@@ -2,7 +2,12 @@ package vn.com.hugio.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import vn.com.hugio.auth.entity.Role;
+import vn.com.hugio.auth.entity.User;
+import vn.com.hugio.auth.entity.UserInfo;
+import vn.com.hugio.auth.entity.UserRole;
 import vn.com.hugio.auth.entity.repository.RoleRepo;
 import vn.com.hugio.auth.entity.repository.UserInfoRepo;
 import vn.com.hugio.auth.entity.repository.UserRepo;
@@ -11,6 +16,9 @@ import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.utils.BCryptUtil;
 import vn.com.hugio.common.utils.DateTimeUtil;
 import vn.com.hugio.common.utils.StringUtil;
+
+import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -23,10 +31,9 @@ public class CommandRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        /*
-        List<Role> role = List.of(
+        /*List<Role> role = List.of(
                 new Role("ADMIN", null),
-                new Role("LSO", null),
+                new Role("MODERATOR", null),
                 new Role("CUSTOMER", null)
         );
         this.roleRepo.saveAll(role);
@@ -39,7 +46,7 @@ public class CommandRunner implements CommandLineRunner {
                 .username("admin")
                 .password(BCryptUtil.hashPassword("admin"))
                 .build();
-        PageLink pageLink = new PageLink(1, 0, null);
+        PageLink pageLink = new PageLink(1, 0);
         Page<User> users = this.userRepo.findAll(pageLink.toPageable());
         if (users.isEmpty()) {
             this.userRepo.save(user);
@@ -56,7 +63,6 @@ public class CommandRunner implements CommandLineRunner {
         userInfo.setUserUid(userUid);
         userInfo.setFullName("SYSTEM ADMIN");
         userInfo.setEmail("abc@mail.com");
-        this.userInfoRepo.save(userInfo);
-        */
+        this.userInfoRepo.save(userInfo);*/
     }
 }
