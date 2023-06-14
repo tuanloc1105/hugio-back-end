@@ -1,10 +1,10 @@
 server:
-  port: ${SERVER_PORT:8010}
+  port: ${SERVER_PORT:8020}
   servlet:
     context-path: /user_service
 grpc:
   server:
-    port: ${GRPC_PORT:9010}
+    port: ${GRPC_PORT:9020}
     auth_server: ${GRPC_AUTH_SERVER:localhost:9000}
 spring:
   jpa:

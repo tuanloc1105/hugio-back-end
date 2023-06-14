@@ -65,7 +65,7 @@ spec:
             - containerPort: ${grpc_port}
           env:
             - name: MYSQL_DB_URL
-              value: "jdbc:mysql://172.19.0.1:3306/tdtu_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
+              value: "jdbc:mysql://172.19.0.1:3306/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
             - name: MYSQL_DB_USERNAME
               value: "root"
             - name: MYSQL_DB_PASSWORD
