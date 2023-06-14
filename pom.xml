@@ -9,8 +9,8 @@
         <module>hugio-user-service</module>
     </modules>
 
-    <groupId>com.dlf</groupId>
-    <artifactId>dlf</artifactId>
+    <groupId>com.hugio</groupId>
+    <artifactId>hugio</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>digital-loan-form</name>
 
