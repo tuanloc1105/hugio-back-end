@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+package vn.com.hugio.proto.common;
+import "validation.proto";
+
+message TraceTypeGRPC{
+  string cid = 1 [(validation.required) = true];
+  string sid = 3 [(validation.required) = true];
+}
+

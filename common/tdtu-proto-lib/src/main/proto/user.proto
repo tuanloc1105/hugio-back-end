@@ -1,0 +1,102 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package vn.com.hugio.grpc.user;
+import "common.proto";
+
+service UserService {
+  rpc findUserByToken (RequestTypeUserTokenInput) returns (ResponseTypeUserInfo) {}
+  rpc createUser (RequestTypeCreateUserInput) returns (ResponseTypeUserInfo) {}
+  rpc changeUserStatus (RequestTypeUpdateUserStatus) returns (ResponseTypeUpdateUserStatus) {}
+}
+message UserTokenInput {
+  string token = 1;
+}
+
+message RequestTypeUserTokenInput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  oneof input {
+    UserTokenInput request = 2;
+  }
+}
+
+// ------------------------------------------------------------
+
+message CreateUserInput {
+  string encryptUsername = 1;
+  string encryptPassword = 2;
+  repeated string roles = 3;
+}
+
+message RequestTypeCreateUserInput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  oneof input {
+    CreateUserInput request = 2;
+  }
+}
+
+// ------------------------------------------------------------
+
+message UserInfo {
+  string userUid = 1;
+  string username = 2;
+  repeated string role = 3;
+}
+
+message ResponseTypeUserInfo {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  string code = 2;
+  string message = 3;
+  oneof output{
+    UserInfo response = 4;
+  }
+}
+
+// ------------------------------------------------------------
+
+message UpdateUserStatus {
+  string userUid = 1;
+  bool status = 2;
+}
+
+message RequestTypeUpdateUserStatus {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  oneof input {
+    UpdateUserStatus request = 4;
+  }
+}
+
+// ------------------------------------------------------------
+
+message ResponseTypeUpdateUserStatus {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  string code = 2;
+  string message = 3;
+}
+
+
+
+// ------------------------------ Example ------------------------------
+
+message Input {
+  string userUid = 1;
+}
+
+message RequestTypeInput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  oneof input {
+    Input request = 4;
+  }
+}
+
+message Output {
+  string userUid = 1;
+}
+
+message ResponseTypeOutput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  string code = 2;
+  string message = 3;
+  oneof output{
+    Output response = 4;
+  }
+}

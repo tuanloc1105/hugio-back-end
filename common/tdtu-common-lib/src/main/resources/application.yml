@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    open-in-view: false
+logging:
+  level:
+    org:
+      hibernate:
+        nodeValue: info
+        stat: debug
+        SQL_SLOW: info
+        SQL: debug
+        cache: debug
+        orm:
+          jdbc:
+            bind: trace

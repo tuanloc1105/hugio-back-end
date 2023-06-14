@@ -1,0 +1,18 @@
+syntax = "proto3";
+option java_multiple_files = true;
+
+import "google/protobuf/descriptor.proto";
+
+package vn.com.hugio.proto.validation;
+
+extend google.protobuf.FieldOptions {
+  int64 max = 50001;
+  int64 min = 50002;
+  bool past = 50003;
+  bool future = 50004;
+  int64 repeatMax = 50005;
+  int64 repeatMin = 50006;
+  string regex = 50007;
+  bool required = 50008;
+  bool forbidden = 50009;
+}
