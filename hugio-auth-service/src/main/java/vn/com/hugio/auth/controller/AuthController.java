@@ -6,6 +6,7 @@ import vn.com.hugio.auth.dto.UserDto;
 import vn.com.hugio.auth.message.request.LoginRequest;
 import vn.com.hugio.auth.message.response.LoginResponse;
 import vn.com.hugio.auth.service.AuthService;
+import vn.com.hugio.common.filter.AuthenResponse;
 import vn.com.hugio.common.object.RequestType;
 import vn.com.hugio.common.object.ResponseType;
 
@@ -23,8 +24,13 @@ public class AuthController {
     }
 
     @PostMapping("/retrieve-info")
-    public ResponseType<UserDto> retrieveInfo(@RequestHeader("Authorization") String token) {
-        return ResponseType.ok(this.authService.authorize(token));
+    public ResponseType<AuthenResponse> retrieveInfo(@RequestHeader("Authorization") String token) {
+        UserDto dto = this.authService.authorize(token);
+        return ResponseType.ok(AuthenResponse.builder()
+                .roles(dto.getRoles())
+                .username(dto.getUsername())
+                .userUid(dto.getUserUid().toString())
+                .build());
     }
 
 }

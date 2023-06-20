@@ -1,5 +1,6 @@
-package vn.com.hugio.user.config;
+package vn.com.hugio.common.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -23,10 +25,12 @@ import org.springframework.web.filter.GenericFilterBean;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.filter.AuthenResponse;
 import vn.com.hugio.common.object.ResponseType;
-import vn.com.hugio.user.service.client.AuthServiceGrpcClient;
+import vn.com.hugio.common.utils.HttpUtil;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +39,7 @@ import java.util.Optional;
 public class AuthFilter extends GenericFilterBean {
 
     private final ObjectMapper objectMapper;
-    private final AuthServiceGrpcClient authServiceGrpcClient;
+    private final HttpUtil httpUtil;
 
     @Value("${api.whitelist.api-list:}")
     private List<String> whiteListApiProperty;
@@ -43,15 +47,18 @@ public class AuthFilter extends GenericFilterBean {
     @Value("${server.servlet.context-path:}")
     private String contextPath;
 
+    @Value("${auth.endpoint:}")
+    private String authEndpoint;
+
     @Autowired
     public AuthFilter(ObjectMapper objectMapper,
-                      AuthServiceGrpcClient authServiceGrpcClient) {
+                      HttpUtil httpUtil) {
         this.objectMapper = objectMapper;
-        this.authServiceGrpcClient = authServiceGrpcClient;
+        this.httpUtil = httpUtil;
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = ((HttpServletRequest) request).getHeader("Authorization");
         Authentication authentication = null;
         MDC.put("username", "anonymous");
@@ -84,11 +91,36 @@ public class AuthFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        filterChain.doFilter(request, response);
+        chain.doFilter(request, response);
 
     }
 
     private AuthenResponse auth(String token) {
-        return this.authServiceGrpcClient.auth(token);
+        try {
+            var response = this.httpUtil.callApi(
+                    null,
+                    authEndpoint,
+                    HttpMethod.POST,
+                    new HashMap<>() {
+                        @Serial
+                        private static final long serialVersionUID = -1342466708918905425L;
+
+                        {
+                            put("Authorization", token);
+                        }
+                    },
+                    new ParameterizedTypeReference<ResponseType<AuthenResponse>>() {
+                    },
+                    false
+            ).getBody();
+            assert response != null;
+            if (response.getCodeNumber().intValue() != ErrorCodeEnum.SUCCESS.getCode().intValue()) {
+                return null;
+            }
+            return response.getResponse();
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
+
 }
