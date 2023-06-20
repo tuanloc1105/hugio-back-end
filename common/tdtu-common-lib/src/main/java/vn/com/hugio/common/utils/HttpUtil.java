@@ -50,8 +50,10 @@ public class HttpUtil {
         this.noSslRestTemplate = noSslRestTemplate;
     }
 
-    public <T> ResponseEntity<T> callApi(Object data, String url, HttpMethod method, Map<String, String> requestHeader, ParameterizedTypeReference<T> respModel, boolean sslCheck) throws JsonProcessingException {
-        LOG.info("STARTING FETCHING API TO ENDPOINT %s WITH VALUE \n %s", url, LoggingUtil.maskValue(this.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(data)));
+    public <T> ResponseEntity<T> callApi(Object data, String url, HttpMethod method, Map<String, String> requestHeader, ParameterizedTypeReference<T> respModel, boolean sslCheck, boolean... isLog) throws JsonProcessingException {
+        if (isLog.length > 0 && isLog[0]) {
+            LOG.info("STARTING FETCHING API TO ENDPOINT %s WITH VALUE \n %s", url, LoggingUtil.maskValue(this.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(data)));
+        }
         HttpHeaders headers = new HttpHeaders();
         if (requestHeader != null && !requestHeader.isEmpty()) {
             for (Map.Entry<String, String> entry : requestHeader.entrySet()) {
@@ -66,13 +68,17 @@ public class HttpUtil {
             } else {
                 response = this.noSslRestTemplate.exchange(url, method, requestEntity, respModel);
             }
-            LOG.info("[API RESPONSE] \n %s", LoggingUtil.maskValue(this.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody())));
+            if (isLog.length > 0 && isLog[0]) {
+                LOG.info("[API RESPONSE] \n %s", LoggingUtil.maskValue(this.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody())));
+            }
             return response;
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw e;
         } finally {
-            LOG.info("FETCHING API COMPLETED");
+            if (isLog.length > 0 && isLog[0]) {
+                LOG.info("FETCHING API COMPLETED");
+            }
         }
     }
 
