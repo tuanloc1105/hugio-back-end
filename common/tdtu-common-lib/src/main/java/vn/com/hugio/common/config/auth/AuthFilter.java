@@ -1,4 +1,4 @@
-package vn.com.hugio.common.config;
+package vn.com.hugio.common.config.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+import vn.com.hugio.common.annotation.Exclude;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.filter.AuthenResponse;
 import vn.com.hugio.common.object.ResponseType;
@@ -36,6 +37,7 @@ import java.util.Optional;
 
 @Component
 @Order(0)
+@Exclude
 public class AuthFilter extends GenericFilterBean {
 
     private final ObjectMapper objectMapper;
@@ -47,7 +49,7 @@ public class AuthFilter extends GenericFilterBean {
     @Value("${server.servlet.context-path:}")
     private String contextPath;
 
-    @Value("${auth.endpoint:}")
+    @Value("${auth.endpoint}")
     private String authEndpoint;
 
     @Autowired

@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import vn.com.hugio.common.DisableSSL;
+import vn.com.hugio.common.annotation.Exclude;
 import vn.com.hugio.common.constant.ConsoleColors;
 
 import java.io.ByteArrayInputStream;
@@ -13,8 +14,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
+import static org.springframework.context.annotation.FilterType.ANNOTATION;
+
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@ComponentScan(value = {"vn.com"})
+@ComponentScan(
+        value = {"vn.com"},
+        excludeFilters = {
+                @ComponentScan.Filter(classes = Exclude.class, type = ANNOTATION)
+        }
+)
 public class AuthApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
