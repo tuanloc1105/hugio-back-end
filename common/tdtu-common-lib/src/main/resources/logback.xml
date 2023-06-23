@@ -49,9 +49,38 @@
         </encoder>
     </appender>
 
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>192.168.234.128:5000</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc />
+                <context />
+                <logLevel />
+                <loggerName />
+                <pattern>
+                    <pattern>
+                        {
+                        "serviceName": "${APPLICATION_NAME}"
+                        }
+                    </pattern>
+                </pattern>
+                <threadName />
+                <message />
+                <logstashMarkers />
+                <stackTrace />
+            </providers>
+        </encoder>
+    </appender>
+
     <root level="info">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE-AUDIT"/>
     </root>
+
+    <logger name="vn.com" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE-AUDIT"/>
+        <appender-ref ref="logstash"/>
+    </logger>
 
 </configuration>
