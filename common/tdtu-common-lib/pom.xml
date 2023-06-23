@@ -175,6 +175,12 @@
         <!-- <artifactId>spring-boot-starter-log4j</artifactId> -->
         <!-- </dependency> -->
 
+        <!-- https://mvnrepository.com/artifact/net.logstash.logback/logstash-logback-encoder -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>7.4</version>
+        </dependency>
 
     </dependencies>
 
