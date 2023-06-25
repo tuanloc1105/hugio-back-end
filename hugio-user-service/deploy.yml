@@ -17,9 +17,6 @@ spec:
           emptyDir: {}
       containers:
         - name: user-service
-          volumeMounts:
-            - mountPath: /app/data/log
-              name: log
           image: tuanloc/project:user-service
           imagePullPolicy: Always
           ports:
