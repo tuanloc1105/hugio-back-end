@@ -83,6 +83,20 @@ public class PageResponse<T> implements Serializable {
                 .build();
     }
 
+    public static <V> PageResponse<V> create(List<V> list, int totalElements, int pageNumber, int pageSize) {
+        return PageResponse
+                .<V>builder()
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
+                .totalPages(list.isEmpty() ? 0 : totalElements / list.size())
+                .numberOfElements(list.size())
+                .totalElements((long) totalElements)
+                .firstPage(pageNumber == 0)
+                .lastPage(((pageNumber + 1) * (pageSize) == totalElements) || (pageSize > totalElements))
+                .content(list)
+                .build();
+    }
+
     public interface Handler<T, V> {
         V handle(T input);
     }
