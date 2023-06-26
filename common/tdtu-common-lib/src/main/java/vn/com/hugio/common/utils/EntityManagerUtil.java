@@ -3,6 +3,7 @@ package vn.com.hugio.common.utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.Query;
+import org.hibernate.jpa.AvailableHints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.hibernate.jpa.QueryHints.HINT_NATIVE_LOCKMODE;
 
 @SuppressWarnings("unchecked")
 @Component
@@ -35,7 +35,7 @@ public class EntityManagerUtil {
         }
         // this can be use in repository interface class with annotation @Lock
         //query.setLockMode(LockModeType.PESSIMISTIC_READ);
-        query.setHint(HINT_NATIVE_LOCKMODE, LockModeType.PESSIMISTIC_READ);
+        query.setHint(AvailableHints.HINT_NATIVE_LOCK_MODE, LockModeType.PESSIMISTIC_READ);
         return query.getResultList();
     }
 
@@ -49,7 +49,7 @@ public class EntityManagerUtil {
         }
         // this can be use in repository interface class with annotation @Lock
         //query.setLockMode(LockModeType.PESSIMISTIC_READ);
-        query.setHint(HINT_NATIVE_LOCKMODE, LockModeType.PESSIMISTIC_READ);
+        query.setHint(AvailableHints.HINT_NATIVE_LOCK_MODE, LockModeType.PESSIMISTIC_READ);
         return query.getResultList();
     }
 
