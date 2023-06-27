@@ -12,7 +12,7 @@ echo "UPGRADE HELM"
 helm upgrade -i -n default auth-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi tuanloc/project:auth-service
-cd..
+cd ..
 
 echo "================================== tuanloc/project:product-service =================================="
 cd hugio-product-service
@@ -24,7 +24,7 @@ echo "UPGRADE HELM"
 helm upgrade -i -n default product-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi tuanloc/project:product-service
-cd..
+cd ..
 
 echo "================================== tuanloc/project:user-service =================================="
 cd hugio-user-service
@@ -36,4 +36,4 @@ echo "UPGRADE HELM"
 helm upgrade -i -n default user-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi tuanloc/project:user-service
-cd..
+cd ..
