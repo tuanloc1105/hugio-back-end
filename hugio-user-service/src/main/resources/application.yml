@@ -23,11 +23,11 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 mysql:
-  url: ${MYSQL_DB_URL:jdbc:mysql://192.168.234.128:3306/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}
-  username: ${MYSQL_DB_USERNAME:root}
-  password: ${MYSQL_DB_PASSWORD:123456}
+  url: ${MYSQL_DB_URL:jdbc:mysql://20.212.226.245:3306/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}
+  username: ${MYSQL_DB_USERNAME:thanhmysql}
+  password: ${MYSQL_DB_PASSWORD:19008198}
   driver_class_name: com.mysql.cj.jdbc.Driver
-  ddl_auto: none
+  ddl_auto: update
   dialect: org.hibernate.dialect.MySQLDialect
   show_sql: false
 management:
