@@ -59,9 +59,9 @@ public class FilterUtil {
 
     public void addCorsHeader(ServletResponse servletResponse) {
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Origin", "*");
-        ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+        ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Max-Age", "3600");
-        ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With, credential, X-XSRF-TOKEN");
+        ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With, credential, X-XSRF-TOKEN, Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token");
     }
 
     public void returnErrorResponse(ServletResponse servletResponse, Throwable e) {
