@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-resource
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: auth-service-svc-1
+            port:
+              number: 8000
+        path: /auth_service
+        pathType: Prefix
+      - backend:
+          service:
+            name: user-service-svc-1
+            port:
+              number: 8010
+        path: /user_service
+        pathType: Prefix
+      - backend:
+          service:
+            name: product-service-svc-1
+            port:
+              number: 8020
+        path: /product_service
+        pathType: Prefix
