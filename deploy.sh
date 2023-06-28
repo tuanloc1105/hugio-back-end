@@ -9,7 +9,7 @@ docker build . -t tuanloc/project:auth-service
 echo "PUSH IMAGE"
 docker push tuanloc/project:auth-service
 echo "UPGRADE HELM"
-helm upgrade -i -n default auth-service ./helm_chart
+helm upgrade -i -n hugio auth-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi tuanloc/project:auth-service
 cd ..
@@ -21,7 +21,7 @@ docker build . -t tuanloc/project:product-service
 echo "PUSH IMAGE"
 docker push tuanloc/project:product-service
 echo "UPGRADE HELM"
-helm upgrade -i -n default product-service ./helm_chart
+helm upgrade -i -n hugio product-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi tuanloc/project:product-service
 cd ..
@@ -33,7 +33,7 @@ docker build . -t tuanloc/project:user-service
 echo "PUSH IMAGE"
 docker push tuanloc/project:user-service
 echo "UPGRADE HELM"
-helm upgrade -i -n default user-service ./helm_chart
+helm upgrade -i -n hugio user-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi tuanloc/project:user-service
 cd ..
