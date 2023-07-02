@@ -37,3 +37,5 @@ helm upgrade -i -n hugio user-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi tuanloc/project:user-service
 cd ..
+
+mvn clean -f pom.xml
