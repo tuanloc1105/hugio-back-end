@@ -57,6 +57,22 @@ public class PageLink {
         this.sortOrder = null;
     }
 
+    public static PageLink create(Integer pageSize, Integer page, SortOrder sortOrder) {
+        return new PageLink(pageSize, page, sortOrder);
+    }
+
+    public static PageLink create(Integer pageSize, Integer page, String property, Direction direction) {
+        return new PageLink(pageSize, page, property, direction);
+    }
+
+    public static PageLink create(Integer pageSize, Integer page, Direction direction) {
+        return new PageLink(pageSize, page, direction);
+    }
+
+    public static PageLink create(Integer pageSize, Integer page) {
+        return new PageLink(pageSize, page);
+    }
+
     public Pageable toPageable() {
         return PageRequest.of(this.page, this.pageSize, toSort());
     }

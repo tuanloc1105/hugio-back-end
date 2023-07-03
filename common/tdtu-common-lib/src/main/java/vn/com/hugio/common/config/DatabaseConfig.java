@@ -24,8 +24,8 @@ import java.util.HashMap;
         transactionManagerRef = "mysqlTransactionManager"
 )
 //@ConditionalOnProperty(
-        //value = "mysql",
-        //havingValue = "true"
+//value = "mysql",
+//havingValue = "true"
 //)
 public class DatabaseConfig {
 

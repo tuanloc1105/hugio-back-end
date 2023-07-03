@@ -6,19 +6,11 @@ import vn.com.hugio.common.exceptions.InternalServiceException;
 
 public class BCryptUtil {
 
+    private static final Integer[] HASH_ROUND = new Integer[]{4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     private volatile static BCryptUtil INSTANCE;
 
     public BCryptUtil() {
     }
-
-    public synchronized BCryptUtil getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new BCryptUtil();
-        }
-        return INSTANCE;
-    }
-
-    private static final Integer[] HASH_ROUND = new Integer[]{4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
     public static String hashPassword(String password) {
         if (StringUtil.isNotEmpty(password)) {
@@ -36,6 +28,13 @@ public class BCryptUtil {
             throw new InternalServiceException(ErrorCodeEnum.AUTH_FAILURE.getCode(), "Password is not correct");
         }
         throw new InternalServiceException(ErrorCodeEnum.VALIDATE_FAILURE.getCode(), "password and passHash can not be null");
+    }
+
+    public synchronized BCryptUtil getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new BCryptUtil();
+        }
+        return INSTANCE;
     }
 
 }

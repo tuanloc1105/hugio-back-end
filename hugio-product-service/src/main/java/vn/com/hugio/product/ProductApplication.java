@@ -16,60 +16,60 @@ import java.nio.charset.Charset;
 @ComponentScan(value = {"vn.com"})
 public class ProductApplication implements CommandLineRunner {
 
-	public static void main(String[] args) {
-		//Model model = MavenUtil.getProjectInfo();
-		System.setProperty("LOG_FILE_NAME", "product_application");
-		System.setProperty("APPLICATION_NAME", "product_application");
-	
-		//MDC.put("appName", model.getArtifactId());
-		SpringApplication.run(ProductApplication.class, args);
-	}
+    public static void main(String[] args) {
+        //Model model = MavenUtil.getProjectInfo();
+        System.setProperty("LOG_FILE_NAME", "product_application");
+        System.setProperty("APPLICATION_NAME", "product_application");
 
-	public static String getCharacterEncoding() {
+        //MDC.put("appName", model.getArtifactId());
+        SpringApplication.run(ProductApplication.class, args);
+    }
 
-		// Creating an array of byte type chars and
-		// passing random  alphabet as an argument.abstract
-		// Say alphabet be 'w'
-		byte[] byte_array = {'w'};
+    public static String getCharacterEncoding() {
 
-		// Creating an object of InputStream
-		InputStream instream = new ByteArrayInputStream(byte_array);
+        // Creating an array of byte type chars and
+        // passing random  alphabet as an argument.abstract
+        // Say alphabet be 'w'
+        byte[] byte_array = {'w'};
 
-		// Now, opening new file input stream reader
-		InputStreamReader streamreader = new InputStreamReader(instream);
-		String defaultCharset = streamreader.getEncoding();
+        // Creating an object of InputStream
+        InputStream instream = new ByteArrayInputStream(byte_array);
 
-		// Returning default character encoding
-		return defaultCharset;
-	}
+        // Now, opening new file input stream reader
+        InputStreamReader streamreader = new InputStreamReader(instream);
+        String defaultCharset = streamreader.getEncoding();
 
-	@Override
-	public void run(String... args) throws Exception {
-		String defaultEncoding = System.getProperty("file.encoding");
+        // Returning default character encoding
+        return defaultCharset;
+    }
 
-		System.out.printf(
-				"%s: %s%n",
-				ConsoleColors.printYellow("Default Charset"),
-				ConsoleColors.printRed(defaultEncoding)
-		);
+    @Override
+    public void run(String... args) throws Exception {
+        String defaultEncoding = System.getProperty("file.encoding");
 
-		System.out.printf(
-				"%s: %s%n",
-				ConsoleColors.printYellow("Default Charset encoding by java.nio.charset"),
-				ConsoleColors.printRed(Charset.defaultCharset().name())
-		);
+        System.out.printf(
+                "%s: %s%n",
+                ConsoleColors.printYellow("Default Charset"),
+                ConsoleColors.printRed(defaultEncoding)
+        );
 
-		System.out.printf(
-				"%s: %s%n",
-				ConsoleColors.printYellow("Default Charset by InputStreamReader"),
-				ConsoleColors.printRed(getCharacterEncoding())
-		);
+        System.out.printf(
+                "%s: %s%n",
+                ConsoleColors.printYellow("Default Charset encoding by java.nio.charset"),
+                ConsoleColors.printRed(Charset.defaultCharset().name())
+        );
 
-		// Getting character encoding by InputStreamReader
-		// System.out.println("Default Charset by InputStreamReader: " + getCharacterEncoding());
+        System.out.printf(
+                "%s: %s%n",
+                ConsoleColors.printYellow("Default Charset by InputStreamReader"),
+                ConsoleColors.printRed(getCharacterEncoding())
+        );
 
-		// Getting character encoding by java.nio.charset
-		// System.out.println("Default Charset: " + Charset.defaultCharset());
-	}
+        // Getting character encoding by InputStreamReader
+        // System.out.println("Default Charset by InputStreamReader: " + getCharacterEncoding());
+
+        // Getting character encoding by java.nio.charset
+        // System.out.println("Default Charset: " + Charset.defaultCharset());
+    }
 
 }

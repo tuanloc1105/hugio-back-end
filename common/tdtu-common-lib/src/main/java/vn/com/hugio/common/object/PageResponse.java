@@ -97,6 +97,20 @@ public class PageResponse<T> implements Serializable {
                 .build();
     }
 
+    public static <V> PageResponse<V> create(List<V> list, Page<?> page) {
+        return PageResponse
+                .<V>builder()
+                .pageNumber(page.getNumber())
+                .pageSize(page.getSize())
+                .totalPages(page.getTotalPages())
+                .numberOfElements(page.getNumberOfElements())
+                .totalElements(page.getTotalElements())
+                .firstPage(page.isFirst())
+                .lastPage(page.isLast())
+                .content(list)
+                .build();
+    }
+
     public interface Handler<T, V> {
         V handle(T input);
     }

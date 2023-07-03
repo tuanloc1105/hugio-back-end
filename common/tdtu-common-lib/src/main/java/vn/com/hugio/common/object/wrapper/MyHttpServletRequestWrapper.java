@@ -5,7 +5,13 @@ import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
@@ -33,18 +39,6 @@ public class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void setByteArrayOutputStream(ByteArrayOutputStream byteArrayOutputStream) {
-        this.byteArrayOutputStream = byteArrayOutputStream;
-    }
-
-    public void setRequest(HttpServletRequest request) {
-        this.request = request;
-    }
-
-    public void setServletInput(ResettableServletInputStream servletInput) {
-        this.servletInput = servletInput;
     }
 
     @Override
@@ -76,13 +70,25 @@ public class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
         return byteArrayOutputStream;
     }
 
+    public void setByteArrayOutputStream(ByteArrayOutputStream byteArrayOutputStream) {
+        this.byteArrayOutputStream = byteArrayOutputStream;
+    }
+
     @Override
     public HttpServletRequest getRequest() {
         return request;
     }
 
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+
     public ResettableServletInputStream getServletInput() {
         return servletInput;
+    }
+
+    public void setServletInput(ResettableServletInputStream servletInput) {
+        this.servletInput = servletInput;
     }
 
     private static class ResettableServletInputStream extends ServletInputStream {

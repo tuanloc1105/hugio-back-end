@@ -3,10 +3,10 @@ package vn.com.hugio.auth.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
-import vn.com.hugio.grpc.user.CreateUserInput;
 import vn.com.hugio.auth.dto.UserDto;
 import vn.com.hugio.auth.entity.User;
 import vn.com.hugio.auth.message.request.CreateUserRequest;
+import vn.com.hugio.grpc.user.CreateUserInput;
 
 import javax.annotation.processing.Generated;
 import java.util.stream.Collectors;

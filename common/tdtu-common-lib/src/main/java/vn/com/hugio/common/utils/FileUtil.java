@@ -18,7 +18,7 @@ public class FileUtil {
             if (Optional.ofNullable(url).isEmpty()) {
                 return null;
             }
-            if(url.getPath() != null) {
+            if (url.getPath() != null) {
                 File file = new File(url.getPath());
                 Path path = file.toPath();
                 return Files.readAllBytes(path);

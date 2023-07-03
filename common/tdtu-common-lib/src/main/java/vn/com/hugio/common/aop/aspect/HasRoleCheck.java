@@ -5,11 +5,11 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import vn.com.hugio.common.aop.HasRoles;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.filter.AuthenResponse;
 import vn.com.hugio.common.log.LOG;
-import vn.com.hugio.common.aop.HasRoles;
 
 import java.util.ArrayList;
 import java.util.List;

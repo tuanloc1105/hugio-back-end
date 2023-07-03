@@ -16,7 +16,6 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
-import java.time.Duration;
 
 @Configuration
 public class RestTemplateConfig {

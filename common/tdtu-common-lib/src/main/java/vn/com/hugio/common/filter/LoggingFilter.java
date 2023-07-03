@@ -14,9 +14,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.object.wrapper.MyHttpServletRequestWrapper;
 import vn.com.hugio.common.object.wrapper.MyHttpServletResponseWrapper;
-import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.utils.FilterUtil;
 
 import java.io.IOException;

@@ -1,6 +1,10 @@
 package vn.com.hugio.auth.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import vn.com.hugio.common.dto.BaseEntityDto;
 
 import java.util.List;

@@ -87,7 +87,7 @@ public class HttpUtil {
         return (HttpURLConnection) url.openConnection();
     }
 
-    public <T> T sendRequest(Object data, String url, HttpMethod method, Map<String, String> requestHeader, TypeReference<T> respModel, boolean sslCheck)  throws Exception {
+    public <T> T sendRequest(Object data, String url, HttpMethod method, Map<String, String> requestHeader, TypeReference<T> respModel, boolean sslCheck) throws Exception {
         HttpURLConnection http = this.generateConnection(url);
         http.setRequestMethod(method.name());
         http.setDoOutput(true);

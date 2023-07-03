@@ -1,15 +1,22 @@
 package vn.com.hugio.product.service.impl;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
+import vn.com.hugio.common.object.PageResponse;
+import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.service.BaseService;
 import vn.com.hugio.common.utils.StringUtil;
+import vn.com.hugio.product.dto.ProductDto;
 import vn.com.hugio.product.entity.Product;
 import vn.com.hugio.product.entity.repository.ProductRepository;
+import vn.com.hugio.product.mapper.ProductMapper;
 import vn.com.hugio.product.request.CreateProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
+import vn.com.hugio.product.request.GetProductRequest;
 import vn.com.hugio.product.service.ProductDetailService;
 import vn.com.hugio.product.service.ProductService;
 
@@ -19,10 +26,17 @@ import java.util.Optional;
 public class ProductServiceImpl extends BaseService<Product, ProductRepository> implements ProductService {
 
     private final ProductDetailService productDetailService;
+    private final ModelMapper modelMapper;
+    private final ProductMapper productMapper;
 
-    public ProductServiceImpl(ProductRepository repository, ProductDetailService productDetailService) {
+    public ProductServiceImpl(ProductRepository repository,
+                              ProductDetailService productDetailService,
+                              ModelMapper modelMapper,
+                              ProductMapper productMapper) {
         super(repository);
         this.productDetailService = productDetailService;
+        this.modelMapper = modelMapper;
+        this.productMapper = productMapper;
     }
 
     @Override
@@ -43,7 +57,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         this.productDetailService.addOrSaveProductDetail(product, request.getDetails());
     }
 
-    //@Override
+    @Override
     public void updateProduct(EditProductRequest request) {
         Product product = this.repository.findByProductName(
                 request.getName()
@@ -76,5 +90,14 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
             LOG.info("UPDATE PRODUCT DETAIL", request.getName());
             this.productDetailService.addOrSaveProductDetail(product, request.getDetails());
         }
+    }
+
+    public PageResponse<ProductDto> getAllProduct(GetProductRequest request) {
+        PageLink pageLink = PageLink.create(request.getPageSize(), request.getPageNumber(), request.getSort());
+        Page<Product> products = this.repository.findByActiveIsTrue(pageLink.toPageable());
+        //List<ProductDto> dtos = products.stream()
+        //        .map(productMapper::productEntityToProductDto)
+        //        .toList();
+        return PageResponse.create(products, productMapper::productEntityToProductDto);
     }
 }

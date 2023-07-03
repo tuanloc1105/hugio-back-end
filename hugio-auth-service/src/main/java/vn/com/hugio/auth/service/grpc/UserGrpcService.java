@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
-import vn.com.hugio.grpc.user.*;
 import vn.com.hugio.auth.dto.UserDto;
 import vn.com.hugio.auth.mapper.UserMapper;
 import vn.com.hugio.auth.message.request.CreateUserRequest;
@@ -13,6 +12,15 @@ import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.utils.StringUtil;
+import vn.com.hugio.grpc.user.CreateUserInput;
+import vn.com.hugio.grpc.user.RequestTypeCreateUserInput;
+import vn.com.hugio.grpc.user.RequestTypeUpdateUserStatus;
+import vn.com.hugio.grpc.user.RequestTypeUserTokenInput;
+import vn.com.hugio.grpc.user.ResponseTypeUpdateUserStatus;
+import vn.com.hugio.grpc.user.ResponseTypeUserInfo;
+import vn.com.hugio.grpc.user.UpdateUserStatus;
+import vn.com.hugio.grpc.user.UserInfo;
+import vn.com.hugio.grpc.user.UserServiceGrpc;
 import vn.com.hugio.proto.utils.GrpcUtil;
 
 @GrpcService

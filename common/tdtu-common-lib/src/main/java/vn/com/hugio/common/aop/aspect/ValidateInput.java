@@ -4,8 +4,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.aop.Validate;
+import vn.com.hugio.common.log.LOG;
 
 @Aspect
 @Component

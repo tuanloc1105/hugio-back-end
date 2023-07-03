@@ -18,7 +18,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @NoArgsConstructor
 @Data
@@ -35,7 +34,7 @@ public class Category extends BaseEntity implements Serializable {
     private Long id;
 
     @Column(name = "CATEGORY_UID", nullable = false, updatable = false)
-    private UUID categoryUid;
+    private String categoryUid;
 
     @Column(name = "CATEGORY_NAME", nullable = false)
     private String categoryName;
@@ -43,7 +42,7 @@ public class Category extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<ProductCategory> productCategories;
 
-    public Category(Long id, UUID categoryUid, String categoryName, List<ProductCategory> productCategories) {
+    public Category(Long id, String categoryUid, String categoryName, List<ProductCategory> productCategories) {
         this.id = id;
         this.categoryUid = categoryUid;
         this.categoryName = categoryName;
@@ -51,7 +50,7 @@ public class Category extends BaseEntity implements Serializable {
     }
 
     @Builder
-    public Category(Long id, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy, Long id1, UUID categoryUid, String categoryName, List<ProductCategory> productCategories) {
+    public Category(Long id, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy, Long id1, String categoryUid, String categoryName, List<ProductCategory> productCategories) {
         super(id, active, createdAt, updatedAt, createdBy, updatedBy);
         this.id = id1;
         this.categoryUid = categoryUid;

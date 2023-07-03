@@ -21,12 +21,10 @@ package vn.com.hugio.proto.validation.validators;
  */
 
 import com.google.protobuf.Descriptors.FieldDescriptor;
-
+import com.google.protobuf.GeneratedMessageV3;
 import vn.com.hugio.proto.validation.MessageValidationException;
 import vn.com.hugio.proto.validation.ValidationConditions;
 import vn.com.hugio.proto.validation.Validator;
-
-import com.google.protobuf.GeneratedMessageV3;
 
 import java.util.Map;
 

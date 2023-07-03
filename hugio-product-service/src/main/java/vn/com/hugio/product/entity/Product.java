@@ -3,6 +3,7 @@ package vn.com.hugio.product.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,7 +19,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @NoArgsConstructor
 @Data
@@ -53,10 +53,10 @@ public class Product extends BaseEntity implements Serializable {
     @Column(name = "PRODUCT_DESCRIPTION")
     private String productDescription;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductDetail> productDetails;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductCategory> productCategories;
 
     public Product(Long id, String productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {

@@ -8,7 +8,9 @@ import java.util.Optional;
 public interface UserRepo extends BaseRepository<User> {
 
     Optional<User> findByUsernameAndActiveIsTrue(String username);
+
     Optional<User> findByUserUidAndActiveIsTrue(String userUid);
+
     Optional<User> findByUserUid(String userUid);
 
     boolean existsByUsername(String username);
