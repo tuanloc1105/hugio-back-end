@@ -21,4 +21,9 @@ public class ProductController {
         return ResponseType.ok(null);
     }
 
+    @PostMapping("/edit")
+    public ResponseType<String> editProduct(@RequestBody RequestType<CreateProductRequest> request) {
+        return ResponseType.ok(null);
+    }
+
 }

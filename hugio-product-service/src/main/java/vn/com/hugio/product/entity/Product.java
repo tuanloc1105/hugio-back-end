@@ -36,7 +36,7 @@ public class Product extends BaseEntity implements Serializable {
     private Long id;
 
     @Column(name = "PRODUCT_UID", nullable = false, updatable = false)
-    private UUID productUid;
+    private String productUid;
 
     @Column(name = "PRODUCT_NAME")
     private String productName;
@@ -59,7 +59,7 @@ public class Product extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductCategory> productCategories;
 
-    public Product(Long id, UUID productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {
+    public Product(Long id, String productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {
         this.id = id;
         this.productUid = productUid;
         this.productName = productName;
@@ -72,7 +72,7 @@ public class Product extends BaseEntity implements Serializable {
     }
 
     @Builder
-    public Product(Long id, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy, Long id1, UUID productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {
+    public Product(Long id, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy, Long id1, String productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {
         super(id, active, createdAt, updatedAt, createdBy, updatedBy);
         this.id = id1;
         this.productUid = productUid;

@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CreateProductRequest {
+public class EditProductRequest {
 
 
     @FieldNotNull
@@ -22,6 +22,10 @@ public class CreateProductRequest {
     @FieldNotNull
     @JsonProperty("price")
     private Double price;
+
+    @FieldNotNull
+    @JsonProperty("discount")
+    private Double discount;
 
     @JsonProperty("product_description")
     private String productDescription;
