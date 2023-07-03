@@ -11,6 +11,8 @@ public interface ProductRepository extends BaseRepository<Product> {
 
     Optional<Product> findByProductName(String productName);
 
+    Optional<Product> findByProductUid(String productUid);
+
     Page<Product> findByActiveIsTrue(Pageable pageable);
 
 }

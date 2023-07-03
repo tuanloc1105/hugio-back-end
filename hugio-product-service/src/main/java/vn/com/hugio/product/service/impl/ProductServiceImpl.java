@@ -21,6 +21,7 @@ import vn.com.hugio.product.service.ProductDetailService;
 import vn.com.hugio.product.service.ProductService;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImpl extends BaseService<Product, ProductRepository> implements ProductService {
@@ -46,6 +47,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
             throw new InternalServiceException(ErrorCodeEnum.EXISTS.getCode(), "this product has been existed");
         }
         Product product = Product.builder()
+                .productUid(UUID.randomUUID().toString())
                 .productName(request.getName())
                 .rawProductName(StringUtil.removeAccent(request.getName()))
                 .productDescription(request.getProductDescription())
@@ -59,8 +61,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public void updateProduct(EditProductRequest request) {
-        Product product = this.repository.findByProductName(
-                request.getName()
+        Product product = this.repository.findByProductUid(
+                request.getProductId()
         ).orElseThrow(
                 () -> new InternalServiceException(ErrorCodeEnum.EXISTS.getCode(), "this product does not exist")
         );
