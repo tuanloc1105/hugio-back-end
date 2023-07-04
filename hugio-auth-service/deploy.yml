@@ -17,7 +17,7 @@ spec:
           emptyDir: {}
       containers:
         - name: auth-service
-          image: tuanloc/project:auth-service
+          image: tuanloc/hugio:auth-service
           imagePullPolicy: Always
           ports:
             - containerPort: 8000

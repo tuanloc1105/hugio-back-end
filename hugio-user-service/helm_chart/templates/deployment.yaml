@@ -17,7 +17,7 @@ spec:
           emptyDir: {}
       containers:
         - name: {{ .Release.Name }}
-          image: tuanloc/project:user-service
+          image: tuanloc/hugio:user-service
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.tcp_port }}
