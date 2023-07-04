@@ -6,7 +6,7 @@ tcp_svc_type: NodePort
 grpc_port: 9010
 replica: 1
 database:
-  url: jdbc:mysql://192.168.189.129:3306/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+  url: jdbc:mysql://192.168.1.22:3306/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
   username: cm9vdA==
   password: MTIzNDU2
 auth_endpoint: http://192.168.1.22:8000/auth_service/auth/retrieve-info
