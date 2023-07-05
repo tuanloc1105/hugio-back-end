@@ -17,7 +17,7 @@ spec:
           emptyDir: {}
       containers:
         - name: {{ .Release.Name }}
-          image: tuanloc/hugio:product-service
+          image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.tcp_port }}
