@@ -1,6 +1,6 @@
 image:
-  name: tuanloc/project
-  tag: latest
+  name: tuanloc/hugio
+  tag: auth-service
 tcp_port: 8000
 tcp_svc_type: NodePort
 grpc_port: 9000
