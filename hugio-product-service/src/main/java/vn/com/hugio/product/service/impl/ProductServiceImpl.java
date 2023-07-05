@@ -1,8 +1,8 @@
 package vn.com.hugio.product.service.impl;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
@@ -11,33 +11,41 @@ import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.service.BaseService;
 import vn.com.hugio.common.utils.StringUtil;
 import vn.com.hugio.product.dto.ProductDto;
+import vn.com.hugio.product.entity.Category;
 import vn.com.hugio.product.entity.Product;
+import vn.com.hugio.product.entity.ProductCategory;
 import vn.com.hugio.product.entity.repository.ProductRepository;
 import vn.com.hugio.product.mapper.ProductMapper;
 import vn.com.hugio.product.request.CreateProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
 import vn.com.hugio.product.request.GetProductRequest;
+import vn.com.hugio.product.service.CategoryService;
+import vn.com.hugio.product.service.ProductCategoryService;
 import vn.com.hugio.product.service.ProductDetailService;
 import vn.com.hugio.product.service.ProductService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional(rollbackFor = {InternalServiceException.class, RuntimeException.class, Exception.class, Throwable.class})
 public class ProductServiceImpl extends BaseService<Product, ProductRepository> implements ProductService {
 
     private final ProductDetailService productDetailService;
-    private final ModelMapper modelMapper;
     private final ProductMapper productMapper;
+    private final CategoryService categoryService;
 
     public ProductServiceImpl(ProductRepository repository,
                               ProductDetailService productDetailService,
-                              ModelMapper modelMapper,
-                              ProductMapper productMapper) {
+                              ProductMapper productMapper,
+                              CategoryService categoryService) {
         super(repository);
         this.productDetailService = productDetailService;
-        this.modelMapper = modelMapper;
         this.productMapper = productMapper;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -57,6 +65,20 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         product = this.save(product);
         LOG.info("SAVE PRODUCT {} SUCCESS, SAVE PRODUCT DETAIL", request.getName());
         this.productDetailService.addOrSaveProductDetail(product, request.getDetails());
+        if (request.getCategory() != null && !(request.getCategory().isEmpty())) {
+            LOG.info("SAVE CATEGORY FOR NEW PRODUCT {}", request.getName());
+            List<Category> categories = this.categoryService.getCategoryByNameOrUid(request.getCategory());
+            Product finalProduct = product;
+            List<ProductCategory> productCategories = categories.stream().map(
+                    category -> ProductCategory.builder()
+                            .product(finalProduct)
+                            .category(category)
+                            .build()
+            ).collect(Collectors.toList());
+            product.setProductCategories(productCategories);
+            //this.productCategoryService.saveEntities(productCategories);
+            this.save(product);
+        }
     }
 
     @Override

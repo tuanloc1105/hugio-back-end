@@ -1,6 +1,8 @@
 package vn.com.hugio.product.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.service.BaseService;
 import vn.com.hugio.product.entity.Product;
 import vn.com.hugio.product.entity.ProductDetail;
@@ -11,6 +13,7 @@ import vn.com.hugio.product.service.ProductDetailService;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = {InternalServiceException.class, RuntimeException.class, Exception.class, Throwable.class})
 public class ProductDetailServiceImpl extends BaseService<ProductDetail, ProductDetailRepository> implements ProductDetailService {
     public ProductDetailServiceImpl(ProductDetailRepository repository) {
         super(repository);

@@ -1,6 +1,7 @@
 package vn.com.hugio.product.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.service.BaseService;
@@ -10,10 +11,12 @@ import vn.com.hugio.product.request.CreateCategoryRequest;
 import vn.com.hugio.product.request.EditCategoryRequest;
 import vn.com.hugio.product.service.CategoryService;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional(rollbackFor = {InternalServiceException.class, RuntimeException.class, Exception.class, Throwable.class})
 public class CategoryServiceImpl extends BaseService<Category, CategoryRepository> implements CategoryService {
 
     public CategoryServiceImpl(CategoryRepository repository) {
@@ -39,5 +42,10 @@ public class CategoryServiceImpl extends BaseService<Category, CategoryRepositor
                 .orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "category not exist"));
         category.setCategoryName(request.getCategoryName());
         this.save(category);
+    }
+
+    @Override
+    public List<Category> getCategoryByNameOrUid(List<String> input) {
+        return this.repository.findByCategoryNameInOrCategoryUidIn(input, input);
     }
 }

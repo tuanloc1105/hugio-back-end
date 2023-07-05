@@ -32,6 +32,9 @@ public class EditProductRequest {
     @JsonProperty("product_description")
     private String productDescription;
 
+    @JsonProperty("category")
+    private List<String> category;
+
     @JsonProperty("details")
     private List<ProductDetailReqDto> details;
 

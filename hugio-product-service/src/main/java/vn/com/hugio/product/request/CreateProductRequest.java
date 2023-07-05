@@ -26,6 +26,9 @@ public class CreateProductRequest {
     @JsonProperty("product_description")
     private String productDescription;
 
+    @JsonProperty("category")
+    private List<String> category;
+
     @JsonProperty("details")
     private List<ProductDetailReqDto> details;
 
