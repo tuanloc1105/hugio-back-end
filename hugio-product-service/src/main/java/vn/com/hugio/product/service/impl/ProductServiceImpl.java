@@ -20,11 +20,9 @@ import vn.com.hugio.product.request.CreateProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
 import vn.com.hugio.product.request.GetProductRequest;
 import vn.com.hugio.product.service.CategoryService;
-import vn.com.hugio.product.service.ProductCategoryService;
 import vn.com.hugio.product.service.ProductDetailService;
 import vn.com.hugio.product.service.ProductService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -116,6 +114,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         }
     }
 
+    @Override
     public PageResponse<ProductDto> getAllProduct(GetProductRequest request) {
         PageLink pageLink = PageLink.create(request.getPageSize(), request.getPageNumber(), request.getSort());
         Page<Product> products = this.repository.findByActiveIsTrue(pageLink.toPageable());

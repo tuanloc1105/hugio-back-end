@@ -57,6 +57,7 @@ public abstract class BaseEntity {
         this.updatedAt = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of(CommonConstant.DEFAULT_TIMEZONE)).toLocalDateTime();
         this.createdBy = MDC.get("username");
         this.updatedBy = MDC.get("username");
+        this.active = true;
     }
 
     @PreUpdate
