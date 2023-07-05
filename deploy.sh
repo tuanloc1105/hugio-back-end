@@ -16,7 +16,7 @@ docker push $auth:$tag
 echo "UPGRADE HELM"
 helm upgrade -i --set image.name=$auth,image.tag=$tag -n hugio auth-service ./helm_chart
 echo "REMOVE IMAGE"
-docker rmi tuanloc/hugio:auth-service
+docker rmi $auth:$tag
 cd ..
 
 echo "================================== $product:$tag =================================="
@@ -28,7 +28,7 @@ docker push $product:$tag
 echo "UPGRADE HELM"
 helm upgrade -i --set image.name=$product,image.tag=$tag -n hugio product-service ./helm_chart
 echo "REMOVE IMAGE"
-docker rmi tuanloc/hugio:product-service
+docker rmi $product:$tag
 cd ..
 
 echo "================================== $user:$tag =================================="
@@ -40,7 +40,7 @@ docker push $user:$tag
 echo "UPGRADE HELM"
 helm upgrade -i --set image.name=$user,image.tag=$tag -n hugio user-service ./helm_chart
 echo "REMOVE IMAGE"
-docker rmi tuanloc/hugio:user-service
+docker rmi $user:$tag
 cd ..
 
 mvn clean -f pom.xml
