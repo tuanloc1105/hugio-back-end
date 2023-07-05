@@ -36,4 +36,4 @@ management:
       probability: '1.0'
 aes_secret_key: iXlCmp4pcEZ2YBUqfelapUH2wGRDDSar
 auth:
-  endpoint: ${AUTH_ENDPOINT:http://localhost:8000/auth_service/auth/retrieve-info}
+  endpoint: ${AUTH_ENDPOINT:http://192.168.1.22:8000/auth_service/auth/retrieve-info}

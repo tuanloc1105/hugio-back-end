@@ -5,7 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.Data;
+import org.slf4j.MDC;
 import vn.com.hugio.common.constant.CommonConstant;
 
 import java.time.Instant;
@@ -46,5 +49,19 @@ public abstract class BaseEntity {
         this.updatedAt = updatedAt;
         this.createdBy = createdBy;
         this.updatedBy = updatedBy;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of(CommonConstant.DEFAULT_TIMEZONE)).toLocalDateTime();
+        this.updatedAt = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of(CommonConstant.DEFAULT_TIMEZONE)).toLocalDateTime();
+        this.createdBy = MDC.get("username");
+        this.updatedBy = MDC.get("username");
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of(CommonConstant.DEFAULT_TIMEZONE)).toLocalDateTime();
+        this.updatedBy = MDC.get("username");
     }
 }
