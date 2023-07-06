@@ -24,7 +24,7 @@ public class ProductDetail extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = -2062120580227342477L;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
     private Product product;
 

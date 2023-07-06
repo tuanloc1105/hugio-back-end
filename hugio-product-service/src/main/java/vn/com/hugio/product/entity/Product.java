@@ -29,12 +29,6 @@ public class Product extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1134098415121029559L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUCT_SEQ")
-    @SequenceGenerator(name = "PRODUCT_SEQ", sequenceName = "PRODUCT_ID_SEQ", allocationSize = 1)
-    @Column(name = "ID", nullable = false, insertable = true, updatable = false)
-    private Long id;
-
     @Column(name = "PRODUCT_UID", nullable = false, updatable = false)
     private String productUid;
 
@@ -53,14 +47,13 @@ public class Product extends BaseEntity implements Serializable {
     @Column(name = "PRODUCT_DESCRIPTION")
     private String productDescription;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE/*, CascadeType.PERSIST*/}, fetch = FetchType.EAGER)
     private List<ProductDetail> productDetails;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE/*, CascadeType.PERSIST*/}, fetch = FetchType.EAGER)
     private List<ProductCategory> productCategories;
 
-    public Product(Long id, String productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {
-        this.id = id;
+    public Product(String productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {
         this.productUid = productUid;
         this.productName = productName;
         this.rawProductName = rawProductName;
@@ -72,9 +65,8 @@ public class Product extends BaseEntity implements Serializable {
     }
 
     @Builder
-    public Product(Long id, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy, Long id1, String productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {
+    public Product(Long id, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy, String productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {
         super(id, active, createdAt, updatedAt, createdBy, updatedBy);
-        this.id = id1;
         this.productUid = productUid;
         this.productName = productName;
         this.rawProductName = rawProductName;

@@ -6,8 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
-import vn.com.hugio.common.pagable.PageResponse;
+import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageLink;
+import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.service.BaseService;
 import vn.com.hugio.common.utils.StringUtil;
 import vn.com.hugio.product.dto.ProductDto;
@@ -19,8 +20,8 @@ import vn.com.hugio.product.mapper.ProductMapper;
 import vn.com.hugio.product.request.CreateProductRequest;
 import vn.com.hugio.product.request.DeleteProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
-import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.product.service.CategoryService;
+import vn.com.hugio.product.service.ProductCategoryService;
 import vn.com.hugio.product.service.ProductDetailService;
 import vn.com.hugio.product.service.ProductService;
 
@@ -36,15 +37,18 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     private final ProductDetailService productDetailService;
     private final ProductMapper productMapper;
     private final CategoryService categoryService;
+    private final ProductCategoryService productCategoryService;
 
     public ProductServiceImpl(ProductRepository repository,
                               ProductDetailService productDetailService,
                               ProductMapper productMapper,
-                              CategoryService categoryService) {
+                              CategoryService categoryService,
+                              ProductCategoryService productCategoryService) {
         super(repository);
         this.productDetailService = productDetailService;
         this.productMapper = productMapper;
         this.categoryService = categoryService;
+        this.productCategoryService = productCategoryService;
     }
 
     @Override
@@ -75,8 +79,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                             .build()
             ).collect(Collectors.toList());
             product.setProductCategories(productCategories);
-            //this.productCategoryService.saveEntities(productCategories);
-            this.save(product);
+            this.productCategoryService.saveEntities(productCategories);
+            //this.save(product);
         }
     }
 
@@ -128,7 +132,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     @Override
     public void removeProduct(DeleteProductRequest request) {
         if (request.getIsPermanent()) {
-            this.repository.deleteByProductUid(request.getProductId());
+            Product product = this.repository.findByProductUid(request.getProductId()).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "product does not exist"));
+            this.repository.delete(product);
         } else {
             this.repository.softDeleteByProductUid(request.getProductId());
         }

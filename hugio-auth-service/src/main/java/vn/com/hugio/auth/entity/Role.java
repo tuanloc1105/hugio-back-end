@@ -36,7 +36,7 @@ public class Role extends BaseEntity implements Serializable {
     @Column(name = "ROLE_NAME", nullable = false)
     private String roleName;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "role", cascade = {CascadeType.REMOVE/*, CascadeType.PERSIST*/})
     private List<UserRole> userRoles;
 
     public Role(String roleName, List<UserRole> userRoles) {

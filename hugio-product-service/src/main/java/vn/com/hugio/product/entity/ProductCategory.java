@@ -34,11 +34,11 @@ public class ProductCategory extends BaseEntity implements Serializable {
     @Column(name = "ID", nullable = false, insertable = true, updatable = false)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID", nullable = false)
     private Product product;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID", nullable = false)
     private Category category;
 

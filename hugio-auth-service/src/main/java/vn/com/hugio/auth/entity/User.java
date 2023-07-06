@@ -30,7 +30,7 @@ public class User extends BaseEntity implements Serializable {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE/*, CascadeType.PERSIST*/}, fetch = FetchType.EAGER)
     private List<UserRole> userRoles;
 
     public User(String userUid, String username, String password, List<UserRole> userRoles) {
