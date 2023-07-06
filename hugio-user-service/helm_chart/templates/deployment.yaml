@@ -43,3 +43,8 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-cf
                   key: auth_grpc_endpoint
+            - name: AUTH_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-cf
+                  key: auth_rest_endpoint
