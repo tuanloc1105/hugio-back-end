@@ -5,4 +5,4 @@ git commit -m "Update code ${c}"
 git push origin master
 echo "=============================== DONE ==============================="
 
-sleep 5m
+#sleep 5m
