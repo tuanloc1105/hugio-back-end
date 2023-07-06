@@ -43,4 +43,4 @@ echo "REMOVE IMAGE"
 docker rmi $user:$tag
 cd ..
 
-mvn clean -f pom.xml
+# mvn clean -f pom.xml
