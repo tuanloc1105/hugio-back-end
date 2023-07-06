@@ -29,7 +29,7 @@ mysql:
   driver_class_name: com.mysql.cj.jdbc.Driver
   ddl_auto: update
   dialect: org.hibernate.dialect.MySQLDialect
-  show_sql: false
+  show_sql: true
 management:
   tracing:
     sampling:
