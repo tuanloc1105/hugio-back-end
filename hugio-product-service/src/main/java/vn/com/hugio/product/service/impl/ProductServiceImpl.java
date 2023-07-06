@@ -130,7 +130,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         if (request.getIsPermanent()) {
             this.repository.deleteByProductUid(request.getProductId());
         } else {
-
+            this.repository.softDeleteByProductUid(request.getProductId());
         }
+        LOG.info("REMOVED A PRODUCT WITH UID %s", request.getProductId());
     }
 }

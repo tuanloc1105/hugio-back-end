@@ -43,6 +43,7 @@ public class ProductController {
 
     @PostMapping("/all")
     public ResponseType<String> deleteProduct(@RequestBody RequestType<DeleteProductRequest> request) {
+        this.productService.removeProduct(request.getRequest());
         return ResponseType.ok("ok");
     }
 
