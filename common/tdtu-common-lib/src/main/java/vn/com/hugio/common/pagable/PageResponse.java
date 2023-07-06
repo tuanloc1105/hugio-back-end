@@ -1,4 +1,4 @@
-package vn.com.hugio.common.object;
+package vn.com.hugio.common.pagable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -55,10 +55,10 @@ public class PageResponse<T> implements Serializable {
         this.content = content;
     }
 
-    public static <T, V> PageResponse<V> create(Page<T> page, Function<List<T>, List<V>> function) {
+    public static <T, V> PageResponse<V> create(Page<T> page, Function<List<T>, List<V>> function, boolean... isIncreasePageNumber) {
         return PageResponse
                 .<V>builder()
-                .pageNumber(page.getNumber())
+                .pageNumber(isIncreasePageNumber.length > 0 && isIncreasePageNumber[0] ? page.getNumber() + 1 :  page.getNumber())
                 .pageSize(page.getSize())
                 .totalPages(page.getTotalPages())
                 .numberOfElements(page.getNumberOfElements())
@@ -69,10 +69,10 @@ public class PageResponse<T> implements Serializable {
                 .build();
     }
 
-    public static <T, V> PageResponse<V> create(Page<T> page, Handler<T, V> handler) {
+    public static <T, V> PageResponse<V> create(Page<T> page, Handler<T, V> handler, boolean... isIncreasePageNumber) {
         return PageResponse
                 .<V>builder()
-                .pageNumber(page.getNumber())
+                .pageNumber(isIncreasePageNumber.length > 0 && isIncreasePageNumber[0] ? page.getNumber() + 1 :  page.getNumber())
                 .pageSize(page.getSize())
                 .totalPages(page.getTotalPages())
                 .numberOfElements(page.getNumberOfElements())
@@ -83,10 +83,10 @@ public class PageResponse<T> implements Serializable {
                 .build();
     }
 
-    public static <V> PageResponse<V> create(List<V> list, int totalElements, int pageNumber, int pageSize) {
+    public static <V> PageResponse<V> create(List<V> list, int totalElements, int pageNumber, int pageSize, boolean... isIncreasePageNumber) {
         return PageResponse
                 .<V>builder()
-                .pageNumber(pageNumber)
+                .pageNumber(isIncreasePageNumber.length > 0 && isIncreasePageNumber[0] ? pageNumber + 1 :  pageNumber)
                 .pageSize(pageSize)
                 .totalPages(list.isEmpty() ? 0 : totalElements / list.size())
                 .numberOfElements(list.size())
@@ -97,10 +97,10 @@ public class PageResponse<T> implements Serializable {
                 .build();
     }
 
-    public static <V> PageResponse<V> create(List<V> list, Page<?> page) {
+    public static <V> PageResponse<V> create(List<V> list, Page<?> page, boolean... isIncreasePageNumber) {
         return PageResponse
                 .<V>builder()
-                .pageNumber(page.getNumber())
+                .pageNumber(isIncreasePageNumber.length > 0 && isIncreasePageNumber[0] ? page.getNumber() + 1 :  page.getNumber())
                 .pageSize(page.getSize())
                 .totalPages(page.getTotalPages())
                 .numberOfElements(page.getNumberOfElements())

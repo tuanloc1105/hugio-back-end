@@ -1,6 +1,6 @@
 package vn.com.hugio.product.service;
 
-import vn.com.hugio.common.object.PageResponse;
+import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.product.dto.UserInfoDto;
 import vn.com.hugio.product.message.request.CreateUserInfoRequest;

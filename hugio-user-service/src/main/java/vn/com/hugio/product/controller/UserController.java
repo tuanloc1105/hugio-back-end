@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.com.hugio.common.aop.HasRoles;
-import vn.com.hugio.common.object.PageResponse;
+import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.object.RequestType;
 import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.product.dto.UserInfoDto;

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
-import vn.com.hugio.common.object.PageResponse;
+import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.service.BaseService;
