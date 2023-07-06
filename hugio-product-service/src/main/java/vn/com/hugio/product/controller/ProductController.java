@@ -11,6 +11,7 @@ import vn.com.hugio.common.object.RequestType;
 import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.product.dto.ProductDto;
 import vn.com.hugio.product.request.CreateProductRequest;
+import vn.com.hugio.product.request.DeleteProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.product.service.ProductService;
@@ -38,6 +39,11 @@ public class ProductController {
     @PostMapping("/all")
     public ResponseType<PageResponse<ProductDto>> getAllProduct(@RequestBody RequestType<PagableRequest> request) {
         return ResponseType.ok(this.productService.getAllProduct(request.getRequest()));
+    }
+
+    @PostMapping("/all")
+    public ResponseType<String> deleteProduct(@RequestBody RequestType<DeleteProductRequest> request) {
+        return ResponseType.ok("ok");
     }
 
 }

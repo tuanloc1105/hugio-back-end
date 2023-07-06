@@ -1,12 +1,18 @@
 package vn.com.hugio.product.service.impl;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
+import vn.com.hugio.common.pagable.PagableRequest;
+import vn.com.hugio.common.pagable.PageLink;
+import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.service.BaseService;
+import vn.com.hugio.product.dto.CategoryDto;
 import vn.com.hugio.product.entity.Category;
 import vn.com.hugio.product.entity.repository.CategoryRepository;
+import vn.com.hugio.product.mapper.CategoryMapper;
 import vn.com.hugio.product.request.CreateCategoryRequest;
 import vn.com.hugio.product.request.EditCategoryRequest;
 import vn.com.hugio.product.service.CategoryService;
@@ -19,8 +25,12 @@ import java.util.UUID;
 @Transactional(rollbackFor = {InternalServiceException.class, RuntimeException.class, Exception.class, Throwable.class})
 public class CategoryServiceImpl extends BaseService<Category, CategoryRepository> implements CategoryService {
 
-    public CategoryServiceImpl(CategoryRepository repository) {
+    private final CategoryMapper categoryMapper;
+
+    public CategoryServiceImpl(CategoryRepository repository,
+                               CategoryMapper categoryMapper) {
         super(repository);
+        this.categoryMapper = categoryMapper;
     }
 
     @Override
@@ -47,5 +57,11 @@ public class CategoryServiceImpl extends BaseService<Category, CategoryRepositor
     @Override
     public List<Category> getCategoryByNameOrUid(List<String> input) {
         return this.repository.findByCategoryNameInOrCategoryUidIn(input, input);
+    }
+
+    @Override
+    public PageResponse<CategoryDto> getCategory(PagableRequest input) {
+        Page<Category> categoryPage = this.repository.findByActiveIsTrue(PageLink.create(input).toPageable());
+        return PageResponse.create(categoryPage, categoryMapper::categoryEntityToDto, true);
     }
 }

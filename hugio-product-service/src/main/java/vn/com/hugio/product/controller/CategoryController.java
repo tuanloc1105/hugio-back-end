@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.com.hugio.common.object.RequestType;
 import vn.com.hugio.common.object.ResponseType;
+import vn.com.hugio.common.pagable.PagableRequest;
+import vn.com.hugio.common.pagable.PageResponse;
+import vn.com.hugio.product.dto.CategoryDto;
 import vn.com.hugio.product.request.CreateCategoryRequest;
 import vn.com.hugio.product.service.CategoryService;
 
@@ -26,9 +29,8 @@ public class CategoryController {
     }
 
     @PostMapping("/all")
-    public ResponseType<String> getCategory(@RequestBody RequestType<CreateCategoryRequest> request) {
-        this.categoryService.create(request.getRequest());
-        return ResponseType.ok("ok");
+    public ResponseType<PageResponse<CategoryDto>> getCategory(@RequestBody RequestType<PagableRequest> request) {
+        return ResponseType.ok(this.categoryService.getCategory(request.getRequest()));
     }
 
 }

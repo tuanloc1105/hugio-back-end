@@ -17,6 +17,7 @@ import vn.com.hugio.product.entity.ProductCategory;
 import vn.com.hugio.product.entity.repository.ProductRepository;
 import vn.com.hugio.product.mapper.ProductMapper;
 import vn.com.hugio.product.request.CreateProductRequest;
+import vn.com.hugio.product.request.DeleteProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.product.service.CategoryService;
@@ -122,5 +123,14 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         //        .map(productMapper::productEntityToProductDto)
         //        .toList();
         return PageResponse.create(products, productMapper::productEntityToProductDto, true);
+    }
+
+    @Override
+    public void removeProduct(DeleteProductRequest request) {
+        if (request.getIsPermanent()) {
+            this.repository.deleteByProductUid(request.getProductId());
+        } else {
+
+        }
     }
 }

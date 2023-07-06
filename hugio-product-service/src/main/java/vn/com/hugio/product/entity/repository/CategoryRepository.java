@@ -1,5 +1,7 @@
 package vn.com.hugio.product.entity.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import vn.com.hugio.common.entity.repository.BaseRepository;
 import vn.com.hugio.product.entity.Category;
 
@@ -13,5 +15,7 @@ public interface CategoryRepository extends BaseRepository<Category> {
     Optional<Category> findByCategoryUid(String categoryUid);
 
     List<Category> findByCategoryNameInOrCategoryUidIn(List<String> id, List<String> name);
+
+    Page<Category> findByActiveIsTrue(Pageable pageable);
 
 }
