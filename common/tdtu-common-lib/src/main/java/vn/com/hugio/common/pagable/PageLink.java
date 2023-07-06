@@ -57,6 +57,12 @@ public class PageLink {
         this.sortOrder = null;
     }
 
+    public PageLink(PagableRequest pagableRequest) {
+        this.pageSize = pagableRequest.getPageSize() != null ? pagableRequest.getPageSize() : DEFAULT_PAGE_SIZE;
+        this.page = pagableRequest.getPageNumber() != null ? pagableRequest.getPageNumber() : DEFAULT_PAGE;
+        this.sortOrder = new SortOrder(pagableRequest.getProperty(), pagableRequest.getSort());
+    }
+
     public static PageLink create(Integer pageSize, Integer page, SortOrder sortOrder) {
         return new PageLink(pageSize, page, sortOrder);
     }
@@ -71,6 +77,10 @@ public class PageLink {
 
     public static PageLink create(Integer pageSize, Integer page) {
         return new PageLink(pageSize, page);
+    }
+
+    public static PageLink create(PagableRequest pagableRequest) {
+        return new PageLink(pagableRequest);
     }
 
     public Pageable toPageable() {

@@ -1,4 +1,4 @@
-package vn.com.hugio.product.request;
+package vn.com.hugio.common.pagable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import vn.com.hugio.common.pagable.Direction;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetProductRequest {
+public class PagableRequest {
 
     @JsonProperty("page_number")
     @FieldGreaterThan(value = 0D)
@@ -16,6 +16,9 @@ public class GetProductRequest {
 
     @JsonProperty("page_size")
     private Integer pageSize;
+
+    @JsonProperty("property")
+    private String property;
 
     @JsonProperty("sort")
     private Direction sort;
@@ -42,5 +45,13 @@ public class GetProductRequest {
 
     public void setSort(Direction sort) {
         this.sort = sort;
+    }
+
+    public String getProperty() {
+        return property;
+    }
+
+    public void setProperty(String property) {
+        this.property = property;
     }
 }

@@ -25,4 +25,10 @@ public class CategoryController {
         return ResponseType.ok("ok");
     }
 
+    @PostMapping("/all")
+    public ResponseType<String> getCategory(@RequestBody RequestType<CreateCategoryRequest> request) {
+        this.categoryService.create(request.getRequest());
+        return ResponseType.ok("ok");
+    }
+
 }

@@ -12,7 +12,7 @@ import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.product.dto.ProductDto;
 import vn.com.hugio.product.request.CreateProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
-import vn.com.hugio.product.request.GetProductRequest;
+import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.product.service.ProductService;
 
 @RestController
@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @PostMapping("/all")
-    public ResponseType<PageResponse<ProductDto>> getAllProduct(@RequestBody RequestType<GetProductRequest> request) {
+    public ResponseType<PageResponse<ProductDto>> getAllProduct(@RequestBody RequestType<PagableRequest> request) {
         return ResponseType.ok(this.productService.getAllProduct(request.getRequest()));
     }
 

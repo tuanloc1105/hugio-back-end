@@ -18,7 +18,7 @@ import vn.com.hugio.product.entity.repository.ProductRepository;
 import vn.com.hugio.product.mapper.ProductMapper;
 import vn.com.hugio.product.request.CreateProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
-import vn.com.hugio.product.request.GetProductRequest;
+import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.product.service.CategoryService;
 import vn.com.hugio.product.service.ProductDetailService;
 import vn.com.hugio.product.service.ProductService;
@@ -115,12 +115,12 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     }
 
     @Override
-    public PageResponse<ProductDto> getAllProduct(GetProductRequest request) {
+    public PageResponse<ProductDto> getAllProduct(PagableRequest request) {
         PageLink pageLink = PageLink.create(request.getPageSize(), request.getPageNumber(), request.getSort());
         Page<Product> products = this.repository.findByActiveIsTrue(pageLink.toPageable());
         //List<ProductDto> dtos = products.stream()
         //        .map(productMapper::productEntityToProductDto)
         //        .toList();
-        return PageResponse.create(products, productMapper::productEntityToProductDto);
+        return PageResponse.create(products, productMapper::productEntityToProductDto, true);
     }
 }
