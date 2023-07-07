@@ -67,7 +67,7 @@ public class FilterUtil {
 
     public void returnErrorResponse(ServletResponse servletResponse, Throwable e) {
         try {
-            LOG.error(ExceptionStackTraceUtil.getStackTrace(e));
+            LOG.error("\n" + ExceptionStackTraceUtil.getStackTrace(e));
             String message;
             Optional<Throwable> t = Optional.ofNullable(e.getCause());
             if (t.isEmpty()) {

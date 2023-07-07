@@ -9,6 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.object.ResponseType;
+import vn.com.hugio.common.utils.ExceptionStackTraceUtil;
 import vn.com.hugio.common.utils.ObjectUtil;
 
 @RestControllerAdvice
@@ -16,11 +17,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {InternalServiceException.class})
     public ResponseEntity<Object> handleException(InternalServiceException ex, WebRequest request) {
-        String message = ObjectUtil.isNullOrEmpty(ex.getMessage()) ? "Null pointer exception" : ex.getMessage();
-        LOG.error(
-                "[EXCEPTION] %s",
-                message
-        );
+        LOG.error("\n" + ExceptionStackTraceUtil.getStackTrace(ex));
         return ResponseEntity.ok(
                 ResponseType.builder()
                         .code(ex.getCode())
@@ -32,10 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
         String message = ObjectUtil.isNullOrEmpty(ex.getMessage()) ? "Unknown error" : ex.getMessage();
-        LOG.error(
-                "[EXCEPTION] {}",
-                message
-        );
+        LOG.error("\n" + ExceptionStackTraceUtil.getStackTrace(ex));
         return ResponseEntity.ok(
                 ResponseType.builder()
                         .code(statusCode.value())
