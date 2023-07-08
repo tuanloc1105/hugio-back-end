@@ -28,9 +28,9 @@ pipeline {
                     dir ("hugio-auth-service") {
                         authDockerTag = dockerImage + 'auth_' + now
                         sshagent(credentials: ['ae403-ssh']) {
-                            sh 'scp -r ./helm_chart ae403@192.168.1.22:/home/ae403/hugio/auth_service'
-                            sh 'scp -r ./target ae403@192.168.1.22:/home/ae403/hugio/auth_service'
-                            sh 'scp Dockerfile ae403@192.168.1.22:/home/ae403/hugio/auth_service'
+                            sh 'scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@192.168.1.22:/home/ae403/hugio/auth_service'
+                            sh 'scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:/home/ae403/hugio/auth_service'
+                            sh 'scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@192.168.1.22:/home/ae403/hugio/auth_service'
                         }
                     }
                 }
