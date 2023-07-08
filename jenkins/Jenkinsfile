@@ -1,6 +1,7 @@
-def artifactId = ""
-def dockerImage = ""
-def dockerTag = "latest"
+def dockerImage = "tuanloc/hugio"
+def authDockerTag = ""
+def userDockerTag = ""
+def productDockerTag = ""
 def userIdCause = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')
 def now = (new Date()).format("yyMMddHHmmss", TimeZone.getTimeZone('Asia/Ho_Chi_Minh'))
 
@@ -11,17 +12,29 @@ pipeline {
         jdk "17"
     }
     environment {
-        DOCKER_REGISTRY = '091976145410.dkr.ecr.ap-southeast-1.amazonaws.com'
-        K8S_NAMESPACE = 'omni-cib'
-        K8S_CONTEXT = 'arn:aws:eks:ap-southeast-1:091976145410:cluster/nb-eks-dev'
-        AWS_REGION = 'ap-southeast-1'
+        K8S_NAMESPACE = 'hugio'
     }
     stages {
         stage('Build') {
             steps {
                 script {
-                    sh 'java -version'
                     sh 'mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml'
+                }
+            }
+        }
+    }
+    stages {
+        stage('Copy source') {
+            steps {
+                script {
+                    dir ("hugio-auth-service") {
+                        authDockerTag = dockerImage + 'auth_' + now
+                        sshagent(credentials: ['ae403-ssh']) {
+                            sh 'scp -r ./helm_chart ae403:192.168.1.22:/home/ae403/hugio/auth_service'
+                            sh 'scp -r ./target ae403:192.168.1.22:/home/ae403/hugio/auth_service'
+                            sh 'scp Dockerfile ae403:192.168.1.22:/home/ae403/hugio/auth_service'
+                        }
+                    }
                 }
             }
         }
