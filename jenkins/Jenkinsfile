@@ -7,8 +7,8 @@ def now = (new Date()).format("yyMMddHHmmss", TimeZone.getTimeZone('Asia/Ho_Chi_
 pipeline {
     agent any
     tools {
-        maven "mvn-3.9.3"
-        jdk "jdk17"
+        //maven "mvn-3.9.3"
+        //jdk "jdk17"
     }
     environment {
         DOCKER_REGISTRY = '091976145410.dkr.ecr.ap-southeast-1.amazonaws.com'
