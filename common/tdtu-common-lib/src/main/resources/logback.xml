@@ -80,7 +80,7 @@
     <logger name="vn.com" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
         <!--        <appender-ref ref="FILE-AUDIT"/>-->
-        <appender-ref ref="logstash"/>
+        <!--        <appender-ref ref="logstash"/>-->
     </logger>
 
 </configuration>
