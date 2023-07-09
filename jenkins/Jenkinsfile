@@ -27,12 +27,10 @@ pipeline {
                 script {
                     dir ("hugio-auth-service") {
                         authDockerTag = dockerImage + 'auth_' + now
-                        sshagent(credentials: ['ae403']) {
-                            sh 'ssh ae403@1.tcp.ap.ngrok.io -p 21919 "mkdir -p /home/ae403/hugio/auth_service"'
-                            sh 'scp -P 21919 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@1.tcp.ap.ngrok.io:/home/ae403/hugio/auth_service'
-                            sh 'scp -P 21919 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@1.tcp.ap.ngrok.io:/home/ae403/hugio/auth_service'
-                            sh 'scp -P 21919 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@1.tcp.ap.ngrok.io:/home/ae403/hugio/auth_service'
-                        }
+                        sh 'ssh -i /var/jenkins_home/.ssh/jenkins ae403@1.tcp.ap.ngrok.io -p 21919 "mkdir -p /home/ae403/hugio/auth_service"'
+                        sh 'scp -P 21919 -i /var/jenkins_home/.ssh/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@1.tcp.ap.ngrok.io:/home/ae403/hugio/auth_service'
+                        sh 'scp -P 21919 -i /var/jenkins_home/.ssh/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@1.tcp.ap.ngrok.io:/home/ae403/hugio/auth_service'
+                        sh 'scp -P 21919 -i /var/jenkins_home/.ssh/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@1.tcp.ap.ngrok.io:/home/ae403/hugio/auth_service'
                     }
                 }
             }
