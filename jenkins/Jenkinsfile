@@ -2,6 +2,9 @@ def dockerImage = "tuanloc/hugio"
 def authDockerTag = ""
 def userDockerTag = ""
 def productDockerTag = ""
+def authProjectId = ""
+def userProjectId = ""
+def productProjectId = ""
 def userIdCause = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')
 def now = (new Date()).format("yyMMddHHmmss", TimeZone.getTimeZone('Asia/Ho_Chi_Minh'))
 
@@ -26,21 +29,24 @@ pipeline {
             steps {
                 script {
                     dir ("hugio-auth-service") {
-                        authDockerTag = dockerImage + 'auth_' + now
+                        authProjectId = sh script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true
+                        authDockerTag = authProjectId.replace("-", "_") + '_' + now
                         sh 'ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 "mkdir -p /home/ae403/hugio/auth_service"'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@192.168.1.22:/home/ae403/hugio/auth_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:/home/ae403/hugio/auth_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@192.168.1.22:/home/ae403/hugio/auth_service'
                     }
                     dir ("hugio-user-service") {
-                        userDockerTag = dockerImage + 'user_' + now
+                        userProjectId = sh script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true
+                        userDockerTag = userProjectId.replace("-", "_") + '_' + now
                         sh 'ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 "mkdir -p /home/ae403/hugio/user_service"'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@192.168.1.22:/home/ae403/hugio/user_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:/home/ae403/hugio/user_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@192.168.1.22:/home/ae403/hugio/user_service'
                     }
                     dir ("hugio-product-service") {
-                        productDockerTag = dockerImage + 'product_' + now
+                        productProjectId = sh script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true
+                        productDockerTag = productProjectId.replace("-", "_") + '_' + now
                         sh 'ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 "mkdir -p /home/ae403/hugio/product_service"'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@192.168.1.22:/home/ae403/hugio/product_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:/home/ae403/hugio/product_service'
@@ -52,7 +58,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/auth_service && docker build . -t ${authDockerTag}\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/auth_service && docker build . -t ${dockerImage}:${authDockerTag} && docker push ${dockerImage}:${authDockerTag} && docker rmi ${dockerImage}:${authDockerTag} && upgrade -i --set image.name=$auth,image.tag=$tag -n hugio auth-service ./helm_chart\""
                 }
             }
         }
