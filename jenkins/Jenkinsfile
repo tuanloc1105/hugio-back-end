@@ -32,7 +32,7 @@ pipeline {
                         authProjectId = sh script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true
                         authDockerTag = authProjectId.replace("-", "_") + '_' + now
                         sh 'ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 "mkdir -p /home/ae403/hugio/auth_service"'
-                        sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@192.168.1.22:/home/ae403/hugio/auth_service'
+                        sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./_chart ae403@192.168.1.22:/home/ae403/hugio/auth_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:/home/ae403/hugio/auth_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@192.168.1.22:/home/ae403/hugio/auth_service'
                     }
@@ -40,7 +40,7 @@ pipeline {
                         userProjectId = sh script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true
                         userDockerTag = userProjectId.replace("-", "_") + '_' + now
                         sh 'ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 "mkdir -p /home/ae403/hugio/user_service"'
-                        sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@192.168.1.22:/home/ae403/hugio/user_service'
+                        sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./_chart ae403@192.168.1.22:/home/ae403/hugio/user_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:/home/ae403/hugio/user_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@192.168.1.22:/home/ae403/hugio/user_service'
                     }
@@ -48,7 +48,7 @@ pipeline {
                         productProjectId = sh script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true
                         productDockerTag = productProjectId.replace("-", "_") + '_' + now
                         sh 'ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 "mkdir -p /home/ae403/hugio/product_service"'
-                        sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@192.168.1.22:/home/ae403/hugio/product_service'
+                        sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./_chart ae403@192.168.1.22:/home/ae403/hugio/product_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:/home/ae403/hugio/product_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@192.168.1.22:/home/ae403/hugio/product_service'
                     }
@@ -58,9 +58,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/auth_service && docker build . -t ${dockerImage}:${authDockerTag} && docker push ${dockerImage}:${authDockerTag} && docker rmi ${dockerImage}:${authDockerTag} && helm upgrade -i --set image.name=${dockerImage},image.tag=${authDockerTag} -n ${K8S_NAMESPACE} ${authProjectId} ./helm_chart\""
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/user_service && docker build . -t ${dockerImage}:${userDockerTag} && docker push ${dockerImage}:${userDockerTag} && docker rmi ${dockerImage}:${userDockerTag} && helm upgrade -i --set image.name=${dockerImage},image.tag=${userDockerTag} -n ${K8S_NAMESPACE} ${userProjectId} ./helm_chart\""
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/product_service && docker build . -t ${dockerImage}:${productDockerTag} && docker push ${dockerImage}:${productDockerTag} && docker rmi ${dockerImage}:${productDockerTag} && helm upgrade -i --set image.name=${dockerImage},image.tag=${productDockerTag} -n ${K8S_NAMESPACE} ${productProjectId} ./helm_chart\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/auth_service && docker build . -t ${dockerImage}:${authDockerTag} && docker push ${dockerImage}:${authDockerTag} && docker rmi ${dockerImage}:${authDockerTag} &&  upgrade -i --set image.name=${dockerImage},image.tag=${authDockerTag} -n ${K8S_NAMESPACE} ${authProjectId} ./_chart\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/user_service && docker build . -t ${dockerImage}:${userDockerTag} && docker push ${dockerImage}:${userDockerTag} && docker rmi ${dockerImage}:${userDockerTag} &&  upgrade -i --set image.name=${dockerImage},image.tag=${userDockerTag} -n ${K8S_NAMESPACE} ${userProjectId} ./_chart\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/product_service && docker build . -t ${dockerImage}:${productDockerTag} && docker push ${dockerImage}:${productDockerTag} && docker rmi ${dockerImage}:${productDockerTag} &&  upgrade -i --set image.name=${dockerImage},image.tag=${productDockerTag} -n ${K8S_NAMESPACE} ${productProjectId} ./_chart\""
                 }
             }
         }
