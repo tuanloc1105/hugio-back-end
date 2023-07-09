@@ -62,7 +62,7 @@ public class FilterUtil {
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,PUT,DELETE,OPTIONS");
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Max-Age", "3600");
         //((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization,Content-Length,X-Requested-With,credential,X-XSRF-TOKEN,Access-Control-Allow-Headers: Origin,Content-Type,X-Auth-Token");
-        ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,Authorization");
+        ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Headers", "Origin,Content-Type,Accept,Authorization");
     }
 
     public void returnErrorResponse(ServletResponse servletResponse, Throwable e) {
