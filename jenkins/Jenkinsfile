@@ -1,4 +1,4 @@
-def dockerImage = "tuanloc/hugio"
+def dockerImage = "localhost:6000/tuanloc/hugio"
 def authDockerTag = ""
 def userDockerTag = ""
 def productDockerTag = ""
