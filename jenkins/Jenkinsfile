@@ -22,7 +22,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy auth service') {
+        stage('Copy source') {
             steps {
                 script {
                     dir ("hugio-auth-service") {
@@ -32,12 +32,6 @@ pipeline {
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:/home/ae403/hugio/auth_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@192.168.1.22:/home/ae403/hugio/auth_service'
                     }
-                }
-            }
-        }
-        stage('Deploy user service') {
-            steps {
-                script {
                     dir ("hugio-user-service") {
                         userDockerTag = dockerImage + 'user_' + now
                         sh 'ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 "mkdir -p /home/ae403/hugio/user_service"'
@@ -45,12 +39,6 @@ pipeline {
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:/home/ae403/hugio/user_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@192.168.1.22:/home/ae403/hugio/user_service'
                     }
-                }
-            }
-        }
-        stage('Deploy product service') {
-            steps {
-                script {
                     dir ("hugio-product-service") {
                         productDockerTag = dockerImage + 'product_' + now
                         sh 'ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 "mkdir -p /home/ae403/hugio/product_service"'
@@ -58,6 +46,13 @@ pipeline {
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:/home/ae403/hugio/product_service'
                         sh 'scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no Dockerfile ae403@192.168.1.22:/home/ae403/hugio/product_service'
                     }
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    sh 'ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 "cd /home/ae403/hugio/auth_service && docker build . -t ${authDockerTag}"'
                 }
             }
         }
