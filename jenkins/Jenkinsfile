@@ -52,7 +52,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 "cd /home/ae403/hugio/auth_service && docker build . -t ${authDockerTag}"'
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/auth_service && docker build . -t ${authDockerTag}\""
                 }
             }
         }
