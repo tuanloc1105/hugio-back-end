@@ -16,7 +16,7 @@ pipeline {
     //    disableConcurrentBuilds()
     //}
     // as a step in a scripted pipeline
-    properties([disableConcurrentBuilds(abortPrevious: true)])
+    //properties([disableConcurrentBuilds(abortPrevious: true)])
     // as a directive in a declarative pipeline
     options { disableConcurrentBuilds abortPrevious: true }
     tools {
