@@ -1,4 +1,5 @@
-def dockerImage = "localhost:6000/hugio"
+def dockerImageForPush = "localhost:6000/hugio"
+def dockerImageForHelm = "registry:5000/hugio"
 def authDockerTag = ""
 def userDockerTag = ""
 def productDockerTag = ""
@@ -67,9 +68,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/auth_service && docker build . -t ${dockerImage}:${authDockerTag} && docker push ${dockerImage}:${authDockerTag} && docker rmi ${dockerImage}:${authDockerTag} && helm upgrade -i --set image.name=${dockerImage},image.tag=${authDockerTag} -n ${K8S_NAMESPACE} ${authProjectId} ./helm_chart\""
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/user_service && docker build . -t ${dockerImage}:${userDockerTag} && docker push ${dockerImage}:${userDockerTag} && docker rmi ${dockerImage}:${userDockerTag} && helm upgrade -i --set image.name=${dockerImage},image.tag=${userDockerTag} -n ${K8S_NAMESPACE} ${userProjectId} ./helm_chart\""
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/product_service && docker build . -t ${dockerImage}:${productDockerTag} && docker push ${dockerImage}:${productDockerTag} && docker rmi ${dockerImage}:${productDockerTag} && helm upgrade -i --set image.name=${dockerImage},image.tag=${productDockerTag} -n ${K8S_NAMESPACE} ${productProjectId} ./helm_chart\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/auth_service && docker build . -t ${dockerImageForPush}:${authDockerTag} && docker push ${dockerImageForPush}:${authDockerTag} && docker rmi ${dockerImageForPush}:${authDockerTag} && helm upgrade -i --set image.name=${dockerImageForHelm},image.tag=${authDockerTag} -n ${K8S_NAMESPACE} ${authProjectId} ./helm_chart\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/user_service && docker build . -t ${dockerImageForPush}:${userDockerTag} && docker push ${dockerImageForPush}:${userDockerTag} && docker rmi ${dockerImageForPush}:${userDockerTag} && helm upgrade -i --set image.name=${dockerImageForHelm},image.tag=${userDockerTag} -n ${K8S_NAMESPACE} ${userProjectId} ./helm_chart\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/product_service && docker build . -t ${dockerImageForPush}:${productDockerTag} && docker push ${dockerImageForPush}:${productDockerTag} && docker rmi ${dockerImageForPush}:${productDockerTag} && helm upgrade -i --set image.name=${dockerImageForHelm},image.tag=${productDockerTag} -n ${K8S_NAMESPACE} ${productProjectId} ./helm_chart\""
                 }
             }
         }
