@@ -21,6 +21,9 @@ public class ProductDetailServiceImpl extends BaseService<ProductDetail, Product
 
     @Override
     public void addOrSaveProductDetail(Product product, List<ProductDetailReqDto> reqDto) {
+        if (reqDto == null || reqDto.isEmpty()) {
+            return;
+        }
         reqDto.forEach(dto -> {
             ProductDetail productDetail = repository.findByProduct_IdAndKey(product.getId(), dto.getKey())
                     .orElse(
