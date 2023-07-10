@@ -10,6 +10,11 @@ def now = (new Date()).format("yyMMddHHmmss", TimeZone.getTimeZone('Asia/Ho_Chi_
 
 pipeline {
     agent any
+    options {
+        // Disallow concurrent executions of the Pipeline. Can be useful
+        // for preventing simultaneous accesses to shared resources, etc.
+        disableConcurrentBuilds()
+    }
     tools {
         maven "3.9.3"
         jdk "17"
