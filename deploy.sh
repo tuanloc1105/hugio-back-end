@@ -1,9 +1,9 @@
 #!/bin/bash
 
 tag=$(date -d "$b 0 min" "+%Y_%m_%d_%H_%M_%S")
-auth="tuanloc/auth-service"
-product="tuanloc/product-service"
-user="tuanloc/user-service"
+auth="d64217dc5e27.ngrok.app/auth-service"
+product="d64217dc5e27.ngrok.app/product-service"
+user="d64217dc5e27.ngrok.app/user-service"
 
 mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml
 
