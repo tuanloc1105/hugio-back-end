@@ -18,7 +18,7 @@ spec:
       containers:
         - name: auth-service
           image: tuanloc/hugio:auth-service
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent #Always
           ports:
             - containerPort: 8000
             - containerPort: 9000

@@ -18,7 +18,7 @@ spec:
       containers:
         - name: user-service
           image: tuanloc/hugio:user-service
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent #Always
           ports:
             - containerPort: 8010
             - containerPort: 9010
