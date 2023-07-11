@@ -12,7 +12,8 @@ cd hugio-auth-service
 echo "BUILD IMAGE"
 docker build . -t $auth:$tag
 echo "PUSH IMAGE"
-docker push $auth:$tag
+#docker push $auth:$tag
+kind load docker-image $auth:$tag
 echo "UPGRADE HELM"
 helm upgrade -i --set image.name=$auth,image.tag=$tag -n hugio auth-service ./helm_chart
 echo "REMOVE IMAGE"
@@ -24,7 +25,8 @@ cd hugio-product-service
 echo "BUILD IMAGE"
 docker build . -t $product:$tag
 echo "PUSH IMAGE"
-docker push $product:$tag
+#docker push $product:$tag
+kind load docker-image $product:$tag
 echo "UPGRADE HELM"
 helm upgrade -i --set image.name=$product,image.tag=$tag -n hugio product-service ./helm_chart
 echo "REMOVE IMAGE"
@@ -36,7 +38,8 @@ cd hugio-user-service
 echo "BUILD IMAGE"
 docker build . -t $user:$tag
 echo "PUSH IMAGE"
-docker push $user:$tag
+#docker push $user:$tag
+kind load docker-image $user:$tag
 echo "UPGRADE HELM"
 helm upgrade -i --set image.name=$user,image.tag=$tag -n hugio user-service ./helm_chart
 echo "REMOVE IMAGE"
