@@ -8,6 +8,7 @@
         <module>hugio-auth-service</module>
         <module>hugio-user-service</module>
         <module>hugio-product-service</module>
+        <module>hugio-inventory-service</module>
     </modules>
 
     <groupId>com.hugio</groupId>
