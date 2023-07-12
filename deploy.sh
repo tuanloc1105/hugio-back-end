@@ -1,9 +1,12 @@
 #!/bin/bash
 
+git fetch && git pull
+
 tag=$(date -d "$b 0 min" "+%Y_%m_%d_%H_%M_%S")
 auth="tuanloc/auth-service"
 product="tuanloc/product-service"
 user="tuanloc/user-service"
+k8s_replica=2
 
 mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml
 
@@ -15,7 +18,7 @@ echo "PUSH IMAGE"
 #docker push $auth:$tag
 kind load docker-image $auth:$tag
 echo "UPGRADE HELM"
-helm upgrade -i --set image.name=$auth,image.tag=$tag -n hugio auth-service ./helm_chart
+helm upgrade -i --set image.name=$auth,image.tag=$tag,replica=$k8s_replica -n hugio auth-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi $auth:$tag
 cd ..
@@ -28,7 +31,7 @@ echo "PUSH IMAGE"
 #docker push $product:$tag
 kind load docker-image $product:$tag
 echo "UPGRADE HELM"
-helm upgrade -i --set image.name=$product,image.tag=$tag -n hugio product-service ./helm_chart
+helm upgrade -i --set image.name=$product,image.tag=$tag,replica=$k8s_replica -n hugio product-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi $product:$tag
 cd ..
@@ -41,7 +44,7 @@ echo "PUSH IMAGE"
 #docker push $user:$tag
 kind load docker-image $user:$tag
 echo "UPGRADE HELM"
-helm upgrade -i --set image.name=$user,image.tag=$tag -n hugio user-service ./helm_chart
+helm upgrade -i --set image.name=$user,image.tag=$tag,replica=$k8s_replica -n hugio user-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi $user:$tag
 cd ..
