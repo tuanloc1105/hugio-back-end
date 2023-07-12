@@ -1,6 +1,6 @@
 package vn.com.hugio.common.exceptions;
 
-public enum ErrorCodeEnum {
+public enum ErrorCodeEnum implements ErrorCode {
     SUCCESS("Successful", 0),
     FAILURE("Failure", 1),
     SP_ERROR("Error in SP '%s' with resultCode = %s", 2),
@@ -47,4 +47,16 @@ public enum ErrorCodeEnum {
         return code;
     }
 
+    @Override
+    public String getErrorCode() {
+        return String.valueOf(code);
+    }
+
+    @Override
+    public String getErrorMessage(Object... param) {
+        if (param.length > 0) {
+            return String.format(message, param);
+        }
+        return message;
+    }
 }

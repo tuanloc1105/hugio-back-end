@@ -38,6 +38,12 @@ public class InternalServiceException extends RuntimeException {
         this.codeMessage = codeMessage;
     }
 
+    public InternalServiceException(ErrorCode errorCode, Object... param) {
+        super(errorCode.getErrorMessage(param));
+        this.code = errorCode.getErrorCode();
+        this.codeMessage = errorCode.getErrorMessage(param);
+    }
+
     public InternalServiceException(Exception e) {
         super(e);
         this.code = "-1";
