@@ -31,6 +31,7 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
         this.modelMapper = modelMapper;
     }
 
+    @Override
     public void create(InventoryRequest request) {
         Optional<ProductInventory> optionalProductInventory = this.repository.findByProductUid(request.getProductUid());
         if (optionalProductInventory.isPresent()) {
