@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Service
-@Transactional(rollbackFor = {Exception.class, Throwable.class, RuntimeException.class})
+@Transactional(rollbackFor = {Exception.class, Throwable.class, RuntimeException.class, Error.class})
 public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> implements UserService {
 
     private final AuthServiceGrpcClient authServiceGrpcClient;

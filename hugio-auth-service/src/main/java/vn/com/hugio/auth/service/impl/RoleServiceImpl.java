@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackOn = {Exception.class, Throwable.class, RuntimeException.class})
+@Transactional(rollbackOn = {Exception.class, Throwable.class, RuntimeException.class, Error.class})
 public class RoleServiceImpl extends BaseService<Role, RoleRepo> implements RoleService {
 
     private final RoleMapper roleMapper;

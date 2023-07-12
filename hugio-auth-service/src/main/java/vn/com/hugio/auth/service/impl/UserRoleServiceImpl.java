@@ -9,7 +9,7 @@ import vn.com.hugio.auth.service.UserRoleService;
 import vn.com.hugio.common.service.BaseService;
 
 @Service
-@Transactional(rollbackFor = {Exception.class, Throwable.class, RuntimeException.class})
+@Transactional(rollbackFor = {Exception.class, Throwable.class, RuntimeException.class, Error.class})
 public class UserRoleServiceImpl extends BaseService<UserRole, UserRoleRepo> implements UserRoleService {
 
     @Autowired

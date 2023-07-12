@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional(rollbackFor = {Exception.class, Throwable.class, RuntimeException.class})
+@Transactional(rollbackFor = {Exception.class, Throwable.class, RuntimeException.class, Error.class})
 public class AuthServiceImpl extends BaseService<User, UserRepo> implements AuthService {
 
     private final UserMapper userMapper;
