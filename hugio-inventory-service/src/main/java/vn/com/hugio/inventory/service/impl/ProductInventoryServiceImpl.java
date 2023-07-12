@@ -47,4 +47,14 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
         inventoryLog.setBehaviour(ImportBehaviour.CREATE);
         inventoryLogService.create(inventoryLog);
     }
+
+    @Override
+    public void add(InventoryRequest request) {
+        ProductInventory productInventory = this.repository.findByProductUid(request.getProductUid()).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
+
+        this.save(productInventory);
+        InventoryLog inventoryLog = this.modelMapper.map(request, InventoryLog.class);
+        inventoryLog.setBehaviour(ImportBehaviour.CREATE);
+        inventoryLogService.create(inventoryLog);
+    }
 }
