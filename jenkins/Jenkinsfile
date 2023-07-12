@@ -27,6 +27,7 @@ pipeline {
     }
     environment {
         K8S_NAMESPACE = 'hugio'
+        K8S_REPLICA = 2
     }
     stages {
         stage('Build') {
@@ -72,21 +73,21 @@ pipeline {
         stage('Deploy auth service') {
             steps {
                 script {
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/auth_service && docker build . -t ${authDockerImage}:${authDockerTag} && kind load docker-image ${authDockerImage}:${authDockerTag} && docker rmi ${authDockerImage}:${authDockerTag}  && helm upgrade -i --set image.name=${authDockerImage},image.tag=${authDockerTag} -n ${K8S_NAMESPACE} ${authProjectId} ./helm_chart\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/auth_service && docker build . -t ${authDockerImage}:${authDockerTag} && kind load docker-image ${authDockerImage}:${authDockerTag} && docker rmi ${authDockerImage}:${authDockerTag}  && helm upgrade -i --set image.name=${authDockerImage},image.tag=${authDockerTag},replica=${K8S_REPLICA} -n ${K8S_NAMESPACE} ${authProjectId} ./helm_chart\""
                 }
             }
         }
         stage('Deploy user service') {
             steps {
                 script {
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/user_service && docker build . -t ${userDockerImage}:${userDockerTag} && kind load docker-image ${userDockerImage}:${userDockerTag} && docker rmi ${userDockerImage}:${userDockerTag}  && helm upgrade -i --set image.name=${userDockerImage},image.tag=${userDockerTag} -n ${K8S_NAMESPACE} ${userProjectId} ./helm_chart\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/user_service && docker build . -t ${userDockerImage}:${userDockerTag} && kind load docker-image ${userDockerImage}:${userDockerTag} && docker rmi ${userDockerImage}:${userDockerTag}  && helm upgrade -i --set image.name=${userDockerImage},image.tag=${userDockerTag},replica=${K8S_REPLICA} -n ${K8S_NAMESPACE} ${userProjectId} ./helm_chart\""
                 }
             }
         }
         stage('Deploy product service') {
             steps {
                 script {
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/product_service && docker build . -t ${productDockerImage}:${productDockerTag} && kind load docker-image ${productDockerImage}:${productDockerTag} && docker rmi ${productDockerImage}:${productDockerTag}  && helm upgrade -i --set image.name=${productDockerImage},image.tag=${productDockerTag} -n ${K8S_NAMESPACE} ${productProjectId} ./helm_chart\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd /home/ae403/hugio/product_service && docker build . -t ${productDockerImage}:${productDockerTag} && kind load docker-image ${productDockerImage}:${productDockerTag} && docker rmi ${productDockerImage}:${productDockerTag}  && helm upgrade -i --set image.name=${productDockerImage},image.tag=${productDockerTag},replica=${K8S_REPLICA} -n ${K8S_NAMESPACE} ${productProjectId} ./helm_chart\""
                 }
             }
         }
