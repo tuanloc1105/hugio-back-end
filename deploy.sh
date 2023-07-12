@@ -1,12 +1,10 @@
 #!/bin/bash
 
-git fetch && git pull
-
 tag=$(date -d "$b 0 min" "+%Y_%m_%d_%H_%M_%S")
 auth="tuanloc/auth-service"
 product="tuanloc/product-service"
 user="tuanloc/user-service"
-k8s_replica=2
+k8s_replica=1
 
 mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml
 
