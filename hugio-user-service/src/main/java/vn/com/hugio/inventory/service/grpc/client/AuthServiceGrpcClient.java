@@ -1,6 +1,8 @@
 package vn.com.hugio.inventory.service.grpc.client;
 
 import io.grpc.ManagedChannel;
+import io.grpc.Metadata;
+import io.grpc.stub.MetadataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -50,7 +52,12 @@ public class AuthServiceGrpcClient {
                 .setTrace(traceTypeGRPC)
                 .setRequest(tokenInput)
                 .build();
+        //Metadata header = new Metadata();
+        //Metadata.Key<String> key =
+        //        Metadata.Key.of("Grps-Matches-Key", Metadata.ASCII_STRING_MARSHALLER);
+        //header.put(key, "match.items");
         UserServiceGrpc.UserServiceBlockingStub blockingStub = UserServiceGrpc.newBlockingStub(authManagedChannel);
+        //blockingStub.withInterceptors(MetadataUtils.newAttachHeadersInterceptor(header));
         ResponseTypeUserInfo responseType = blockingStub.findUserByToken(requestTypeUserTokenInput);
         LOG.info("RETRIEVE A GRPC MESSAGE");
         if (
