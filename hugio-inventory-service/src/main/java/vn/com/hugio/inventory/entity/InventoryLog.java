@@ -30,7 +30,7 @@ public class InventoryLog extends BaseEntity {
     private Long importedQuantity;
 
     @Column(name = "IMPORTED_BY")
-    private Long importedBy;
+    private String importedBy;
 
     @Column(name = "NOTE")
     private String note;

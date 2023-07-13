@@ -5,5 +5,7 @@ import vn.com.hugio.inventory.request.InventoryRequest;
 public interface ProductInventoryService {
     void create(InventoryRequest request);
 
-    void add(InventoryRequest request);
+    void importProduct(InventoryRequest request);
+
+    void updateProduct(InventoryRequest request);
 }

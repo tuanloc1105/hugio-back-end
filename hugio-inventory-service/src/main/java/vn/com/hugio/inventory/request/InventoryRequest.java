@@ -12,7 +12,7 @@ public class InventoryRequest {
     private String productUid;
     private String importedFrom;
     private Long importedQuantity;
-    private Long importedBy;
+    private String importedBy;
     private String note;
 
 }

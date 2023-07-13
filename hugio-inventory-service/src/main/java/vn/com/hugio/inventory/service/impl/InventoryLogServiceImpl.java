@@ -13,7 +13,7 @@ public class InventoryLogServiceImpl extends BaseService<InventoryLog, Inventory
     }
 
     @Override
-    public void create(InventoryLog inventoryLog) {
+    public void saveEntity(InventoryLog inventoryLog) {
         this.save(inventoryLog);
     }
 }
