@@ -19,7 +19,7 @@ public class GrpcUtil {
     public static void getTraceId(TraceTypeGRPC traceTypeGRPC) {
         if (
                 !(StringUtils.hasText(traceTypeGRPC.getCid()))
-                        && !(StringUtils.hasText(traceTypeGRPC.getSid()))
+                        || !(StringUtils.hasText(traceTypeGRPC.getSid()))
         ) {
             throw new RuntimeException("trace.cid and trace.sid is required");
         }

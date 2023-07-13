@@ -1,0 +1,31 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package vn.com.hugio.grpc.inventory;
+import "common.proto";
+
+service InventoryService {
+  rpc create (RequestTypeInventoryRequest) returns (ResponseTypeVoid) {}
+  rpc importProduct (RequestTypeInventoryRequest) returns (ResponseTypeVoid) {}
+  rpc updateProduct (RequestTypeInventoryRequest) returns (ResponseTypeVoid) {}
+}
+
+message InventoryRequest {
+  string productUid = 1;
+  string importedFrom = 2;
+  int64 importedQuantity = 3;
+  string importedBy = 4;
+  string note = 5;
+}
+
+message RequestTypeInventoryRequest {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  oneof input {
+    InventoryRequest request = 4;
+  }
+}
+
+message ResponseTypeVoid {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  string code = 2;
+  string message = 3;
+}

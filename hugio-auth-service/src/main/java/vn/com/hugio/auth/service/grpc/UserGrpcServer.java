@@ -25,7 +25,7 @@ import vn.com.hugio.proto.utils.GrpcUtil;
 
 @GrpcService
 @RequiredArgsConstructor
-public class UserGrpcService extends UserServiceGrpc.UserServiceImplBase {
+public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
 
     private final AuthService authService;
     private final UserMapper userMapper;
