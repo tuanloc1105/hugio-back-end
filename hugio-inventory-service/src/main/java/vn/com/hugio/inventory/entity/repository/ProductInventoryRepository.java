@@ -1,7 +1,7 @@
-package vn.com.hugio.inventory.entiry.repository;
+package vn.com.hugio.inventory.entity.repository;
 
 import vn.com.hugio.common.entity.repository.BaseRepository;
-import vn.com.hugio.inventory.entiry.ProductInventory;
+import vn.com.hugio.inventory.entity.ProductInventory;
 
 import java.util.Optional;
 

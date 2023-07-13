@@ -1,4 +1,4 @@
-package vn.com.hugio.inventory.entiry;
+package vn.com.hugio.inventory.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
