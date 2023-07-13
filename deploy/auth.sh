@@ -9,7 +9,6 @@ k8s_replica=1
 mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml
 
 echo "================================== $image:$tag =================================="
-cd hugio-auth-service
 echo "BUILD IMAGE"
 docker build . -t $image:$tag
 echo "PUSH IMAGE"
