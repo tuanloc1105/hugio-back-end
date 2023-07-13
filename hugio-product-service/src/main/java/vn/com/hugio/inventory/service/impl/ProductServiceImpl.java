@@ -117,6 +117,20 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
             LOG.info("UPDATE PRODUCT DETAIL", request.getName());
             this.productDetailService.addOrSaveProductDetail(product, request.getDetails());
         }
+        if (request.getCategory() != null && !(request.getCategory().isEmpty())) {
+            LOG.info("UPDATE CATEGORY FOR PRODUCT {}", request.getName());
+            this.productCategoryService.deleteEntities(product.getId());
+            List<Category> categories = this.categoryService.getCategoryByNameOrUid(request.getCategory());
+            Product finalProduct = product;
+            List<ProductCategory> productCategories = categories.stream().map(
+                    category -> ProductCategory.builder()
+                            .product(finalProduct)
+                            .category(category)
+                            .build()
+            ).collect(Collectors.toList());
+            product.setProductCategories(productCategories);
+            this.save(product);
+        }
     }
 
     @Override

@@ -43,10 +43,10 @@ public class Product extends BaseEntity implements Serializable {
     @Column(name = "PRODUCT_DESCRIPTION")
     private String productDescription;
 
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE/*, CascadeType.PERSIST*/}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<ProductDetail> productDetails;
 
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE/*, CascadeType.PERSIST*/}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<ProductCategory> productCategories;
 
     public Product(String productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {

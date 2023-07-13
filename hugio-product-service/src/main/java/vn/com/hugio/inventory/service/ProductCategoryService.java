@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ProductCategoryService {
     void saveEntities(List<ProductCategory> productCategories);
+
+    void deleteEntities(Long productId);
 }

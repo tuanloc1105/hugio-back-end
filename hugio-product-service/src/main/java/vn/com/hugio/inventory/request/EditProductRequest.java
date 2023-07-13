@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class EditProductRequest {
 
-    @JsonProperty("product_id")
+    @JsonProperty("product_uid")
     private String productId;
 
     @FieldNotNull

@@ -39,7 +39,7 @@ public class Category extends BaseEntity implements Serializable {
     @Column(name = "CATEGORY_NAME", nullable = false)
     private String categoryName;
 
-    @OneToMany(mappedBy = "category", cascade = {CascadeType.REMOVE/*, CascadeType.PERSIST*/}/*, orphanRemoval = true*/)
+    @OneToMany(mappedBy = "category", cascade = {CascadeType.ALL}/*, orphanRemoval = true*/)
     private List<ProductCategory> productCategories;
 
     public Category(Long id, String categoryUid, String categoryName, List<ProductCategory> productCategories) {
