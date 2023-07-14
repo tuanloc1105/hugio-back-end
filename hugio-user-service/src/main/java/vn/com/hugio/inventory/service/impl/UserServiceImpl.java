@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
+import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.common.pagable.PageLink;
@@ -18,7 +19,6 @@ import vn.com.hugio.inventory.entity.UserInfo;
 import vn.com.hugio.inventory.entity.repository.UserInfoRepo;
 import vn.com.hugio.inventory.mapper.UserInfoMapper;
 import vn.com.hugio.inventory.message.request.CreateUserInfoRequest;
-import vn.com.hugio.inventory.message.request.GetAllUserRequest;
 import vn.com.hugio.inventory.service.UserService;
 import vn.com.hugio.inventory.service.grpc.client.AuthServiceGrpcClient;
 
@@ -64,10 +64,10 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
     }
 
     @Override
-    public PageResponse<UserInfoDto> getAllUser(GetAllUserRequest request) {
-        PageLink pageLink = new PageLink(request.getPageSize(), request.getPageNumber());
+    public PageResponse<UserInfoDto> getAllUser(PagableRequest request) {
+        PageLink pageLink = new PageLink(request);
         Page<UserInfo> page = this.repository.findAll(pageLink.toPageable());
-        return PageResponse.create(page, userInfoMapper::userInfoDtoMapper);
+        return PageResponse.create(page, userInfoMapper::userInfoDtoMapper, true);
     }
 
     @Override

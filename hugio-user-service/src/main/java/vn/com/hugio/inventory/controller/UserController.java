@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.com.hugio.common.aop.HasRoles;
+import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.object.RequestType;
 import vn.com.hugio.common.object.ResponseType;
@@ -32,7 +33,7 @@ public class UserController {
 
     @PostMapping("/all")
     @HasRoles(roles = "ADMIN")
-    public ResponseType<PageResponse<UserInfoDto>> all(@RequestBody RequestType<GetAllUserRequest> request) {
+    public ResponseType<PageResponse<UserInfoDto>> all(@RequestBody RequestType<PagableRequest> request) {
         return ResponseType.ok(this.userService.getAllUser(request.getRequest()));
     }
 
