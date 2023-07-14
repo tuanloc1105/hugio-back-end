@@ -1,12 +1,12 @@
 #!/bin/bash
 
+sh common.sh
 cd ../hugio-auth-service
 
 tag=$(date -d "$b 0 min" "+%Y_%m_%d_%H_%M_%S")
 image="tuanloc/auth-service"
 k8s_replica=1
 
-sh common.sh
 mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml
 
 echo "================================== $image:$tag =================================="
