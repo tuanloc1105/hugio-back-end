@@ -10,11 +10,15 @@ import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.filter.AuthenResponse;
 import vn.com.hugio.common.log.LOG;
+import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.utils.AesUtil;
 import vn.com.hugio.grpc.user.CreateUserInput;
+import vn.com.hugio.grpc.user.PageableInput;
 import vn.com.hugio.grpc.user.RequestTypeCreateUserInput;
+import vn.com.hugio.grpc.user.RequestTypePageableInput;
 import vn.com.hugio.grpc.user.RequestTypeUpdateUserStatus;
 import vn.com.hugio.grpc.user.RequestTypeUserTokenInput;
+import vn.com.hugio.grpc.user.ResponseTypeRoleOutput;
 import vn.com.hugio.grpc.user.ResponseTypeUpdateUserStatus;
 import vn.com.hugio.grpc.user.ResponseTypeUserInfo;
 import vn.com.hugio.grpc.user.UpdateUserStatus;
@@ -27,6 +31,7 @@ import vn.com.hugio.proto.common.TraceTypeGRPC;
 import vn.com.hugio.proto.utils.GrpcUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AuthServiceGrpcClient {
@@ -110,6 +115,31 @@ public class AuthServiceGrpcClient {
         }
         UserInfo userInfo = responseType.getResponse();
         return new UserInfoGrpcDto(userInfo.getUserUid());
+    }
+
+    public List<String> getRoles(PagableRequest request) {
+        TraceTypeGRPC traceTypeGRPC = GrpcUtil.createTraceTypeGrpc();
+
+        RequestTypePageableInput requestType = RequestTypePageableInput.newBuilder()
+                .setTrace(traceTypeGRPC)
+                .setRequest(
+                        PageableInput.newBuilder()
+                                .setPageNumber(request.getPageNumber())
+                                .setPageSize(request.getPageSize())
+                                .setProperty(request.getProperty())
+                                .setDirection(request.getSort().name())
+                                .build()
+                )
+                .build();
+        UserServiceGrpc.UserServiceBlockingStub blockingStub = UserServiceGrpc.newBlockingStub(authManagedChannel);
+        ResponseTypeRoleOutput responseType = blockingStub.getRoles(requestType);
+        LOG.info("RETRIEVE A GRPC MESSAGE");
+        if (
+                !(responseType.getCode().equals(ErrorCodeEnum.SUCCESS.getCode().toString()))
+        ) {
+            throw new InternalServiceException(responseType.getCode(), responseType.getMessage());
+        }
+        return new ArrayList<>(responseType.getResponse().getRoleNameList());
     }
 
     public void changeUserStatus(String userUid, boolean status) {
