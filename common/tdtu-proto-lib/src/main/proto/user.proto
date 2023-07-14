@@ -7,6 +7,8 @@ service UserService {
   rpc findUserByToken (RequestTypeUserTokenInput) returns (ResponseTypeUserInfo) {}
   rpc createUser (RequestTypeCreateUserInput) returns (ResponseTypeUserInfo) {}
   rpc changeUserStatus (RequestTypeUpdateUserStatus) returns (ResponseTypeUpdateUserStatus) {}
+  rpc getRoles (RequestTypePageableInput) returns (ResponseTypeRoleOutput) {}
+  rpc getUserRole (RequestTypeUserInfoInput) returns (ResponseTypeUserInfo) {}
 }
 message UserTokenInput {
   string token = 1;
@@ -73,8 +75,45 @@ message ResponseTypeUpdateUserStatus {
   string message = 3;
 }
 
+// ------------------------------------------------------------
 
+message PageableInput {
+  int32 pageNumber = 1;
+  int32 pageSize = 2;
+  string property = 3;
+  string direction = 4;
+}
+message RequestTypePageableInput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  oneof input {
+    PageableInput request = 4;
+  }
+}
 
+message RoleOutput {
+  repeated string roleName = 1;
+}
+
+message ResponseTypeRoleOutput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  string code = 2;
+  string message = 3;
+  oneof output{
+    RoleOutput response = 4;
+  }
+}
+// ------------------------------------------------------------
+
+message UserInfoInput {
+  string userUid = 1;
+}
+
+message RequestTypeUserInfoInput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  oneof input {
+    Input request = 4;
+  }
+}
 // ------------------------------ Example ------------------------------
 
 message Input {

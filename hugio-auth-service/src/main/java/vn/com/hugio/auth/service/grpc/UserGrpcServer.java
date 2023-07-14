@@ -8,14 +8,21 @@ import vn.com.hugio.auth.dto.UserDto;
 import vn.com.hugio.auth.mapper.UserMapper;
 import vn.com.hugio.auth.message.request.CreateUserRequest;
 import vn.com.hugio.auth.service.AuthService;
+import vn.com.hugio.auth.service.RoleService;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
+import vn.com.hugio.common.pagable.Direction;
+import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.utils.StringUtil;
 import vn.com.hugio.grpc.user.CreateUserInput;
+import vn.com.hugio.grpc.user.PageableInput;
 import vn.com.hugio.grpc.user.RequestTypeCreateUserInput;
+import vn.com.hugio.grpc.user.RequestTypePageableInput;
 import vn.com.hugio.grpc.user.RequestTypeUpdateUserStatus;
+import vn.com.hugio.grpc.user.RequestTypeUserInfoInput;
 import vn.com.hugio.grpc.user.RequestTypeUserTokenInput;
+import vn.com.hugio.grpc.user.ResponseTypeRoleOutput;
 import vn.com.hugio.grpc.user.ResponseTypeUpdateUserStatus;
 import vn.com.hugio.grpc.user.ResponseTypeUserInfo;
 import vn.com.hugio.grpc.user.UpdateUserStatus;
@@ -30,6 +37,7 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
     private final AuthService authService;
     private final UserMapper userMapper;
     private final ObjectMapper objectMapper;
+    private final RoleService roleService;
 
     @Override
     public void findUserByToken(RequestTypeUserTokenInput request, StreamObserver<ResponseTypeUserInfo> responseObserver) {
@@ -144,5 +152,62 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
         LOG.info("RETURN GRPC RESULT");
         responseObserver.onNext(responseBuilder.build());
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getRoles(RequestTypePageableInput request, StreamObserver<ResponseTypeRoleOutput> responseObserver) {
+        ResponseTypeRoleOutput.Builder responseBuilder = ResponseTypeRoleOutput.newBuilder();
+        try {
+            GrpcUtil.getTraceId(request.getTrace());
+            LOG.info("RETRIEVE A GRPC MESSAGE");
+        } catch (RuntimeException e) {
+            responseBuilder.setCode(ErrorCodeEnum.VALIDATE_FAILURE.getCode().toString());
+            responseBuilder.setMessage(e.getMessage());
+            responseObserver.onNext(responseBuilder.build());
+            responseObserver.onCompleted();
+            return;
+        }
+        try {
+            PageableInput input = request.getRequest();
+            PagableRequest request1 = PagableRequest.builder()
+                    .pageNumber(input.getPageNumber())
+                    .pageSize(input.getPageSize())
+                    .property(input.getProperty())
+                    .sort(Direction.valueOf(input.getDirection()))
+                    .build();
+
+            if (input.getStatus()) {
+                this.authService.activeUser(input.getUserUid());
+            } else {
+                this.authService.deleteUser(input.getUserUid());
+            }
+            responseBuilder.setCode(ErrorCodeEnum.SUCCESS.getCode().toString());
+            responseBuilder.setMessage(ErrorCodeEnum.SUCCESS.getMessage());
+        } catch (InternalServiceException e) {
+            responseBuilder.setCode(e.getCode());
+            responseBuilder.setMessage(e.getMessage());
+        } catch (Exception e) {
+            responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
+            responseBuilder.setMessage(e.getMessage());
+        }
+        responseBuilder.setTrace(GrpcUtil.createTraceTypeGrpc());
+        LOG.info("RETURN GRPC RESULT");
+        responseObserver.onNext(responseBuilder.build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getUserRole(RequestTypeUserInfoInput request, StreamObserver<ResponseTypeUserInfo> responseObserver) {
+        ResponseTypeUserInfo.Builder responseBuilder = ResponseTypeUserInfo.newBuilder();
+        try {
+            GrpcUtil.getTraceId(request.getTrace());
+            LOG.info("RETRIEVE A GRPC MESSAGE");
+        } catch (RuntimeException e) {
+            responseBuilder.setCode(ErrorCodeEnum.VALIDATE_FAILURE.getCode().toString());
+            responseBuilder.setMessage(e.getMessage());
+            responseObserver.onNext(responseBuilder.build());
+            responseObserver.onCompleted();
+            return;
+        }
     }
 }

@@ -8,6 +8,8 @@ import vn.com.hugio.auth.entity.Role;
 import vn.com.hugio.auth.entity.repository.RoleRepo;
 import vn.com.hugio.auth.mapper.RoleMapper;
 import vn.com.hugio.auth.service.RoleService;
+import vn.com.hugio.common.pagable.PagableRequest;
+import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.service.BaseService;
 
 import java.util.List;
@@ -33,6 +35,11 @@ public class RoleServiceImpl extends BaseService<Role, RoleRepo> implements Role
     @Override
     public List<Role> findRoleByList(List<String> roleName) {
         return this.repository.findByRoleNameIn(roleName);
+    }
+
+    @Override
+    public List<Role> all(PagableRequest request) {
+        return this.repository.findByActiveIsTrue(PageLink.create(request).toPageable());
     }
 
 }

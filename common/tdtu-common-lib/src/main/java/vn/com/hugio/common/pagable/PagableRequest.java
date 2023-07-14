@@ -2,12 +2,14 @@ package vn.com.hugio.common.pagable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.aop.FieldGreaterThan;
 import vn.com.hugio.common.pagable.Direction;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class PagableRequest {
 
     @JsonProperty("page_number")
