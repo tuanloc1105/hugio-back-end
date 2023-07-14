@@ -73,6 +73,13 @@ public class AuthServiceImpl extends BaseService<User, UserRepo> implements Auth
     }
 
     @Override
+    public UserDto getInfo(String userUid) {
+        User user = this.repository.findByUserUidAndActiveIsTrue(userUid)
+                .orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exists"));
+        return this.userMapper.userDtoMapper(user);
+    }
+
+    @Override
     public UserDto createUser(CreateUserRequest request) {
         var userUid = UUID.randomUUID();
         String username, password;

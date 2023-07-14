@@ -1,5 +1,6 @@
 package vn.com.hugio.auth.service;
 
+import org.springframework.data.domain.Page;
 import vn.com.hugio.auth.dto.RoleDto;
 import vn.com.hugio.auth.entity.Role;
 import vn.com.hugio.common.pagable.PagableRequest;
@@ -11,5 +12,5 @@ public interface RoleService {
 
     List<Role> findRoleByList(List<String> roleName);
 
-    List<Role> all(PagableRequest request);
+    Page<Role> all(PagableRequest request);
 }

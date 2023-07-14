@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.data.domain.Page;
 import vn.com.hugio.auth.dto.UserDto;
+import vn.com.hugio.auth.entity.Role;
 import vn.com.hugio.auth.mapper.UserMapper;
 import vn.com.hugio.auth.message.request.CreateUserRequest;
 import vn.com.hugio.auth.service.AuthService;
@@ -25,6 +27,7 @@ import vn.com.hugio.grpc.user.RequestTypeUserTokenInput;
 import vn.com.hugio.grpc.user.ResponseTypeRoleOutput;
 import vn.com.hugio.grpc.user.ResponseTypeUpdateUserStatus;
 import vn.com.hugio.grpc.user.ResponseTypeUserInfo;
+import vn.com.hugio.grpc.user.RoleOutput;
 import vn.com.hugio.grpc.user.UpdateUserStatus;
 import vn.com.hugio.grpc.user.UserInfo;
 import vn.com.hugio.grpc.user.UserServiceGrpc;
@@ -175,14 +178,12 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
                     .property(input.getProperty())
                     .sort(Direction.valueOf(input.getDirection()))
                     .build();
-
-            if (input.getStatus()) {
-                this.authService.activeUser(input.getUserUid());
-            } else {
-                this.authService.deleteUser(input.getUserUid());
-            }
+            Page<Role> page = this.roleService.all(request1);
+            RoleOutput.Builder builder = RoleOutput.newBuilder();
+            page.getContent().forEach(role -> builder.addRoleName(role.getRoleName()));
             responseBuilder.setCode(ErrorCodeEnum.SUCCESS.getCode().toString());
             responseBuilder.setMessage(ErrorCodeEnum.SUCCESS.getMessage());
+            responseBuilder.setResponse(builder);
         } catch (InternalServiceException e) {
             responseBuilder.setCode(e.getCode());
             responseBuilder.setMessage(e.getMessage());
@@ -209,5 +210,26 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
             responseObserver.onCompleted();
             return;
         }
+        try {
+            UserDto userInfo = this.authService.getInfo(request.getRequest().getUserUid());
+            responseBuilder.setCode(ErrorCodeEnum.SUCCESS.getCode().toString());
+            responseBuilder.setMessage(ErrorCodeEnum.SUCCESS.getMessage());
+            UserInfo.Builder info = UserInfo
+                    .newBuilder()
+                    .setUserUid(userInfo.getUserUid().toString())
+                    .setUsername(userInfo.getUsername());
+            userInfo.getRoles().forEach(info::addRole);
+            responseBuilder.setResponse(info.build());
+        } catch (InternalServiceException e) {
+            responseBuilder.setCode(e.getCode());
+            responseBuilder.setMessage(e.getMessage());
+        } catch (Exception e) {
+            responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
+            responseBuilder.setMessage(e.getMessage());
+        }
+        responseBuilder.setTrace(GrpcUtil.createTraceTypeGrpc());
+        LOG.info("RETURN GRPC RESULT");
+        responseObserver.onNext(responseBuilder.build());
+        responseObserver.onCompleted();
     }
 }

@@ -9,6 +9,8 @@ public interface AuthService {
 
     UserDto authorize(String token);
 
+    UserDto getInfo(String userUid);
+
     UserDto createUser(CreateUserRequest request);
 
     void deleteUser(String userUid);

@@ -2,6 +2,7 @@ package vn.com.hugio.auth.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import vn.com.hugio.auth.dto.RoleDto;
 import vn.com.hugio.auth.entity.Role;
@@ -38,7 +39,7 @@ public class RoleServiceImpl extends BaseService<Role, RoleRepo> implements Role
     }
 
     @Override
-    public List<Role> all(PagableRequest request) {
+    public Page<Role> all(PagableRequest request) {
         return this.repository.findByActiveIsTrue(PageLink.create(request).toPageable());
     }
 
