@@ -3,7 +3,8 @@
 sh common.sh
 cd ../hugio-inventory-service
 
-tag=$(date -d "$b 0 min" "+%Y_%m_%d_%H_%M_%S")
+#tag=$(date -d "$b 0 min" "+%Y_%m_%d_%H_%M_%S")
+tag="inventory"
 image="tuanloc/inventory-service"
 k8s_replica=1
 
