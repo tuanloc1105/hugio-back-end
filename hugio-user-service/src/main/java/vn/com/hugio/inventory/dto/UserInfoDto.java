@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.dto.BaseEntityDto;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,4 +16,5 @@ public class UserInfoDto extends BaseEntityDto {
     private String email;
     private String address;
     private String fullName;
+    private List<String> roles;
 }

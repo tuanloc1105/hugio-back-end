@@ -13,19 +13,7 @@ import vn.com.hugio.common.filter.AuthenResponse;
 import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.utils.AesUtil;
-import vn.com.hugio.grpc.user.CreateUserInput;
-import vn.com.hugio.grpc.user.PageableInput;
-import vn.com.hugio.grpc.user.RequestTypeCreateUserInput;
-import vn.com.hugio.grpc.user.RequestTypePageableInput;
-import vn.com.hugio.grpc.user.RequestTypeUpdateUserStatus;
-import vn.com.hugio.grpc.user.RequestTypeUserTokenInput;
-import vn.com.hugio.grpc.user.ResponseTypeRoleOutput;
-import vn.com.hugio.grpc.user.ResponseTypeUpdateUserStatus;
-import vn.com.hugio.grpc.user.ResponseTypeUserInfo;
-import vn.com.hugio.grpc.user.UpdateUserStatus;
-import vn.com.hugio.grpc.user.UserInfo;
-import vn.com.hugio.grpc.user.UserServiceGrpc;
-import vn.com.hugio.grpc.user.UserTokenInput;
+import vn.com.hugio.grpc.user.*;
 import vn.com.hugio.inventory.dto.UserInfoGrpcDto;
 import vn.com.hugio.inventory.message.request.CreateUserInfoRequest;
 import vn.com.hugio.proto.common.TraceTypeGRPC;
@@ -141,6 +129,28 @@ public class AuthServiceGrpcClient {
             throw new InternalServiceException(responseType.getCode(), responseType.getMessage());
         }
         return new ArrayList<>(responseType.getResponse().getRoleNameList());
+    }
+
+    public List<String> getUserInfo(String userUid) {
+        TraceTypeGRPC traceTypeGRPC = GrpcUtil.createTraceTypeGrpc();
+
+        RequestTypeUserInfoInput requestType = RequestTypeUserInfoInput.newBuilder()
+                .setTrace(traceTypeGRPC)
+                .setRequest(
+                        UserInfoInput.newBuilder()
+                                .setUserUid(userUid)
+                                .build()
+                )
+                .build();
+        UserServiceGrpc.UserServiceBlockingStub blockingStub = UserServiceGrpc.newBlockingStub(authManagedChannel);
+        ResponseTypeUserInfo responseType = blockingStub.getUserRole(requestType);
+        LOG.info("RETRIEVE A GRPC MESSAGE");
+        if (
+                !(responseType.getCode().equals(ErrorCodeEnum.SUCCESS.getCode().toString()))
+        ) {
+            throw new InternalServiceException(responseType.getCode(), responseType.getMessage());
+        }
+        return new ArrayList<>(responseType.getResponse().getRoleList());
     }
 
     public void changeUserStatus(String userUid, boolean status) {

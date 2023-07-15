@@ -14,6 +14,7 @@ import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.inventory.dto.UserInfoDto;
 import vn.com.hugio.inventory.message.request.CreateUserInfoRequest;
 import vn.com.hugio.inventory.message.request.GetAllUserRequest;
+import vn.com.hugio.inventory.message.request.UserDetailRequest;
 import vn.com.hugio.inventory.service.UserService;
 
 @RestController
@@ -29,6 +30,13 @@ public class UserController {
     public ResponseType<String> create(@RequestBody RequestType<CreateUserInfoRequest> request) {
         this.userService.createUser(request.getRequest());
         return ResponseType.ok("OK");
+    }
+
+    @PostMapping("/detail")
+    @HasRoles(roles = "ADMIN")
+    public ResponseType<UserInfoDto> detail(@RequestBody RequestType<UserDetailRequest> request) {
+        ;
+        return ResponseType.ok(this.userService.detail(request.getRequest().getUserUid()));
     }
 
     @PostMapping("/all")

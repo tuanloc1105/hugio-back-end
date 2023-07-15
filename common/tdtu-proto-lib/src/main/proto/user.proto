@@ -111,7 +111,7 @@ message UserInfoInput {
 message RequestTypeUserInfoInput {
   vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
   oneof input {
-    Input request = 4;
+    UserInfoInput request = 4;
   }
 }
 // ------------------------------ Example ------------------------------

@@ -24,6 +24,7 @@ import vn.com.hugio.inventory.service.grpc.client.AuthServiceGrpcClient;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @Transactional(rollbackFor = {Exception.class, Throwable.class, RuntimeException.class, Error.class})
@@ -61,6 +62,15 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
         userInfo.setCif(StringUtil.addZeroLeadingNumber(numberUserCreatedInDay == 0 ? numberUserCreatedInDay + 1 : numberUserCreatedInDay, "C"));
         userInfo.setUserUid(grpcDto.getUserUid());
         this.repository.save(userInfo);
+    }
+
+    @Override
+    public UserInfoDto detail(String uid) {
+        UserInfo userInfo = this.repository.findByUserUidAndActiveIsTrue(uid).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
+        List<String> roles = this.authServiceGrpcClient.getUserInfo(uid);
+        UserInfoDto dto = this.userInfoMapper.userInfoDtoMapper(userInfo);
+        dto.setRoles(roles);
+        return dto;
     }
 
     @Override

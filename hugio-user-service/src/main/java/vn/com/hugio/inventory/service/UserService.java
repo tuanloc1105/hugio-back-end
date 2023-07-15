@@ -10,6 +10,8 @@ import vn.com.hugio.inventory.message.request.GetAllUserRequest;
 public interface UserService {
     void createUser(CreateUserInfoRequest request);
 
+    UserInfoDto detail(String uid);
+
     PageResponse<UserInfoDto> getAllUser(PagableRequest request);
 
     ResponseType<?> deleteUser(Long id);
