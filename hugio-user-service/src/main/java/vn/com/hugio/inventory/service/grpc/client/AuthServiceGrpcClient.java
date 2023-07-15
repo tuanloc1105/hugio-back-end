@@ -3,6 +3,7 @@ package vn.com.hugio.inventory.service.grpc.client;
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
 import io.grpc.stub.MetadataUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -124,10 +125,10 @@ public class AuthServiceGrpcClient {
                 .setTrace(traceTypeGRPC)
                 .setRequest(
                         PageableInput.newBuilder()
-                                .setPageNumber(request.getPageNumber())
-                                .setPageSize(request.getPageSize())
-                                .setProperty(request.getProperty())
-                                .setDirection(request.getSort().name())
+                                .setPageNumber(request.getPageNumber() != null ? request.getPageNumber() : 0)
+                                .setPageSize(request.getPageSize() != null ? request.getPageSize() : 100)
+                                .setProperty(request.getProperty() != null ? request.getProperty() : Strings.EMPTY)
+                                .setDirection(request.getSort() != null ? request.getSort().name() : Strings.EMPTY)
                                 .build()
                 )
                 .build();

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.aop.FieldGreaterThan;
+import vn.com.hugio.common.aop.FieldNotNull;
 import vn.com.hugio.common.pagable.Direction;
 
 @AllArgsConstructor
@@ -14,15 +15,18 @@ public class PagableRequest {
 
     @JsonProperty("page_number")
     @FieldGreaterThan(value = 0D)
+    @FieldNotNull
     private Integer pageNumber;
 
     @JsonProperty("page_size")
+    @FieldNotNull
     private Integer pageSize;
 
     @JsonProperty("property")
     private String property;
 
     @JsonProperty("sort")
+    @FieldNotNull
     private Direction sort;
 
     public Integer getPageNumber() {
