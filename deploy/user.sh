@@ -3,8 +3,8 @@
 sh common.sh
 cd ../hugio-user-service
 
-#tag=$(date -d "$b 0 min" "+%Y_%m_%d_%H_%M_%S")
-tag="user"
+tag=$(date -d "$b 0 min" "+%Y_%m_%d_%H_%M_%S")
+#tag="user"
 image="tuanloc/user-service"
 k8s_replica=1
 
