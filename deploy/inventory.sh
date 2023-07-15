@@ -20,5 +20,5 @@ echo "UPGRADE HELM"
 helm upgrade -i --set image.name=$image,image.tag=$tag,replica=$k8s_replica -n hugio inventory-service ./helm_chart
 echo "REMOVE IMAGE"
 docker rmi $image:$tag
-docker exec -it kind-control-plane crictl rmi $image:$tag
+#docker exec -it kind-control-plane crictl rmi $image:$tag
 cd ..
