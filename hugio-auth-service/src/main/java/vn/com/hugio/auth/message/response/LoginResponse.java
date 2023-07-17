@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.com.hugio.auth.dto.UserDto;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,6 +13,9 @@ public class LoginResponse {
 
     @JsonProperty("access_token")
     private String token;
+
+    @JsonProperty("info")
+    private UserDto info;
 
 }
 

@@ -58,7 +58,7 @@ public class AuthServiceImpl extends BaseService<User, UserRepo> implements Auth
         var dto = this.userMapper.userDtoMapper(user);
         var passHash = user.getPassword();
         BCryptUtil.comparePassword(password, passHash);
-        return new LoginResponse(this.jwtService.generateJWTToken(dto));
+        return new LoginResponse(this.jwtService.generateJWTToken(dto), dto);
     }
 
     @Override
