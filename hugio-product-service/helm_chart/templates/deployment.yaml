@@ -43,6 +43,11 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-cf
                   key: auth_grpc_endpoint
+            - name: GRPC_INVENTORY_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-cf
+                  key: inventory_grpc_endpoint
             - name: AUTH_ENDPOINT
               valueFrom:
                 configMapKeyRef:
