@@ -53,4 +53,74 @@ public class InventoryGrpcServer extends InventoryServiceGrpc.InventoryServiceIm
         responseObserver.onNext(responseBuilder.build());
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void importProduct(RequestTypeInventoryRequest request, StreamObserver<ResponseTypeVoid> responseObserver) {
+        ResponseTypeVoid.Builder responseBuilder = ResponseTypeVoid.newBuilder();
+        try {
+            GrpcUtil.getTraceId(request.getTrace());
+            LOG.info("RETRIEVE A GRPC MESSAGE");
+        } catch (RuntimeException e) {
+            responseBuilder.setCode(ErrorCodeEnum.VALIDATE_FAILURE.getCode().toString());
+            responseBuilder.setMessage(e.getMessage());
+            responseObserver.onNext(responseBuilder.build());
+            responseObserver.onCompleted();
+            return;
+        }
+        try {
+            InventoryRequest request1 = InventoryRequest.builder()
+                    .productUid(request.getRequest().getProductUid())
+                    .importedFrom(request.getRequest().getImportedFrom())
+                    .importedQuantity(request.getRequest().getImportedQuantity())
+                    .importedBy(request.getRequest().getImportedBy())
+                    .note(request.getRequest().getNote())
+                    .build();
+            this.productInventoryService.importProduct(request1);
+        } catch (InternalServiceException e) {
+            responseBuilder.setCode(e.getCode());
+            responseBuilder.setMessage(e.getMessage());
+        } catch (Exception e) {
+            responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
+            responseBuilder.setMessage(e.getMessage());
+        }
+        responseBuilder.setTrace(GrpcUtil.createTraceTypeGrpc());
+        LOG.info("RETURN GRPC RESULT");
+        responseObserver.onNext(responseBuilder.build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void updateProduct(RequestTypeInventoryRequest request, StreamObserver<ResponseTypeVoid> responseObserver) {
+        ResponseTypeVoid.Builder responseBuilder = ResponseTypeVoid.newBuilder();
+        try {
+            GrpcUtil.getTraceId(request.getTrace());
+            LOG.info("RETRIEVE A GRPC MESSAGE");
+        } catch (RuntimeException e) {
+            responseBuilder.setCode(ErrorCodeEnum.VALIDATE_FAILURE.getCode().toString());
+            responseBuilder.setMessage(e.getMessage());
+            responseObserver.onNext(responseBuilder.build());
+            responseObserver.onCompleted();
+            return;
+        }
+        try {
+            InventoryRequest request1 = InventoryRequest.builder()
+                    .productUid(request.getRequest().getProductUid())
+                    .importedFrom(request.getRequest().getImportedFrom())
+                    .importedQuantity(request.getRequest().getImportedQuantity())
+                    .importedBy(request.getRequest().getImportedBy())
+                    .note(request.getRequest().getNote())
+                    .build();
+            this.productInventoryService.updateProduct(request1);
+        } catch (InternalServiceException e) {
+            responseBuilder.setCode(e.getCode());
+            responseBuilder.setMessage(e.getMessage());
+        } catch (Exception e) {
+            responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
+            responseBuilder.setMessage(e.getMessage());
+        }
+        responseBuilder.setTrace(GrpcUtil.createTraceTypeGrpc());
+        LOG.info("RETURN GRPC RESULT");
+        responseObserver.onNext(responseBuilder.build());
+        responseObserver.onCompleted();
+    }
 }
