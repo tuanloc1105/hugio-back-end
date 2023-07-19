@@ -16,19 +16,23 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI(@Value("${springdoc.version:1.0}") String appVersion) {
         final String bearerSecuritySchemeName = "BearerToken";
-        final String basicSecuritySchemeName = "BasicToken";
+        //final String basicSecuritySchemeName = "BasicToken";
         return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement().addList(bearerSecuritySchemeName).addList(basicSecuritySchemeName))
+                .addSecurityItem(
+                        new SecurityRequirement()
+                                .addList(bearerSecuritySchemeName)
+                                //.addList(basicSecuritySchemeName)
+                )
                 .components(
                         new Components()
                                 .addSecuritySchemes(
                                         bearerSecuritySchemeName,
                                         new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
                                 )
-                                .addSecuritySchemes(
-                                        basicSecuritySchemeName,
-                                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")
-                                )
+                                //.addSecuritySchemes(
+                                //        basicSecuritySchemeName,
+                                //        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")
+                                //)
                 )
                 .info(
                         new Info()
