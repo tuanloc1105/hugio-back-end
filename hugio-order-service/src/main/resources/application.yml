@@ -1,0 +1,39 @@
+server:
+  port: ${SERVER_PORT:8040}
+  servlet:
+    context-path: /user_service
+grpc:
+  server:
+    port: ${GRPC_PORT:9040}
+    auth_server: ${GRPC_AUTH_SERVER:localhost:9000}
+spring:
+  jpa:
+    open-in-view: false
+  application:
+    name: ${APPLICATION_NAME:@project.artifactId@}
+  security:
+    user:
+      name: user
+      password: E2$s3U07L#wu
+  main:
+    allow-bean-definition-overriding: true
+security:
+  enable: false
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+mysql:
+  url: ${MYSQL_DB_URL:jdbc:mysql://0.tcp.ap.ngrok.io:14818/hugio_order_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}
+  username: ${MYSQL_DB_USERNAME:root}
+  password: ${MYSQL_DB_PASSWORD:123456}
+  driver_class_name: com.mysql.cj.jdbc.Driver
+  ddl_auto: update
+  dialect: org.hibernate.dialect.MySQLDialect
+  show_sql: false
+management:
+  tracing:
+    sampling:
+      probability: '1.0'
+aes_secret_key: iXlCmp4pcEZ2YBUqfelapUH2wGRDDSar
+auth:
+  endpoint: ${AUTH_ENDPOINT:http://localhost:8000/auth_service/auth/retrieve-info}

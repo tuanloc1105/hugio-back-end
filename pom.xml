@@ -9,6 +9,7 @@
         <module>hugio-user-service</module>
         <module>hugio-product-service</module>
         <module>hugio-inventory-service</module>
+        <module>hugio-order-service</module>
     </modules>
 
     <groupId>com.hugio</groupId>
