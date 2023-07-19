@@ -26,7 +26,7 @@ springdoc:
 security:
   enable: false
 mysql:
-  url: ${MYSQL_DB_URL:jdbc:mysql://0.tcp.ap.ngrok.io:11720/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}
+  url: ${MYSQL_DB_URL:jdbc:mysql://0.tcp.ap.ngrok.io:14818/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}
   username: ${MYSQL_DB_USERNAME:root}
   password: ${MYSQL_DB_PASSWORD:123456}
   driver_class_name: com.mysql.cj.jdbc.Driver
