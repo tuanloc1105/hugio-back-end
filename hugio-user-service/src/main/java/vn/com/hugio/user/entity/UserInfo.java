@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "USER_INFO")
+@EqualsAndHashCode(callSuper=false)
 public class UserInfo extends BaseEntity implements Serializable {
 
     @Column(name = "USER_UID", nullable = false, updatable = false)

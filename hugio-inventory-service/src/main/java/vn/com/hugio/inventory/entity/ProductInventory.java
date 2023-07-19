@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
@@ -15,6 +16,7 @@ import vn.com.hugio.common.entity.BaseEntity;
 @Builder
 @Entity
 @Table(name = "PRODUCT_INVENTORY")
+@EqualsAndHashCode(callSuper=false)
 public class ProductInventory extends BaseEntity {
 
     @Column(name = "PRODUCT_UID", updatable = false)

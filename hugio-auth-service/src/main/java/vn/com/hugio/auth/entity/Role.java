@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
@@ -31,6 +32,7 @@ import java.util.List;
                 ),
         }
 )
+@EqualsAndHashCode(callSuper=false)
 public class Role extends BaseEntity implements Serializable {
 
     @Column(name = "ROLE_NAME", nullable = false)

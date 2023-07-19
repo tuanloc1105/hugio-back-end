@@ -8,6 +8,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
@@ -20,6 +21,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "PRODUCT")
+@EqualsAndHashCode(callSuper=false)
 public class Product extends BaseEntity implements Serializable {
 
     @Serial

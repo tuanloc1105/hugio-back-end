@@ -7,6 +7,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "PRODUCT_DETAIL")
+@EqualsAndHashCode(callSuper=false)
 public class ProductDetail extends BaseEntity implements Serializable {
 
     @Serial

@@ -11,6 +11,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
@@ -23,6 +24,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "CATEGORY")
+@EqualsAndHashCode(callSuper=false)
 public class Category extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 8712926771335467702L;

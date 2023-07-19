@@ -11,6 +11,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "PRODUCT_CATEGORY")
+@EqualsAndHashCode(callSuper=false)
 public class ProductCategory extends BaseEntity implements Serializable {
 
     @Serial

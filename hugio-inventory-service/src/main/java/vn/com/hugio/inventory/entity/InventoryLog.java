@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 import vn.com.hugio.inventory.enums.ImportBehaviour;
@@ -18,6 +19,7 @@ import vn.com.hugio.inventory.enums.ImportBehaviour;
 @Builder
 @Entity
 @Table(name = "INVENTORY_LOG")
+@EqualsAndHashCode(callSuper=false)
 public class InventoryLog extends BaseEntity {
 
     @Column(name = "PRODUCT_UID", updatable = false)
