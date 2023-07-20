@@ -76,7 +76,7 @@ public class FilterUtil {
                 message = StringUtils.hasText(t.get().getMessage()) ? t.get().getMessage() : "Unknown error";
             }
             servletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            ((HttpServletResponse) servletResponse).setStatus(200);
+            ((HttpServletResponse) servletResponse).setStatus(400);
             objectMapper.writeValue(
                     servletResponse.getOutputStream(),
                     ResponseType.builder().code(ErrorCodeEnum.FAILURE.getCode()).message(message).response(null).build()

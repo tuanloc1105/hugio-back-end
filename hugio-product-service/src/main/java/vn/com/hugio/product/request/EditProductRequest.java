@@ -25,7 +25,6 @@ public class EditProductRequest {
     @JsonProperty("price")
     private Double price;
 
-    @FieldNotNull
     @JsonProperty("discount")
     private Double discount;
 

@@ -1,6 +1,7 @@
 package vn.com.hugio.common.exceptions;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,7 +19,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {InternalServiceException.class})
     public ResponseEntity<Object> handleException(InternalServiceException ex, WebRequest request) {
         LOG.error("\n" + ExceptionStackTraceUtil.getStackTrace(ex));
-        return ResponseEntity.ok(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ResponseType.builder()
                         .code(ex.getCode())
                         .message(ex.getMessage())
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
         String message = ObjectUtil.isNullOrEmpty(ex.getMessage()) ? "Unknown error" : ex.getMessage();
         LOG.error("\n" + ExceptionStackTraceUtil.getStackTrace(ex));
-        return ResponseEntity.ok(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ResponseType.builder()
                         .code(statusCode.value())
                         .message(message)
