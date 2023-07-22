@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include
+            resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include
+            resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <property name="APPLICATION_NAME" value="${APPLICATION_NAME}"
+              scope="context"/>
+    <property name="basePath" value="data/log"/>
+    <property name="fileName" value="${LOG_FILE_NAME}"/>
+
+    <property name="STDOUT_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t, ${APPLICATION_NAME}]){faint} %clr(%-40.40logger{1}){cyan} %clr(:){faint} %clr([%X{traceId:-}] [%X{spanId:-}] [%X{cid}] [%X{username}] [%X{http}] [%X{url}] [%X{serviceDomain}] [%X{operatorName}] [%X{stepName}] >>>>>>>>>>>>){magenta} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+    <property name="STDOUT_LOG_PATTERN_NO_COLOR"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%15.15t, ${APPLICATION_NAME}] %-40.40logger{1} : [%X{traceId:-}] [%X{spanId:-}] [%X{cid}] [%X{username}] [%X{http}] [%X{url}] [%X{serviceDomain}] [%X{operatorName}] [%X{stepName}] >>>>>>>>>>>> %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+    <property name="FILE_LOG_PATTERN"
+              value="%d{HH:mm:ss.SSS dd/MM/yyyy} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%15.15t, ${APPLICATION_NAME}] %-40.40logger{1} : [%X{traceId:-}] [%X{spanId:-}] [%X{cid}] [%X{username}] [%X{http}] [%X{url}] [%X{serviceDomain}] [%X{operatorName}] [%X{stepName}] >>>>>>>>>>>> %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+    <appender name="STDOUT"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                ${STDOUT_LOG_PATTERN}
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="STDOUT_NO_COLOR"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                ${STDOUT_LOG_PATTERN_NO_COLOR}
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="FILE-AUDIT"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${basePath}/${fileName}.log</file>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                ${FILE_LOG_PATTERN}
+            </Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>
+                <!-- ${basePath}/rolling_archived/${fileName}/%d{yyyy/MM/dd}/${fileName}.%d{yyyy-MM-dd}.%i.log.zip -->
+                ${basePath}/rolling_archived/${fileName}/%d{yyyy_MM_dd}/${fileName}.%d{yyyy-MM-dd}.%i.log.zip
+            </fileNamePattern>
+            <!-- each file should be at most 10MB, keep 60 days worth of history, but at most 20GB -->
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>192.168.1.22:5000</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc/>
+                <context/>
+                <logLevel/>
+                <loggerName/>
+                <pattern>
+                    <pattern>
+                        {
+                        "serviceName": "${APPLICATION_NAME}"
+                        }
+                    </pattern>
+                </pattern>
+                <threadName/>
+                <message/>
+                <logstashMarkers/>
+                <stackTrace/>
+            </providers>
+        </encoder>
+    </appender>
+
+    <Appender name="splunk" class="com.splunk.logging.HttpEventCollectorLogbackAppender">
+        <url>https://d0a593ae8bcc.ngrok.app</url>
+        <token>79302493-f3de-4fbd-a235-72dd8df1f231</token>
+        <host>localhost</host>
+        <index>hugio_service</index>
+        <!--<type>raw</type>-->
+        <sourcetype>log4j</sourcetype>
+        <messageFormat>text</messageFormat>
+        <disableCertificateValidation>true</disableCertificateValidation>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${STDOUT_LOG_PATTERN_NO_COLOR}</pattern>
+        </layout>
+    </Appender>
+
+
+    <!--<root level="info">
+        <appender-ref ref="STDOUT"/>
+        &lt;!&ndash;        <appender-ref ref="FILE-AUDIT"/>&ndash;&gt;
+    </root>-->
+
+    <logger name="vn.com" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <!--<appender-ref ref="splunk"/>-->
+        <!--        <appender-ref ref="FILE-AUDIT"/>-->
+        <!--        <appender-ref ref="logstash"/>-->
+    </logger>
+
+</configuration>
