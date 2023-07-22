@@ -12,6 +12,9 @@
     <property name="STDOUT_LOG_PATTERN"
               value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t, ${APPLICATION_NAME}]){faint} %clr(%-40.40logger{1}){cyan} %clr(:){faint} %clr([%X{traceId:-}] [%X{spanId:-}] [%X{cid}] [%X{username}] [%X{http}] [%X{url}] [%X{serviceDomain}] [%X{operatorName}] [%X{stepName}] >>>>>>>>>>>>){magenta} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
 
+    <property name="STDOUT_LOG_PATTERN_NO_COLOR"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%15.15t, ${APPLICATION_NAME}] %-40.40logger{1} : [%X{traceId:-}] [%X{spanId:-}] [%X{cid}] [%X{username}] [%X{http}] [%X{url}] [%X{serviceDomain}] [%X{operatorName}] [%X{stepName}] >>>>>>>>>>>> %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
     <property name="FILE_LOG_PATTERN"
               value="%d{HH:mm:ss.SSS dd/MM/yyyy} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%15.15t, ${APPLICATION_NAME}] %-40.40logger{1} : [%X{traceId:-}] [%X{spanId:-}] [%X{cid}] [%X{username}] [%X{http}] [%X{url}] [%X{serviceDomain}] [%X{operatorName}] [%X{stepName}] >>>>>>>>>>>> %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
 
@@ -20,6 +23,15 @@
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
                 ${STDOUT_LOG_PATTERN}
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="STDOUT_NO_COLOR"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                ${STDOUT_LOG_PATTERN_NO_COLOR}
             </Pattern>
         </layout>
     </appender>
@@ -72,13 +84,29 @@
         </encoder>
     </appender>
 
-    <root level="info">
+    <Appender name="splunk" class="com.splunk.logging.HttpEventCollectorLogbackAppender">
+        <url>https://d0a593ae8bcc.ngrok.app</url>
+        <token>79302493-f3de-4fbd-a235-72dd8df1f231</token>
+        <host>localhost</host>
+        <index>hugio_service</index>
+        <!--<type>raw</type>-->
+        <sourcetype>log4j</sourcetype>
+        <messageFormat>text</messageFormat>
+        <disableCertificateValidation>true</disableCertificateValidation>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${STDOUT_LOG_PATTERN_NO_COLOR}</pattern>
+        </layout>
+    </Appender>
+
+
+    <!--<root level="info">
         <appender-ref ref="STDOUT"/>
-        <!--        <appender-ref ref="FILE-AUDIT"/>-->
-    </root>
+        &lt;!&ndash;        <appender-ref ref="FILE-AUDIT"/>&ndash;&gt;
+    </root>-->
 
     <logger name="vn.com" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <!--<appender-ref ref="splunk"/>-->
         <!--        <appender-ref ref="FILE-AUDIT"/>-->
         <!--        <appender-ref ref="logstash"/>-->
     </logger>
