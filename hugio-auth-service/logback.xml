@@ -85,7 +85,7 @@
     </appender>
 
     <Appender name="splunk" class="com.splunk.logging.HttpEventCollectorLogbackAppender">
-        <url>https://d0a593ae8bcc.ngrok.app</url>
+        <url>http://192.168.1.22:5000</url>
         <token>79302493-f3de-4fbd-a235-72dd8df1f231</token>
         <host>localhost</host>
         <index>hugio_service</index>
