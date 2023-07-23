@@ -99,13 +99,13 @@
     </Appender>
 
 
-    <!--<root level="info">
+    <root level="info">
         <appender-ref ref="STDOUT"/>
-        &lt;!&ndash;        <appender-ref ref="FILE-AUDIT"/>&ndash;&gt;
-    </root>-->
+        <!--        <appender-ref ref="FILE-AUDIT"/>-->
+    </root>
 
     <logger name="vn.com" level="info" additivity="false">
-        <appender-ref ref="STDOUT"/>
+        <!--<appender-ref ref="STDOUT"/>-->
         <appender-ref ref="splunk"/>
         <!--        <appender-ref ref="FILE-AUDIT"/>-->
         <!--        <appender-ref ref="logstash"/>-->
