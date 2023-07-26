@@ -38,7 +38,7 @@ public class DatabaseConfig {
 
     @Bean("mysqlDataSources")
     public DataSource mysqlDataSources() {
-        LOG.info("CREATE BEAN mysqlDataSources");
+        LOG.info("CREATE BEAN mysqlDataSources, Connecting to DB URL %s", this.databaseProperty.getUrl());
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(this.databaseProperty.getDriverClassName());
         dataSource.setUrl(this.databaseProperty.getUrl());
