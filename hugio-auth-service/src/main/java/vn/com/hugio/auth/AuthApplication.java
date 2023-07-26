@@ -20,7 +20,8 @@ import static org.springframework.context.annotation.FilterType.ANNOTATION;
 @ComponentScan(
         value = {"vn.com"},
         excludeFilters = {
-                @ComponentScan.Filter(classes = Exclude.class, type = ANNOTATION)
+                @ComponentScan.Filter(classes = Exclude.class, type = ANNOTATION),
+                //@ComponentScan.Filter(classes = DatabaseConfig.class, type = ASSIGNABLE_TYPE)
         }
 )
 public class AuthApplication implements CommandLineRunner {
