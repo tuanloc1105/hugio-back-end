@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.com.hugio.common.object.RequestType;
 import vn.com.hugio.common.object.ResponseType;
+import vn.com.hugio.order.request.PlaceOrderRequest;
 
 @RestController
 @RequestMapping("/order")
@@ -15,7 +16,7 @@ import vn.com.hugio.common.object.ResponseType;
 public class OrderController {
 
     @PostMapping("/place")
-    public ResponseType<?> order(RequestType<?> request) {
+    public ResponseType<?> order(RequestType<PlaceOrderRequest> request) {
         return ResponseType.ok("ok");
     }
 
