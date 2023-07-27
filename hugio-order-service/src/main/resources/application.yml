@@ -5,7 +5,7 @@ server:
 grpc:
   server:
     port: ${GRPC_PORT:9040}
-    auth_server: ${GRPC_AUTH_SERVER:localhost:9000}
+    inventory_server: ${GRPC_INVENTORY_SERVER:localhost:9030}
 spring:
   jpa:
     open-in-view: false
