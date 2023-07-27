@@ -61,54 +61,10 @@
         </encoder>
     </appender>
 
-    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>192.168.1.22:5000</destination>
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-            <providers>
-                <mdc/>
-                <context/>
-                <logLevel/>
-                <loggerName/>
-                <pattern>
-                    <pattern>
-                        {
-                        "serviceName": "${APPLICATION_NAME}"
-                        }
-                    </pattern>
-                </pattern>
-                <threadName/>
-                <message/>
-                <logstashMarkers/>
-                <stackTrace/>
-            </providers>
-        </encoder>
-    </appender>
-
-    <Appender name="splunk" class="com.splunk.logging.HttpEventCollectorLogbackAppender">
-        <url>http://192.168.1.22:5000</url>
-        <token>79302493-f3de-4fbd-a235-72dd8df1f231</token>
-        <host>localhost</host>
-        <index>hugio_service</index>
-        <!--<type>raw</type>-->
-        <sourcetype>log4j</sourcetype>
-        <messageFormat>text</messageFormat>
-        <disableCertificateValidation>true</disableCertificateValidation>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>${STDOUT_LOG_PATTERN_NO_COLOR}</pattern>
-        </layout>
-    </Appender>
-
 
     <root level="info">
         <appender-ref ref="STDOUT"/>
         <!--        <appender-ref ref="FILE-AUDIT"/>-->
     </root>
-
-    <logger name="vn.com" level="info" additivity="false">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="splunk"/>y
-        <!--        <appender-ref ref="FILE-AUDIT"/>-->
-        <!--        <appender-ref ref="logstash"/>-->
-    </logger>
 
 </configuration>
