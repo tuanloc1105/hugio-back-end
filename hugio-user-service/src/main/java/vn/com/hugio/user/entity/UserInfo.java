@@ -9,15 +9,18 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
-import java.io.Serializable;
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Data
 @Entity
 @Table(name = "USER_INFO")
-@EqualsAndHashCode(callSuper=false)
-public class UserInfo extends BaseEntity implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class UserInfo extends BaseEntity {
+
+    @Serial
+    private static final long serialVersionUID = 611933429121974217L;
 
     @Column(name = "USER_UID", nullable = false, updatable = false)
     private String userUid;

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.aop.FieldGreaterThan;
 import vn.com.hugio.common.aop.FieldNotNull;
-import vn.com.hugio.common.pagable.Direction;
 
 @AllArgsConstructor
 @NoArgsConstructor

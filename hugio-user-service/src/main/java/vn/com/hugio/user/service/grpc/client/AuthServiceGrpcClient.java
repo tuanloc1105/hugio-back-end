@@ -12,10 +12,10 @@ import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.utils.AesUtil;
 import vn.com.hugio.grpc.user.*;
-import vn.com.hugio.user.dto.UserInfoGrpcDto;
-import vn.com.hugio.user.message.request.CreateUserInfoRequest;
 import vn.com.hugio.proto.common.TraceTypeGRPC;
 import vn.com.hugio.proto.utils.GrpcUtil;
+import vn.com.hugio.user.dto.UserInfoGrpcDto;
+import vn.com.hugio.user.message.request.CreateUserInfoRequest;
 
 import java.util.ArrayList;
 import java.util.List;

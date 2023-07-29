@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,8 +21,11 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "USERS")
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class User extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 6157701085057910394L;
 
     @Column(name = "USER_UID", nullable = false, updatable = false)
     private String userUid;

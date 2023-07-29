@@ -13,14 +13,19 @@ import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 import vn.com.hugio.inventory.enums.ImportBehaviour;
 
+import java.io.Serial;
+
 @NoArgsConstructor
 @Data
 @AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "INVENTORY_LOG")
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class InventoryLog extends BaseEntity {
+
+    @Serial
+    private static final long serialVersionUID = 1568529841527047171L;
 
     @Column(name = "PRODUCT_UID", updatable = false)
     private String productUid;

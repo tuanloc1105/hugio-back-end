@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -17,8 +18,11 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "USER_ROLE")
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class UserRole extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 2112061479386575412L;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID", nullable = false)

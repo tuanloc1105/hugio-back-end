@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,8 +33,11 @@ import java.util.List;
                 ),
         }
 )
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class Role extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -3982274638762499507L;
 
     @Column(name = "ROLE_NAME", nullable = false)
     private String roleName;

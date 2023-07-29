@@ -11,13 +11,18 @@ import lombok.Data;
 import org.slf4j.MDC;
 import vn.com.hugio.common.constant.CommonConstant;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @MappedSuperclass
 @Data
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1615095191109689026L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

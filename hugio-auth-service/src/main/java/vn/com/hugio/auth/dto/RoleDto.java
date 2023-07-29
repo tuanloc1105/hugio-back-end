@@ -9,7 +9,7 @@ import vn.com.hugio.common.dto.BaseEntityDto;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class RoleDto extends BaseEntityDto {
 
     private String roleName;

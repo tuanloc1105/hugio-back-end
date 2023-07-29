@@ -10,7 +10,7 @@ import vn.com.hugio.common.dto.BaseEntityDto;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ProductDetailDto extends BaseEntityDto {
 
     @JsonProperty("key")

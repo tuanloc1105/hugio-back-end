@@ -26,6 +26,6 @@ public class ProductCategoryServiceImpl extends BaseService<ProductCategory, Pro
     @Override
     public void deleteEntities(Long productId) {
         this.repository.deleteByProduct_Id(productId);
-        }
+    }
 
 }

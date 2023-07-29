@@ -10,6 +10,7 @@ import java.util.List;
 public interface RoleRepo extends BaseRepository<Role> {
 
     List<Role> findByRoleNameIn(List<String> roleName);
+
     Page<Role> findByActiveIsTrue(Pageable pageable);
 
 }

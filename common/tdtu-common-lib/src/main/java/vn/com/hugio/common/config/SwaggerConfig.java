@@ -21,7 +21,7 @@ public class SwaggerConfig {
                 .addSecurityItem(
                         new SecurityRequirement()
                                 .addList(bearerSecuritySchemeName)
-                                //.addList(basicSecuritySchemeName)
+                        //.addList(basicSecuritySchemeName)
                 )
                 .components(
                         new Components()
@@ -29,10 +29,10 @@ public class SwaggerConfig {
                                         bearerSecuritySchemeName,
                                         new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
                                 )
-                                //.addSecuritySchemes(
-                                //        basicSecuritySchemeName,
-                                //        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")
-                                //)
+                        //.addSecuritySchemes(
+                        //        basicSecuritySchemeName,
+                        //        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")
+                        //)
                 )
                 .info(
                         new Info()

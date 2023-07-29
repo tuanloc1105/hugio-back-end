@@ -16,15 +16,14 @@ import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Data
 @Entity
 @Table(name = "PRODUCT_CATEGORY")
-@EqualsAndHashCode(callSuper=false)
-public class ProductCategory extends BaseEntity implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class ProductCategory extends BaseEntity {
 
     @Serial
     private static final long serialVersionUID = -5072533522832604499L;
