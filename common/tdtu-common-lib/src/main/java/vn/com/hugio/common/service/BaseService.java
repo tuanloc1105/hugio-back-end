@@ -27,6 +27,7 @@ public abstract class BaseService<E extends BaseEntity, R extends BaseRepository
         return this.repository.count();
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public List<E> saveAll(Collection<E> entities) {
         LOG.info("%s SAVE %s NEW ENTITY(S)", this.repository.getClass().getSimpleName(), entities.size());
         return this.repository.saveAll(entities);
