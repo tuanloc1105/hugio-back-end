@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.io.Serial;
 @Entity
 @Table(name = "USERS")
 @EqualsAndHashCode(callSuper = false)
+@Builder
 public class OrderDetail extends BaseEntity {
 
     @Serial
@@ -31,4 +33,10 @@ public class OrderDetail extends BaseEntity {
 
     @Column(name = "QUANTITY")
     private Long quantity;
+
+    public OrderDetail(Order order, String productUid, Long quantity) {
+        this.order = order;
+        this.productUid = productUid;
+        this.quantity = quantity;
+    }
 }
