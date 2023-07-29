@@ -19,7 +19,6 @@ import java.io.Serial;
 @EqualsAndHashCode(callSuper = false)
 public class OrderDetail extends BaseEntity {
 
-
     @Serial
     private static final long serialVersionUID = -4542143539459709114L;
 

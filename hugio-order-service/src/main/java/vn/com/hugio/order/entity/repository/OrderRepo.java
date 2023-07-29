@@ -1,4 +1,7 @@
 package vn.com.hugio.order.entity.repository;
 
-public interface OrderRepo {
+import vn.com.hugio.common.entity.repository.BaseRepository;
+import vn.com.hugio.order.entity.Order;
+
+public interface OrderRepo extends BaseRepository<Order> {
 }
