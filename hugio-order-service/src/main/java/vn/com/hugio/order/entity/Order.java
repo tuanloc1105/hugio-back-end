@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,8 @@ import java.util.List;
 @Entity
 @Table(name = "USERS")
 @EqualsAndHashCode(callSuper = false)
+@Builder
+@AllArgsConstructor
 public class Order extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 690221254719037208L;

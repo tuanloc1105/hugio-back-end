@@ -15,7 +15,8 @@ public class OrderDetailServiceImpl extends BaseService<OrderDetail, OrderDetail
         super(repository);
     }
 
-    public void add(Order order, String productUid, Long quantity) {
+    @Override
+    public OrderDetail add(Order order, String productUid, Integer quantity) {
         if (order == null || order.getId() == null) {
             throw new InternalServiceException(
                     ErrorCodeEnum.FAILURE.getCode(),
@@ -28,7 +29,7 @@ public class OrderDetailServiceImpl extends BaseService<OrderDetail, OrderDetail
                     "An error occurred when save a new order detail. Values of productUid and quantity is wrong"
             );
         }
-        this.repository.save(
+        return this.repository.save(
                 OrderDetail.builder()
                         .order(order)
                         .productUid(productUid)
