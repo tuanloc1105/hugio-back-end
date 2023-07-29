@@ -17,7 +17,10 @@ public class OrderDetailServiceImpl extends BaseService<OrderDetail, OrderDetail
 
     public void add(Order order, String productUid, Long quantity) {
         if (order == null || order.getId() == null) {
-            throw new InternalServiceException(ErrorCodeEnum.FAILURE.getCode(), "An error occurred when save a new order detail. order or order.id is null");
+            throw new InternalServiceException(
+                    ErrorCodeEnum.FAILURE.getCode(),
+                    "An error occurred when save a new order detail. order or order.id is null"
+            );
         }
         if (productUid == null || productUid.trim().isEmpty() || quantity == null || quantity == 0) {
             throw new InternalServiceException(
