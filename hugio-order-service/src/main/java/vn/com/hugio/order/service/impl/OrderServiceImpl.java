@@ -30,6 +30,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         this.orderDetailService = orderDetailService;
     }
 
+    @Override
     public void placeOrder(PlaceOrderRequest request) {
         Order order = Order.builder()
                 .totalPrice(0D)
