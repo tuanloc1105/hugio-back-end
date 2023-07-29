@@ -151,6 +151,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public ProductDto getProductDetail(String uid) {
+        LOG.info("finding a product with uid %s", uid);
         Product product = this.repository.findByProductUid(uid).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
         return this.productMapper.productEntityToProductDto(product);
     }

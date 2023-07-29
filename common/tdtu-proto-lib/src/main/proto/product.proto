@@ -18,7 +18,13 @@ message RequestTypeInput {
 }
 
 message ProductInfoOutput {
-  string userUid = 1;
+  int64 id = 1;
+  string productUid = 2;
+  string productName = 3;
+  string rawProductName = 4;
+  double price = 5;
+  double discount = 6;
+  string productDescription = 7;
 }
 
 message ResponseTypeOutput {
@@ -26,6 +32,6 @@ message ResponseTypeOutput {
   string code = 2;
   string message = 3;
   oneof output{
-    Output response = 4;
+    ProductInfoOutput response = 4;
   }
 }
