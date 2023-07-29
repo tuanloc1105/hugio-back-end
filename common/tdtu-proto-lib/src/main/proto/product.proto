@@ -1,0 +1,31 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package vn.com.hugio.grpc.product;
+import "common.proto";
+
+service ProductService {
+}
+
+message ProductInfoInput {
+  string uid = 1;
+}
+
+message RequestTypeInput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  oneof input {
+    ProductInfoInput request = 2;
+  }
+}
+
+message ProductInfoOutput {
+  string userUid = 1;
+}
+
+message ResponseTypeOutput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  string code = 2;
+  string message = 3;
+  oneof output{
+    Output response = 4;
+  }
+}

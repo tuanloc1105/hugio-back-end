@@ -14,5 +14,7 @@ public interface ProductService {
 
     PageResponse<ProductDto> getAllProduct(PagableRequest request);
 
+    ProductDto getProductDetail(String uid);
+
     void removeProduct(DeleteProductRequest request);
 }

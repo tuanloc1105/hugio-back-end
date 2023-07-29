@@ -150,6 +150,12 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     }
 
     @Override
+    public ProductDto getProductDetail(String uid) {
+        Product product = this.repository.findByProductUid(uid).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
+        return this.productMapper.productEntityToProductDto(product);
+    }
+
+    @Override
     public void removeProduct(DeleteProductRequest request) {
         if (request.getIsPermanent()) {
             Product product = this.repository.findByProductUid(request.getProductId()).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "product does not exist"));
