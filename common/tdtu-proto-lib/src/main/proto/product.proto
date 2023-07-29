@@ -4,13 +4,14 @@ package vn.com.hugio.grpc.product;
 import "common.proto";
 
 service ProductService {
+  rpc getProductDetail (RequestTypeProductInfoInput) returns (ResponseTypeProductInfoOutput) {}
 }
 
 message ProductInfoInput {
   string uid = 1;
 }
 
-message RequestTypeInput {
+message RequestTypeProductInfoInput {
   vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
   oneof input {
     ProductInfoInput request = 2;
@@ -27,7 +28,7 @@ message ProductInfoOutput {
   string productDescription = 7;
 }
 
-message ResponseTypeOutput {
+message ResponseTypeProductInfoOutput {
   vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
   string code = 2;
   string message = 3;
