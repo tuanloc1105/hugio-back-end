@@ -6,4 +6,5 @@ metadata:
 data:
   database_url: {{ .Values.database.url }}
   inventory_grpc_endpoint: {{ .Values.inventory_grpc_endpoint }}
+  product_grpc_endpoint: {{ .Values.product_grpc_endpoint }}
   auth_rest_endpoint: {{ .Values.auth_endpoint }}

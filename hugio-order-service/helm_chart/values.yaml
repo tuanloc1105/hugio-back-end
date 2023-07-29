@@ -11,3 +11,4 @@ database:
   password: MTIzNDU2
 auth_endpoint: http://172.18.255.201:8000/auth_service/auth/retrieve-info
 inventory_grpc_endpoint: inventory-service-svc-2:9030
+product_grpc_endpoint: product-service-svc-2:9030
