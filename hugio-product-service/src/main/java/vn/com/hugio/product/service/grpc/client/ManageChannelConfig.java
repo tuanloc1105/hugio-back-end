@@ -10,21 +10,21 @@ import vn.com.hugio.common.log.LOG;
 @Component
 public class ManageChannelConfig {
 
-    @Value("${grpc.server.auth_server}")
-    private String authServerAddress;
+    //@Value("${grpc.server.auth_server}")
+    //private String authServerAddress;
 
     @Value("${grpc.server.inventory_server}")
     private String inventoryServerAddress;
 
-    @Bean
-    public ManagedChannel authManagedChannel() {
-        LOG.info("CREATE MANAGED CHANNEL AT {}", authServerAddress);
-        return ManagedChannelBuilder
-                .forTarget(authServerAddress)
-                .defaultLoadBalancingPolicy("round_robin")
-                .usePlaintext()
-                .build();
-    }
+    //@Bean
+    //public ManagedChannel authManagedChannel() {
+    //    LOG.info("CREATE MANAGED CHANNEL AT {}", authServerAddress);
+    //    return ManagedChannelBuilder
+    //            .forTarget(authServerAddress)
+    //            .defaultLoadBalancingPolicy("round_robin")
+    //            .usePlaintext()
+    //            .build();
+    //}
 
     @Bean
     public ManagedChannel inventoryManagedChannel() {
