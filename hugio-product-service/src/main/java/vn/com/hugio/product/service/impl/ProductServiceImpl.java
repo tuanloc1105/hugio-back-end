@@ -1,6 +1,11 @@
 package vn.com.hugio.product.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
@@ -10,8 +15,11 @@ import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.service.BaseService;
+import vn.com.hugio.common.utils.ExceptionStackTraceUtil;
+import vn.com.hugio.common.utils.HttpUtil;
 import vn.com.hugio.common.utils.StringUtil;
 import vn.com.hugio.product.dto.ProductDto;
+import vn.com.hugio.product.dto.QrCodeReqDto;
 import vn.com.hugio.product.entity.Category;
 import vn.com.hugio.product.entity.Product;
 import vn.com.hugio.product.entity.ProductCategory;
@@ -28,9 +36,7 @@ import vn.com.hugio.product.service.ProductService;
 import vn.com.hugio.product.service.grpc.client.InventoryServiceGrpcClient;
 import vn.com.hugio.product.service.grpc.request.InventoryRequest;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,19 +48,28 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     private final CategoryService categoryService;
     private final ProductCategoryService productCategoryService;
     private final InventoryServiceGrpcClient inventoryServiceGrpcClient;
+    private final HttpUtil httpUtil;
+    private final ObjectMapper objectMapper;
+
+    @Value("${qr.code.api-url}")
+    private String qrCodeApiUrl;
 
     public ProductServiceImpl(ProductRepository repository,
                               ProductDetailService productDetailService,
                               ProductMapper productMapper,
                               CategoryService categoryService,
                               ProductCategoryService productCategoryService,
-                              InventoryServiceGrpcClient inventoryServiceGrpcClient) {
+                              InventoryServiceGrpcClient inventoryServiceGrpcClient,
+                              HttpUtil httpUtil,
+                              ObjectMapper objectMapper) {
         super(repository);
         this.productDetailService = productDetailService;
         this.productMapper = productMapper;
         this.categoryService = categoryService;
         this.productCategoryService = productCategoryService;
         this.inventoryServiceGrpcClient = inventoryServiceGrpcClient;
+        this.httpUtil = httpUtil;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -153,7 +168,9 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     public ProductDto getProductDetail(String uid) {
         LOG.info("finding a product with uid %s", uid);
         Product product = this.repository.findByProductUid(uid).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
-        return this.productMapper.productEntityToProductDto(product);
+        ProductDto dto = this.productMapper.productEntityToProductDto(product);
+        String qrCode = this.generateQrCode(dto);
+        return dto;
     }
 
     @Override
@@ -165,6 +182,48 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
             this.repository.softDeleteByProductUid(request.getProductId());
         }
         LOG.info("REMOVED A PRODUCT WITH UID %s", request.getProductId());
+    }
+
+    //@Override
+
+    /**
+     * byte[] encoded = Base64.getEncoder().encode("Hello".getBytes());
+     * println(new String(encoded));   // Outputs "SGVsbG8="
+     *
+     * byte[] decoded = Base64.getDecoder().decode(encoded);
+     * println(new String(decoded))    // Outputs "Hello"
+     * @param request
+     */
+    public String generateQrCode(ProductDto request) {
+        try {
+            QrCodeReqDto dto = QrCodeReqDto.builder()
+                    .frameName("no-frame")
+                    .qrCodeText(this.objectMapper.writeValueAsString(request))
+                    .imageFormat("SVG")
+                    .qrCodeLogo("scan-me-square")
+                    .build();
+            byte[] bytes = this.httpUtil.callApi(
+                    dto,
+                    this.qrCodeApiUrl,
+                    HttpMethod.POST,
+                    new HashMap<>() {
+                        {
+                            put("Content-Type", "application/json");
+                            put("Accept", "*/*");
+                            put("Accept-Encoding", "gzip, deflate, br");
+                            put("Connection", "keep-alive");
+                        }
+                    },
+                    new ParameterizedTypeReference<byte[]>() {
+                    },
+                    false,
+                    true
+            ).getBody();
+            return new String(Base64.getEncoder().encode(bytes));
+        } catch (Exception e) {
+            LOG.info(ExceptionStackTraceUtil.getStackTrace(e));
+            return Strings.EMPTY;
+        }
     }
 
     private void callInventory(InventoryRequest request, InventoryCallMethod method) {

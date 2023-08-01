@@ -18,8 +18,6 @@ spring:
       password: E2$s3U07L#wu
   main:
     allow-bean-definition-overriding: true
-security:
-  enable: false
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -35,6 +33,8 @@ management:
   tracing:
     sampling:
       probability: '1.0'
-aes_secret_key: iXlCmp4pcEZ2YBUqfelapUH2wGRDDSar
 auth:
   endpoint: ${AUTH_ENDPOINT:http://192.168.1.22:8000/auth_service/auth/retrieve-info}
+qr:
+  code:
+    api-url: ${QR_CODE_API_URL:https://api.qr-code-generator.com/v1/create?access-token=QjA1SUNdr2dck1C9mBZPMCAQDWZgYJ9sxV4vE59kZPXkdP4RjQxuvzKE8Tge8MtR}
