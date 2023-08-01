@@ -169,7 +169,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         LOG.info("finding a product with uid %s", uid);
         Product product = this.repository.findByProductUid(uid).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
         ProductDto dto = this.productMapper.productEntityToProductDto(product);
-        String qrCode = this.generateQrCode(dto);
+        //String qrCode = this.generateQrCode(dto);
         return dto;
     }
 
@@ -217,7 +217,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                     new ParameterizedTypeReference<byte[]>() {
                     },
                     false,
-                    true
+                    false
             ).getBody();
             return new String(Base64.getEncoder().encode(bytes));
         } catch (Exception e) {
