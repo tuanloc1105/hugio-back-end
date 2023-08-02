@@ -38,6 +38,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Release.Name }}-secret
                   key: database_password
+            - name: CHAT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: chat_api_key
             - name: GRPC_INVENTORY_SERVER
               valueFrom:
                 configMapKeyRef:
