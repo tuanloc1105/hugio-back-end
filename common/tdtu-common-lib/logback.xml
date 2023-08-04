@@ -86,10 +86,10 @@
 
     <Appender name="splunk" class="com.splunk.logging.HttpEventCollectorLogbackAppender">
         <url>http://192.168.1.22:5000</url>
-        <token>79302493-f3de-4fbd-a235-72dd8df1f231</token>
+        <token>713924b2-be2a-4a0a-a827-1b2452297c0f</token>
         <host>localhost</host>
-        <index>hugio_service</index>
-        <!--<type>raw</type>-->
+        <index>hugio</index>
+        <type>raw</type>
         <sourcetype>log4j</sourcetype>
         <messageFormat>text</messageFormat>
         <disableCertificateValidation>true</disableCertificateValidation>
