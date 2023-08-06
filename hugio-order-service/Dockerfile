@@ -1,4 +1,4 @@
-FROM tuanloc/ubuntu:java17
+FROM tuanloc/ubuntu:java17.0.8
 
 #WORKDIR /app
 #COPY . /app
