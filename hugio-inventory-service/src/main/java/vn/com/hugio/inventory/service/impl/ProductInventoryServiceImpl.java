@@ -72,6 +72,7 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
     @Override
     public Long getProductQuantity(InventoryRequest request) {
         Optional<ProductInventory> productInventory = this.repository.findByProductUid(request.getProductUid());
+        productInventory.ifPresent(inventory -> System.out.println(inventory.getQuantity()));
         return productInventory.isEmpty() ? 0L : productInventory.get().getQuantity();
     }
 }
