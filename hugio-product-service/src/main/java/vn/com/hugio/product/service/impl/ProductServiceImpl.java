@@ -15,6 +15,7 @@ import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.service.BaseService;
+import vn.com.hugio.common.service.CurrentUserService;
 import vn.com.hugio.common.utils.ExceptionStackTraceUtil;
 import vn.com.hugio.common.utils.HttpUtil;
 import vn.com.hugio.common.utils.StringUtil;
@@ -29,6 +30,7 @@ import vn.com.hugio.product.mapper.ProductMapper;
 import vn.com.hugio.product.request.CreateProductRequest;
 import vn.com.hugio.product.request.DeleteProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
+import vn.com.hugio.product.request.ImportProductQuantityRequest;
 import vn.com.hugio.product.service.CategoryService;
 import vn.com.hugio.product.service.ProductCategoryService;
 import vn.com.hugio.product.service.ProductDetailService;
@@ -50,6 +52,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     private final InventoryServiceGrpcClient inventoryServiceGrpcClient;
     private final HttpUtil httpUtil;
     private final ObjectMapper objectMapper;
+    private final CurrentUserService currentUserService;
 
     @Value("${qr.code.api-url}")
     private String qrCodeApiUrl;
@@ -61,7 +64,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                               ProductCategoryService productCategoryService,
                               InventoryServiceGrpcClient inventoryServiceGrpcClient,
                               HttpUtil httpUtil,
-                              ObjectMapper objectMapper) {
+                              ObjectMapper objectMapper,
+                              CurrentUserService currentUserService) {
         super(repository);
         this.productDetailService = productDetailService;
         this.productMapper = productMapper;
@@ -70,6 +74,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         this.inventoryServiceGrpcClient = inventoryServiceGrpcClient;
         this.httpUtil = httpUtil;
         this.objectMapper = objectMapper;
+        this.currentUserService = currentUserService;
     }
 
     @Override
@@ -87,6 +92,14 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 .price(request.getPrice())
                 .build();
         product = this.save(product);
+        InventoryRequest inventoryRequest = InventoryRequest.builder()
+                .productUid(product.getProductUid())
+                .importedBy(this.currentUserService.getUsername())
+                .importedQuantity(request.getQuantity())
+                .importedFrom(Strings.EMPTY)
+                .note(Strings.EMPTY)
+                .build();
+        this.inventoryServiceGrpcClient.create(inventoryRequest);
         LOG.info("SAVE PRODUCT {} SUCCESS, SAVE PRODUCT DETAIL", request.getName());
         this.productDetailService.addOrSaveProductDetail(product, request.getDetails());
         if (request.getCategory() != null && !(request.getCategory().isEmpty())) {
@@ -107,7 +120,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public void updateProduct(EditProductRequest request) {
-        Product product = this.repository.findByProductUid(
+        Product product = this.repository.findByProductUidAndActiveIsTrue(
                 request.getProductId()
         ).orElseThrow(
                 () -> new InternalServiceException(ErrorCodeEnum.EXISTS.getCode(), "this product does not exist")
@@ -158,10 +171,10 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     public PageResponse<ProductDto> getAllProduct(PagableRequest request) {
         PageLink pageLink = PageLink.create(request.getPageSize(), request.getPageNumber(), request.getSort());
         Page<Product> products = this.repository.findByActiveIsTrue(pageLink.toPageable());
-        //List<ProductDto> dtos = products.stream()
-        //        .map(productMapper::productEntityToProductDto)
-        //        .toList();
-        return PageResponse.create(products, productMapper::productEntityToProductDto, true);
+        List<ProductDto> dtoList = products.stream()
+                .map(productMapper::productEntityToProductDto)
+                .toList().stream().peek(dto -> dto.setQuantity(inventoryServiceGrpcClient.getProductQuantity(dto.getProductUid()))).toList();
+        return PageResponse.create(products, dtoList, true);
     }
 
     @Override
@@ -181,6 +194,22 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         } else {
             this.repository.softDeleteByProductUid(request.getProductId());
         }
+        LOG.info("REMOVED A PRODUCT WITH UID %s", request.getProductId());
+    }
+
+    @Override
+    public void importProductQuantity(ImportProductQuantityRequest request) {
+        this.repository.findByProductUidAndActiveIsTrue(request.getProductId()).orElseThrow(
+                () -> new InternalServiceException(ErrorCodeEnum.EXISTS.getCode(), "this product does not exist or removed")
+        );
+        InventoryRequest inventoryRequest = InventoryRequest.builder()
+                .productUid(request.getProductId())
+                .importedBy(this.currentUserService.getUsername())
+                .importedQuantity(request.getQuantity())
+                .importedFrom(Strings.EMPTY)
+                .note(Strings.EMPTY)
+                .build();
+        this.inventoryServiceGrpcClient.importProduct(inventoryRequest);
         LOG.info("REMOVED A PRODUCT WITH UID %s", request.getProductId());
     }
 

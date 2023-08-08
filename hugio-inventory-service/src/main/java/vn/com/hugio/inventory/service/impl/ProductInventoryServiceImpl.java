@@ -68,4 +68,10 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
         inventoryLog.setBehaviour(ImportBehaviour.UPDATE);
         inventoryLogService.saveEntity(inventoryLog);
     }
+
+    @Override
+    public Long getProductQuantity(InventoryRequest request) {
+        Optional<ProductInventory> productInventory = this.repository.findByProductUid(request.getProductUid());
+        return productInventory.isEmpty() ? 0L : productInventory.get().getQuantity();
+    }
 }

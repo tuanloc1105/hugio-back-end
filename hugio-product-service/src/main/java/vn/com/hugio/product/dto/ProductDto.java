@@ -24,6 +24,9 @@ public class ProductDto extends BaseEntityDto {
     @JsonProperty("product_name")
     private String productName;
 
+    @JsonProperty("product_quantity")
+    private Long quantity;
+
     @JsonProperty("raw_product_name")
     private String rawProductName;
 

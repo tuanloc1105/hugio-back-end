@@ -97,7 +97,7 @@ public class PageResponse<T> implements Serializable {
                 .build();
     }
 
-    public static <V> PageResponse<V> create(List<V> list, Page<?> page, boolean... isIncreasePageNumber) {
+    public static <V> PageResponse<V> create(Page<?> page, List<V> list, boolean... isIncreasePageNumber) {
         return PageResponse
                 .<V>builder()
                 .pageNumber(isIncreasePageNumber.length > 0 && isIncreasePageNumber[0] ? page.getNumber() + 1 : page.getNumber())

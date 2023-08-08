@@ -7,6 +7,7 @@ service InventoryService {
   rpc create (RequestTypeInventoryRequest) returns (ResponseTypeVoid) {}
   rpc importProduct (RequestTypeInventoryRequest) returns (ResponseTypeVoid) {}
   rpc updateProduct (RequestTypeInventoryRequest) returns (ResponseTypeVoid) {}
+  rpc getProductQuantity (RequestTypeProductInput) returns (ResponseTypeProductQuantityOutput) {}
 }
 
 message InventoryRequest {
@@ -28,4 +29,28 @@ message ResponseTypeVoid {
   vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
   string code = 2;
   string message = 3;
+}
+
+message ProductInput {
+  string productUid = 1;
+}
+
+message RequestTypeProductInput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  oneof input {
+    ProductInput request = 4;
+  }
+}
+
+message ProductQuantityOutput {
+  int64 quantity = 1;
+}
+
+message ResponseTypeProductQuantityOutput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  string code = 2;
+  string message = 3;
+  oneof output{
+    ProductQuantityOutput response = 4;
+  }
 }

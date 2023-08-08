@@ -6,6 +6,7 @@ import vn.com.hugio.product.dto.ProductDto;
 import vn.com.hugio.product.request.CreateProductRequest;
 import vn.com.hugio.product.request.DeleteProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
+import vn.com.hugio.product.request.ImportProductQuantityRequest;
 
 public interface ProductService {
     void createProduct(CreateProductRequest request);
@@ -17,4 +18,6 @@ public interface ProductService {
     ProductDto getProductDetail(String uid);
 
     void removeProduct(DeleteProductRequest request);
+
+    void importProductQuantity(ImportProductQuantityRequest request);
 }

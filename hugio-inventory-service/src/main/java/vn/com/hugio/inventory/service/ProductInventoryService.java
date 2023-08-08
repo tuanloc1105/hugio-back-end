@@ -8,4 +8,6 @@ public interface ProductInventoryService {
     void importProduct(InventoryRequest request);
 
     void updateProduct(InventoryRequest request);
+
+    Long getProductQuantity(InventoryRequest request);
 }

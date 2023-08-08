@@ -12,28 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CreateProductRequest {
+public class ImportProductQuantityRequest {
 
-
-    @FieldNotNull
-    @JsonProperty("name")
-    private String name;
-
-    @FieldNotNull
-    @JsonProperty("price")
-    private Double price;
-
-    @JsonProperty("product_description")
-    private String productDescription;
+    @JsonProperty("product_uid")
+    private String productId;
 
     @JsonProperty("product_quantity")
     @FieldNotNull
     private Long quantity;
-
-    @JsonProperty("category")
-    private List<String> category;
-
-    @JsonProperty("details")
-    private List<ProductDetailReqDto> details;
 
 }

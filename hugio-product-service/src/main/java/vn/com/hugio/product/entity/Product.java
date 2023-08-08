@@ -44,25 +44,31 @@ public class Product extends BaseEntity {
     @Column(name = "PRODUCT_DESCRIPTION")
     private String productDescription;
 
+    @Column(name = "PRODUCT_QR")
+    private byte[] productQr;
+
     @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<ProductDetail> productDetails;
 
     @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<ProductCategory> productCategories;
 
-    public Product(String productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {
-        this.productUid = productUid;
-        this.productName = productName;
-        this.rawProductName = rawProductName;
-        this.price = price;
-        this.discount = discount;
-        this.productDescription = productDescription;
-        this.productDetails = productDetails;
-        this.productCategories = productCategories;
-    }
-
     @Builder
-    public Product(Long id, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy, String productUid, String productName, String rawProductName, Double price, Double discount, String productDescription, List<ProductDetail> productDetails, List<ProductCategory> productCategories) {
+    public Product(Long id,
+                   boolean active,
+                   LocalDateTime createdAt,
+                   LocalDateTime updatedAt,
+                   String createdBy,
+                   String updatedBy,
+                   String productUid,
+                   String productName,
+                   String rawProductName,
+                   Double price,
+                   Double discount,
+                   String productDescription,
+                   byte[] productQr,
+                   List<ProductDetail> productDetails,
+                   List<ProductCategory> productCategories) {
         super(id, active, createdAt, updatedAt, createdBy, updatedBy);
         this.productUid = productUid;
         this.productName = productName;
@@ -70,6 +76,7 @@ public class Product extends BaseEntity {
         this.price = price;
         this.discount = discount;
         this.productDescription = productDescription;
+        this.productQr = productQr;
         this.productDetails = productDetails;
         this.productCategories = productCategories;
     }

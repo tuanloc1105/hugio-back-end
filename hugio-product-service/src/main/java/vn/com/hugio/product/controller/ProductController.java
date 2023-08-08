@@ -14,6 +14,7 @@ import vn.com.hugio.product.dto.ProductDto;
 import vn.com.hugio.product.request.CreateProductRequest;
 import vn.com.hugio.product.request.DeleteProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
+import vn.com.hugio.product.request.ImportProductQuantityRequest;
 import vn.com.hugio.product.service.ProductService;
 
 @RestController
@@ -33,6 +34,12 @@ public class ProductController {
     @PostMapping("/edit")
     public ResponseType<String> editProduct(@RequestBody RequestType<EditProductRequest> request) {
         this.productService.updateProduct(request.getRequest());
+        return ResponseType.ok(null);
+    }
+
+    @PostMapping("/import_quantity")
+    public ResponseType<String> importQuantity(@RequestBody RequestType<ImportProductQuantityRequest> request) {
+        this.productService.importProductQuantity(request.getRequest());
         return ResponseType.ok(null);
     }
 
