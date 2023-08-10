@@ -16,7 +16,7 @@ public class CreateProductRequest {
 
 
     @FieldNotNull
-    @JsonProperty("name")
+    @JsonProperty("product_name")
     private String name;
 
     @FieldNotNull
