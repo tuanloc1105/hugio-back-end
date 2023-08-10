@@ -13,7 +13,7 @@ public interface UserService {
 
     PageResponse<UserInfoDto> getAllUser(PagableRequest request);
 
-    ResponseType<?> deleteUser(Long id);
+    ResponseType<?> deleteUser(String id);
 
-    ResponseType<?> activeUser(Long id);
+    ResponseType<?> activeUser(String id);
 }

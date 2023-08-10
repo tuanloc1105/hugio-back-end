@@ -12,6 +12,7 @@ import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.user.dto.UserInfoDto;
+import vn.com.hugio.user.message.request.ChangeUserDetailRequest;
 import vn.com.hugio.user.message.request.CreateUserInfoRequest;
 import vn.com.hugio.user.message.request.UserDetailRequest;
 import vn.com.hugio.user.service.UserService;
@@ -46,14 +47,14 @@ public class UserController {
 
     @PostMapping("/delete")
     @HasRoles(roles = "ADMIN")
-    public ResponseType<?> delete(@RequestBody RequestType<Long> request) {
-        return this.userService.deleteUser(request.getRequest());
+    public ResponseType<?> delete(@RequestBody RequestType<ChangeUserDetailRequest> request) {
+        return this.userService.deleteUser(request.getRequest().getUserUid());
     }
 
     @PostMapping("/active")
     @HasRoles(roles = "ADMIN")
-    public ResponseType<?> active(@RequestBody RequestType<Long> request) {
-        return this.userService.activeUser(request.getRequest());
+    public ResponseType<?> active(@RequestBody RequestType<ChangeUserDetailRequest> request) {
+        return this.userService.activeUser(request.getRequest().getUserUid());
     }
 
 }

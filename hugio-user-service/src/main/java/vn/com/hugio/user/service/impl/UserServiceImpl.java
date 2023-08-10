@@ -81,20 +81,20 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
     }
 
     @Override
-    public ResponseType<?> deleteUser(Long id) {
+    public ResponseType<?> deleteUser(String id) {
         this.changeUserStatus(id, false);
         return ResponseType.ok(null);
     }
 
     @Override
-    public ResponseType<?> activeUser(Long id) {
+    public ResponseType<?> activeUser(String id) {
         this.changeUserStatus(id, true);
         return ResponseType.ok(null);
     }
 
-    private void changeUserStatus(Long id, boolean status) {
-        UserInfo userInfo = this.repository.findById(id).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exist"));
-        userInfo.setActive(true);
+    private void changeUserStatus(String id, boolean status) {
+        UserInfo userInfo = this.repository.findByUserUidAndActiveIsTrue(id).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exist"));
+        userInfo.setActive(status);
         this.authServiceGrpcClient.changeUserStatus(userInfo.getUserUid(), status);
         this.save(userInfo);
     }
