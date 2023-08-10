@@ -91,7 +91,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 .discount(0D)
                 .price(request.getPrice())
                 .build();
-        product = this.save(product);
+        byte[] image = this.generateQrCode(this.productMapper.productEntityToProductDto(product));
+        product.setProductQr(image);
         InventoryRequest inventoryRequest = InventoryRequest.builder()
                 .productUid(product.getProductUid())
                 .importedBy(this.currentUserService.getUsername())
@@ -99,6 +100,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 .importedFrom(Strings.EMPTY)
                 .note(Strings.EMPTY)
                 .build();
+        this.save(product);
         this.inventoryServiceGrpcClient.create(inventoryRequest);
         LOG.info("SAVE PRODUCT {} SUCCESS, SAVE PRODUCT DETAIL", request.getName());
         this.productDetailService.addOrSaveProductDetail(product, request.getDetails());
@@ -114,7 +116,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
             ).collect(Collectors.toList());
             product.setProductCategories(productCategories);
             this.productCategoryService.saveEntities(productCategories);
-            //this.save(product);
+            this.save(product);
         }
     }
 
@@ -145,6 +147,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 StringUtil.isNotEmpty(request.getProductDescription()) ?
                         request.getProductDescription() : product.getProductDescription()
         );
+        byte[] image = this.generateQrCode(this.productMapper.productEntityToProductDto(product));
+        product.setProductQr(image);
         product = this.save(product);
         LOG.info("UPDATE PRODUCT {} SUCCESS, UPDATE PRODUCT DETAIL", request.getName());
         if (request.getDetails() != null && !(request.getDetails().isEmpty())) {
@@ -223,12 +227,12 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
      * println(new String(decoded))    // Outputs "Hello"
      * @param request
      */
-    public String generateQrCode(ProductDto request) {
+    public byte[] generateQrCode(ProductDto request) {
         try {
             QrCodeReqDto dto = QrCodeReqDto.builder()
                     .frameName("no-frame")
                     .qrCodeText(this.objectMapper.writeValueAsString(request))
-                    .imageFormat("SVG")
+                    .imageFormat("PNG")
                     .qrCodeLogo("scan-me-square")
                     .build();
             byte[] bytes = this.httpUtil.callApi(
@@ -248,10 +252,12 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                     false,
                     false
             ).getBody();
-            return new String(Base64.getEncoder().encode(bytes));
+            //return new String(Base64.getEncoder().encode(bytes));
+            return bytes;
         } catch (Exception e) {
             LOG.info(ExceptionStackTraceUtil.getStackTrace(e));
-            return Strings.EMPTY;
+            //return Strings.EMPTY;
+            return null;
         }
     }
 

@@ -44,7 +44,7 @@ public class Product extends BaseEntity {
     @Column(name = "PRODUCT_DESCRIPTION")
     private String productDescription;
 
-    @Column(name = "PRODUCT_QR")
+    @Column(name = "PRODUCT_QR", columnDefinition = "LONGBLOB")
     private byte[] productQr;
 
     @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)

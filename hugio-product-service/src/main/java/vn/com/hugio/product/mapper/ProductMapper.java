@@ -19,17 +19,21 @@ public class ProductMapper {
     public ProductDto productEntityToProductDto(Product product) {
         ProductDto dto = this.modelMapper.map(product, ProductDto.class);
 
-        List<CategoryDto> categoryDtos = product.getProductCategories()
-                .stream()
-                .map(category -> modelMapper.map(category.getCategory(), CategoryDto.class))
-                .toList();
-        dto.setCategoryDtos(categoryDtos);
+        if (product.getProductCategories() != null && !(product.getProductCategories().isEmpty())) {
+            List<CategoryDto> categoryDtos = product.getProductCategories()
+                    .stream()
+                    .map(category -> modelMapper.map(category.getCategory(), CategoryDto.class))
+                    .toList();
+            dto.setCategoryDtos(categoryDtos);
+        }
 
-        List<ProductDetailDto> productDetailDtos = product.getProductDetails()
-                .stream()
-                .map(productDetail -> modelMapper.map(productDetail, ProductDetailDto.class))
-                .toList();
-        dto.setProductDetailDtos(productDetailDtos);
+        if (product.getProductDetails() != null && !(product.getProductDetails().isEmpty())) {
+            List<ProductDetailDto> productDetailDtos = product.getProductDetails()
+                    .stream()
+                    .map(productDetail -> modelMapper.map(productDetail, ProductDetailDto.class))
+                    .toList();
+            dto.setProductDetailDtos(productDetailDtos);
+        }
 
         return dto;
     }
