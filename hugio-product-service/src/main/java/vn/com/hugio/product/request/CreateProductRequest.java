@@ -30,7 +30,7 @@ public class CreateProductRequest {
     @FieldNotNull
     private Long quantity;
 
-    @JsonProperty("category")
+    @JsonProperty("categories")
     private List<String> category;
 
     @JsonProperty("details")

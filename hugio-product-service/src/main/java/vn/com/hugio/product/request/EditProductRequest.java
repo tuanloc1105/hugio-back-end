@@ -18,7 +18,7 @@ public class EditProductRequest {
     private String productId;
 
     @FieldNotNull
-    @JsonProperty("name")
+    @JsonProperty("product_name")
     private String name;
 
     @FieldNotNull
@@ -31,7 +31,7 @@ public class EditProductRequest {
     @JsonProperty("product_description")
     private String productDescription;
 
-    @JsonProperty("category")
+    @JsonProperty("categories")
     private List<String> category;
 
     @JsonProperty("details")
