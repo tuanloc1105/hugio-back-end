@@ -12,4 +12,6 @@ public interface UserInfoRepo extends BaseRepository<UserInfo> {
 
     Optional<UserInfo> findByUserUidAndActiveIsTrue(String userUid);
 
+    Optional<UserInfo> findByUserUid(String userUid);
+
 }

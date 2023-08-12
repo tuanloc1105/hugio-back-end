@@ -14,6 +14,7 @@ import vn.com.hugio.common.utils.AesUtil;
 import vn.com.hugio.grpc.user.*;
 import vn.com.hugio.proto.common.TraceTypeGRPC;
 import vn.com.hugio.proto.utils.GrpcUtil;
+import vn.com.hugio.user.dto.UserInfoDto;
 import vn.com.hugio.user.dto.UserInfoGrpcDto;
 import vn.com.hugio.user.message.request.CreateUserInfoRequest;
 
@@ -129,7 +130,7 @@ public class AuthServiceGrpcClient {
         return new ArrayList<>(responseType.getResponse().getRoleNameList());
     }
 
-    public List<String> getUserInfo(String userUid) {
+    public List<String> getUserRole(String userUid) {
         TraceTypeGRPC traceTypeGRPC = GrpcUtil.createTraceTypeGrpc();
 
         RequestTypeUserInfoInput requestType = RequestTypeUserInfoInput.newBuilder()
@@ -149,6 +150,32 @@ public class AuthServiceGrpcClient {
             throw new InternalServiceException(responseType.getCode(), responseType.getMessage());
         }
         return new ArrayList<>(responseType.getResponse().getRoleList());
+    }
+
+    public UserInfoDto getUserInfo(String userUid) {
+        TraceTypeGRPC traceTypeGRPC = GrpcUtil.createTraceTypeGrpc();
+
+        RequestTypeUserInfoInput requestType = RequestTypeUserInfoInput.newBuilder()
+                .setTrace(traceTypeGRPC)
+                .setRequest(
+                        UserInfoInput.newBuilder()
+                                .setUserUid(userUid)
+                                .build()
+                )
+                .build();
+        UserServiceGrpc.UserServiceBlockingStub blockingStub = UserServiceGrpc.newBlockingStub(authManagedChannel);
+        ResponseTypeUserInfo responseType = blockingStub.getUserRole(requestType);
+        LOG.info("RETRIEVE A GRPC MESSAGE");
+        if (
+                !(responseType.getCode().equals(ErrorCodeEnum.SUCCESS.getCode().toString()))
+        ) {
+            throw new InternalServiceException(responseType.getCode(), responseType.getMessage());
+        }
+        return UserInfoDto.builder()
+                .userUid(responseType.getResponse().getUserUid())
+                .username(responseType.getResponse().getUsername())
+                .roles(responseType.getResponse().getRoleList())
+                .build();
     }
 
     public void changeUserStatus(String userUid, boolean status) {

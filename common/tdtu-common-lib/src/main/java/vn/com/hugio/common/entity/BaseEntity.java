@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 
 @MappedSuperclass
 @Data
@@ -69,5 +70,14 @@ public abstract class BaseEntity implements Serializable {
     public void preUpdate() {
         this.updatedAt = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of(CommonConstant.DEFAULT_TIMEZONE)).toLocalDateTime();
         this.updatedBy = MDC.get("username");
+    }
+
+    public void mergeBase(BaseEntity anotherBaseEntity) {
+        this.id = Optional.ofNullable(anotherBaseEntity.getId()).isPresent() ? anotherBaseEntity.getId() : this.id;
+        this.active = anotherBaseEntity.isActive();
+        this.createdAt = Optional.ofNullable(anotherBaseEntity.getCreatedAt()).isPresent() ? anotherBaseEntity.getCreatedAt() : this.createdAt;
+        this.updatedAt = Optional.ofNullable(anotherBaseEntity.getUpdatedAt()).isPresent() ? anotherBaseEntity.getUpdatedAt() : this.updatedAt;
+        this.createdBy = Optional.ofNullable(anotherBaseEntity.getCreatedBy()).isPresent() ? anotherBaseEntity.getCreatedBy() : this.createdBy;
+        this.updatedBy = Optional.ofNullable(anotherBaseEntity.getUpdatedBy()).isPresent() ? anotherBaseEntity.getUpdatedBy() : this.updatedBy;
     }
 }

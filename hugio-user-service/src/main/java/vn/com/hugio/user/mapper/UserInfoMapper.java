@@ -13,6 +13,12 @@ import vn.com.hugio.user.entity.UserInfo;
 public interface UserInfoMapper {
 
     @Mapping(target = "roles", ignore = true)
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "active", target = "active")
+    @Mapping(source = "createdAt", target = "createdAt")
+    @Mapping(source = "updatedAt", target = "updatedAt")
+    @Mapping(source = "createdBy", target = "createdBy")
+    @Mapping(source = "updatedBy", target = "updatedBy")
     UserInfoDto userInfoDtoMapper(UserInfo userInfo);
 
 }

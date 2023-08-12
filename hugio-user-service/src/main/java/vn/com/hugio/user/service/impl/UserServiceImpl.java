@@ -6,18 +6,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
+import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.service.BaseService;
 import vn.com.hugio.common.utils.DateTimeUtil;
+import vn.com.hugio.common.utils.ExceptionStackTraceUtil;
 import vn.com.hugio.common.utils.StringUtil;
 import vn.com.hugio.user.dto.UserInfoDto;
 import vn.com.hugio.user.dto.UserInfoGrpcDto;
 import vn.com.hugio.user.entity.UserInfo;
 import vn.com.hugio.user.entity.repository.UserInfoRepo;
 import vn.com.hugio.user.mapper.UserInfoMapper;
+import vn.com.hugio.user.mapper.UserMapper;
 import vn.com.hugio.user.message.request.CreateUserInfoRequest;
 import vn.com.hugio.user.service.UserService;
 import vn.com.hugio.user.service.grpc.client.AuthServiceGrpcClient;
@@ -67,7 +70,7 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
     @Override
     public UserInfoDto detail(String uid) {
         UserInfo userInfo = this.repository.findByUserUidAndActiveIsTrue(uid).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
-        List<String> roles = this.authServiceGrpcClient.getUserInfo(uid);
+        List<String> roles = this.authServiceGrpcClient.getUserRole(uid);
         UserInfoDto dto = this.userInfoMapper.userInfoDtoMapper(userInfo);
         dto.setRoles(roles);
         return dto;
@@ -77,7 +80,21 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
     public PageResponse<UserInfoDto> getAllUser(PagableRequest request) {
         PageLink pageLink = new PageLink(request);
         Page<UserInfo> page = this.repository.findAll(pageLink.toPageable());
-        return PageResponse.create(page, userInfoMapper::userInfoDtoMapper, true);
+        List<UserInfoDto> dto = page.getContent()
+                .stream()
+                .map(UserMapper::map)
+                .toList()
+                .stream()
+                .peek(user -> {
+                    try {
+                        UserInfoDto dto1 = authServiceGrpcClient.getUserInfo(user.getUserUid());
+                        user.merge(dto1);
+                    } catch (InternalServiceException e) {
+                        LOG.warn(ExceptionStackTraceUtil.getStackTrace(e));
+                    }
+                })
+                .toList();
+        return PageResponse.create(page, dto, true);
     }
 
     @Override
@@ -93,7 +110,12 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
     }
 
     private void changeUserStatus(String id, boolean status) {
-        UserInfo userInfo = this.repository.findByUserUidAndActiveIsTrue(id).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exist"));
+        UserInfo userInfo;
+        if (!status) {
+            userInfo = this.repository.findByUserUidAndActiveIsTrue(id).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exist"));
+        } else {
+            userInfo = this.repository.findByUserUid(id).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exist"));
+        }
         userInfo.setActive(status);
         this.authServiceGrpcClient.changeUserStatus(userInfo.getUserUid(), status);
         this.save(userInfo);
