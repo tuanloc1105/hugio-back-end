@@ -9,6 +9,7 @@ import vn.com.hugio.auth.entity.Role;
 import vn.com.hugio.auth.entity.User;
 import vn.com.hugio.auth.entity.UserRole;
 import vn.com.hugio.auth.entity.repository.UserRepo;
+import vn.com.hugio.auth.mapper.UserMap;
 import vn.com.hugio.auth.mapper.UserMapper;
 import vn.com.hugio.auth.message.request.CreateUserRequest;
 import vn.com.hugio.auth.message.response.LoginResponse;
@@ -76,7 +77,7 @@ public class AuthServiceImpl extends BaseService<User, UserRepo> implements Auth
     public UserDto getInfo(String userUid) {
         User user = this.repository.findByUserUidAndActiveIsTrue(userUid)
                 .orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exists"));
-        return this.userMapper.userDtoMapper(user);
+        return UserMap.map(user);
     }
 
     @Override

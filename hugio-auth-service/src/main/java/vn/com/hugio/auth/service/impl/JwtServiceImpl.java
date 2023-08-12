@@ -52,7 +52,7 @@ public class JwtServiceImpl implements JwtService {
                 claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
             }
             return UserDto.builder()
-                    .userUid(UUID.fromString(String.valueOf(claims.get("userUid"))))
+                    .userUid(String.valueOf(claims.get("userUid")))
                     .username((String) claims.get("username"))
                     .roles(
                             List.of(String.valueOf(claims.get("roles")).split(","))

@@ -88,7 +88,8 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
                 .peek(user -> {
                     try {
                         UserInfoDto dto1 = authServiceGrpcClient.getUserInfo(user.getUserUid());
-                        user.merge(dto1);
+                        user.setRoles(dto1.getRoles());
+                        user.setUsername(dto1.getUsername());
                     } catch (InternalServiceException e) {
                         LOG.warn(ExceptionStackTraceUtil.getStackTrace(e));
                     }
