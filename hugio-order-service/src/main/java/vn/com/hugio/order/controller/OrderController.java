@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.com.hugio.common.object.RequestType;
 import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.order.request.PlaceOrderRequest;
+import vn.com.hugio.order.service.OrderService;
 
 @RestController
 @RequestMapping("/order")
@@ -15,8 +16,11 @@ import vn.com.hugio.order.request.PlaceOrderRequest;
 @CrossOrigin("*")
 public class OrderController {
 
+    private final OrderService orderService;
+
     @PostMapping("/place")
-    public ResponseType<?> order(RequestType<PlaceOrderRequest> request) {
+    public ResponseType<String> order(RequestType<PlaceOrderRequest> request) {
+        this.orderService.placeOrder(request.getRequest());
         return ResponseType.ok("ok");
     }
 
