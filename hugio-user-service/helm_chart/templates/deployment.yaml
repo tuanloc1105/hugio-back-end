@@ -48,3 +48,8 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-cf
                   key: auth_rest_endpoint
+            - name: DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: default_password

@@ -29,6 +29,8 @@ public class AuthServiceGrpcClient {
     private final ManagedChannel authManagedChannel;
     @Value("${aes_secret_key}")
     private String aesKey;
+    @Value("${default_password}")
+    private String defaultPassword;
 
     @Autowired
     public AuthServiceGrpcClient(ManagedChannel authManagedChannel) {
@@ -74,7 +76,7 @@ public class AuthServiceGrpcClient {
         String username, password;
         try {
             username = AesUtil.encrypt(request.getUsername(), this.aesKey);
-            password = AesUtil.encrypt(request.getPassword() == null ? DEFAULT_PASSWORD : request.getPassword(), this.aesKey);
+            password = AesUtil.encrypt(request.getPassword() == null ? defaultPassword : request.getPassword(), this.aesKey);
         } catch (Exception e) {
             throw new InternalServiceException(ErrorCodeEnum.CANNOT_ENCRYPT.getCode(), e.getMessage());
         }

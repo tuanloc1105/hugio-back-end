@@ -11,3 +11,4 @@ database:
   password: MTIzNDU2
 auth_endpoint: http://172.18.255.201:8000/auth_service/auth/retrieve-info
 auth_grpc_endpoint: auth-service-svc-2:9000
+default_password: SHVnaW8hQCMxMjM=
