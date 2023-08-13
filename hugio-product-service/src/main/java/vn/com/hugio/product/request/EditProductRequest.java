@@ -21,6 +21,9 @@ public class EditProductRequest {
     @JsonProperty("product_name")
     private String name;
 
+    @JsonProperty("product_quantity")
+    private Long quantity;
+
     @FieldNotNull
     @JsonProperty("price")
     private Double price;

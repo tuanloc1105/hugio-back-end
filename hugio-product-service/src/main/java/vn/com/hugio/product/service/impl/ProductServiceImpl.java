@@ -101,7 +101,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 .note(Strings.EMPTY)
                 .build();
         this.save(product);
-        this.inventoryServiceGrpcClient.create(inventoryRequest);
+        this.callInventory(inventoryRequest, InventoryCallMethod.CREATE);
         LOG.info("SAVE PRODUCT {} SUCCESS, SAVE PRODUCT DETAIL", request.getName());
         this.productDetailService.addOrSaveProductDetail(product, request.getDetails());
         if (request.getCategory() != null && !(request.getCategory().isEmpty())) {
@@ -169,6 +169,14 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
             product.setProductCategories(productCategories);
             this.save(product);
         }
+        InventoryRequest inventoryRequest = InventoryRequest.builder()
+                .productUid(product.getProductUid())
+                .importedBy(this.currentUserService.getUsername())
+                .importedQuantity(request.getQuantity())
+                .importedFrom(Strings.EMPTY)
+                .note(Strings.EMPTY)
+                .build();
+        this.callInventory(inventoryRequest, InventoryCallMethod.UPDATE);
     }
 
     @Override
@@ -213,7 +221,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 .importedFrom(Strings.EMPTY)
                 .note(Strings.EMPTY)
                 .build();
-        this.inventoryServiceGrpcClient.importProduct(inventoryRequest);
+        this.callInventory(inventoryRequest, InventoryCallMethod.IMPORT);
         LOG.info("REMOVED A PRODUCT WITH UID %s", request.getProductId());
     }
 
