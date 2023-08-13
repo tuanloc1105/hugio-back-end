@@ -21,6 +21,8 @@ import vn.com.hugio.user.message.request.CreateUserInfoRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static vn.com.hugio.common.constant.CommonConstant.DEFAULT_PASSWORD;
+
 @Service
 public class AuthServiceGrpcClient {
 
@@ -72,7 +74,7 @@ public class AuthServiceGrpcClient {
         String username, password;
         try {
             username = AesUtil.encrypt(request.getUsername(), this.aesKey);
-            password = AesUtil.encrypt(request.getPassword(), this.aesKey);
+            password = AesUtil.encrypt(request.getPassword() == null ? DEFAULT_PASSWORD : request.getPassword(), this.aesKey);
         } catch (Exception e) {
             throw new InternalServiceException(ErrorCodeEnum.CANNOT_ENCRYPT.getCode(), e.getMessage());
         }

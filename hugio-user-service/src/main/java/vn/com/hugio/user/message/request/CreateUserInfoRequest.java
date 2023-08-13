@@ -18,7 +18,6 @@ public class CreateUserInfoRequest {
     private String username;
 
     @JsonProperty("password")
-    @FieldNotNull
     private String password;
 
     @JsonProperty("email")
