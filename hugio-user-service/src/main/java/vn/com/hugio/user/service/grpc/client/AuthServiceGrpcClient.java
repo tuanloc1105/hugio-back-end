@@ -21,8 +21,6 @@ import vn.com.hugio.user.message.request.CreateUserInfoRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static vn.com.hugio.common.constant.CommonConstant.DEFAULT_PASSWORD;
-
 @Service
 public class AuthServiceGrpcClient {
 
