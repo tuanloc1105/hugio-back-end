@@ -37,3 +37,4 @@ management:
 aes_secret_key: iXlCmp4pcEZ2YBUqfelapUH2wGRDDSar
 auth:
   endpoint: ${AUTH_ENDPOINT:http://localhost:8000/auth_service/auth/retrieve-info}
+default_password: ${DEFAULT_PASSWORD:}
