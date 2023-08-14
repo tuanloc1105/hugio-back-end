@@ -21,7 +21,7 @@ public class RedisConfig {
 
     @Bean
     public LettuceConnectionFactory reidsConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(this.host, Integer.parseInt(this.port.replace("_", Strings.EMPTY))));
+        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(this.host, Integer.parseInt(this.port.replace("redis", Strings.EMPTY))));
     }
 
     @Bean
