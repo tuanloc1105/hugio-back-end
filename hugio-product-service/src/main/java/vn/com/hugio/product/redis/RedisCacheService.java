@@ -63,6 +63,17 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
+    public String get(String key) {
+        try {
+            LOG.info("[REDIS GETTING VALUE] Key ({})", key);
+            return (String) this.template.opsForValue().get(key);
+        } catch (Exception e) {
+            LOG.error("[REDIS GET VALUE FAIL] {}", e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
     public void delete(String key) {
         LOG.info("[REDIS DELETING] Key ({})", key);
         this.template.delete(key);

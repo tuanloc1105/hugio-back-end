@@ -1,6 +1,7 @@
 package vn.com.hugio.common.pagable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Data
+@AllArgsConstructor
+@Builder
 public class PageResponse<T> implements Serializable {
     @Serial
     private static final long serialVersionUID = 8325398541544489844L;
@@ -41,18 +44,6 @@ public class PageResponse<T> implements Serializable {
     private List<T> content;
 
     public PageResponse() {
-    }
-
-    @Builder
-    public PageResponse(Integer pageNumber, Integer pageSize, Integer totalPages, Integer numberOfElements, Long totalElements, Boolean firstPage, Boolean lastPage, List<T> content) {
-        this.pageNumber = pageNumber;
-        this.pageSize = pageSize;
-        this.totalPages = totalPages;
-        this.numberOfElements = numberOfElements;
-        this.totalElements = totalElements;
-        this.firstPage = firstPage;
-        this.lastPage = lastPage;
-        this.content = content;
     }
 
     public static <T, V> PageResponse<V> create(Page<T> page, Function<List<T>, List<V>> function, boolean... isIncreasePageNumber) {

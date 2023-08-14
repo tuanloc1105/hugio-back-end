@@ -30,6 +30,8 @@ public interface CacheService {
      */
     <V> V get(String key, TypeReference<V> typeReference);
 
+    String get(String key);
+
 
     /**
      * Delete key
