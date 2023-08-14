@@ -9,6 +9,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import vn.com.hugio.common.log.LOG;
 
 @Configuration
 public class RedisConfig {
@@ -21,7 +22,9 @@ public class RedisConfig {
 
     @Bean
     public LettuceConnectionFactory reidsConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(this.host, Integer.parseInt(this.port.replace("redis", Strings.EMPTY))));
+        int portInteger = Integer.parseInt(this.port.replace("redis", Strings.EMPTY));
+        LOG.info("CONNECTING TO REDIS: %s:%s", this.host, portInteger);
+        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(this.host, portInteger));
     }
 
     @Bean
