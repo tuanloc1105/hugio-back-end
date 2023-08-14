@@ -53,3 +53,13 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-cf
                   key: auth_rest_endpoint
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-cf
+                  key: redis_host
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-cf
+                  key: redis_port

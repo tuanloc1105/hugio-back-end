@@ -1,5 +1,6 @@
 package vn.com.hugio.product.service;
 
+import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.product.dto.ProductDto;
@@ -18,6 +19,8 @@ public interface ProductService {
     ProductDto getProductDetail(String uid);
 
     void removeProduct(DeleteProductRequest request);
+
+    ResponseType<String> getProductQR(String productUid);
 
     void importProductQuantity(ImportProductQuantityRequest request);
 }

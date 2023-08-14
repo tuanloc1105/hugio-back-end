@@ -24,4 +24,10 @@ public class QrCodeReqDto {
     @JsonProperty("qr_code_logo")
     private String qrCodeLogo;
 
+    @JsonProperty("frame_text")
+    private String frameText;
+
+    @JsonProperty("frame_icon_name")
+    private String frameIconName;
+
 }

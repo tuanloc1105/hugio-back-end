@@ -1,6 +1,8 @@
 package vn.com.hugio.product.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
+import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.pagable.PageResponse;
@@ -27,6 +30,7 @@ import vn.com.hugio.product.entity.ProductCategory;
 import vn.com.hugio.product.entity.repository.ProductRepository;
 import vn.com.hugio.product.enums.InventoryCallMethod;
 import vn.com.hugio.product.mapper.ProductMapper;
+import vn.com.hugio.product.redis.RedisCacheService;
 import vn.com.hugio.product.request.CreateProductRequest;
 import vn.com.hugio.product.request.DeleteProductRequest;
 import vn.com.hugio.product.request.EditProductRequest;
@@ -38,12 +42,19 @@ import vn.com.hugio.product.service.ProductService;
 import vn.com.hugio.product.service.grpc.client.InventoryServiceGrpcClient;
 import vn.com.hugio.product.service.grpc.request.InventoryRequest;
 
-import java.util.*;
+import java.time.Duration;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = {InternalServiceException.class, RuntimeException.class, Exception.class, Throwable.class})
 public class ProductServiceImpl extends BaseService<Product, ProductRepository> implements ProductService {
+
+    private static String REDIS_KEY_FORMAT = "all_%s_%s_%s";
 
     private final ProductDetailService productDetailService;
     private final ProductMapper productMapper;
@@ -53,6 +64,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     private final HttpUtil httpUtil;
     private final ObjectMapper objectMapper;
     private final CurrentUserService currentUserService;
+    private final RedisCacheService redisCacheService;
 
     @Value("${qr.code.api-url}")
     private String qrCodeApiUrl;
@@ -65,7 +77,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                               InventoryServiceGrpcClient inventoryServiceGrpcClient,
                               HttpUtil httpUtil,
                               ObjectMapper objectMapper,
-                              CurrentUserService currentUserService) {
+                              CurrentUserService currentUserService,
+                              RedisCacheService redisCacheService) {
         super(repository);
         this.productDetailService = productDetailService;
         this.productMapper = productMapper;
@@ -75,6 +88,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         this.httpUtil = httpUtil;
         this.objectMapper = objectMapper;
         this.currentUserService = currentUserService;
+        this.redisCacheService = redisCacheService;
     }
 
     @Override
@@ -181,12 +195,36 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public PageResponse<ProductDto> getAllProduct(PagableRequest request) {
-        PageLink pageLink = PageLink.create(request.getPageSize(), request.getPageNumber(), request.getSort());
-        Page<Product> products = this.repository.findByActiveIsTrue(pageLink.toPageable());
-        List<ProductDto> dtoList = products.stream()
-                .map(productMapper::productEntityToProductDto)
-                .toList().stream().peek(dto -> dto.setQuantity(inventoryServiceGrpcClient.getProductQuantity(dto.getProductUid()))).toList();
-        return PageResponse.create(products, dtoList, true);
+        String redisKey = String.format(
+                REDIS_KEY_FORMAT,
+                request.getPageNumber(),
+                request.getPageSize(),
+                StringUtils.isNotEmpty(request.getProperty()) ? request.getProperty() : "none"
+        );
+        PageResponse<ProductDto> pageResponse;
+        // try get data from redis
+        pageResponse = this.redisCacheService.get(redisKey, new TypeReference<>() {
+        });
+        if (pageResponse == null) {
+            PageLink pageLink = PageLink.create(request.getPageSize(), request.getPageNumber(), request.getSort());
+            Page<Product> products = this.repository.findByActiveIsTrue(pageLink.toPageable());
+            List<ProductDto> dtoList = products.stream()
+                    .map(productMapper::productEntityToProductDto)
+                    .toList().stream().peek(dto -> dto.setQuantity(inventoryServiceGrpcClient.getProductQuantity(dto.getProductUid())))
+                    .toList();
+            pageResponse = PageResponse.create(products, dtoList, true);
+            try {
+                String dataJson = this.objectMapper.writeValueAsString(pageResponse);
+                this.redisCacheService.set(
+                        redisKey,
+                        dataJson,
+                        Duration.ofDays(1)
+                );
+            } catch (Exception e) {
+                LOG.warn(ExceptionStackTraceUtil.getStackTrace(e));
+            }
+        }
+        return pageResponse;
     }
 
     @Override
@@ -210,6 +248,20 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     }
 
     @Override
+    public ResponseType<String> getProductQR(String productUid) {
+        Product product = this.repository.findByProductUidAndActiveIsTrue(productUid).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "product does not exist"));
+        byte[] byteData = new byte[0];
+        if (product.getProductQr().length != 0) {
+            byteData = product.getProductQr();
+        } else {
+            ProductDto dto = this.productMapper.productEntityToProductDto(product);
+            byteData = this.generateQrCode(dto);
+        }
+        String base64 = Base64.getEncoder().encodeToString(byteData);
+        return ResponseType.ok(base64);
+    }
+
+    @Override
     public void importProductQuantity(ImportProductQuantityRequest request) {
         this.repository.findByProductUidAndActiveIsTrue(request.getProductId()).orElseThrow(
                 () -> new InternalServiceException(ErrorCodeEnum.EXISTS.getCode(), "this product does not exist or removed")
@@ -230,9 +282,10 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     /**
      * byte[] encoded = Base64.getEncoder().encode("Hello".getBytes());
      * println(new String(encoded));   // Outputs "SGVsbG8="
-     *
+     * <p>
      * byte[] decoded = Base64.getDecoder().decode(encoded);
      * println(new String(decoded))    // Outputs "Hello"
+     *
      * @param request
      */
     public byte[] generateQrCode(ProductDto request) {
@@ -241,7 +294,10 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                     .frameName("no-frame")
                     .qrCodeText(this.objectMapper.writeValueAsString(request))
                     .imageFormat("PNG")
-                    .qrCodeLogo("scan-me-square")
+                    //.qrCodeLogo("scan-me-square")
+                    .qrCodeLogo("no-logo")
+                    .frameText("scan me")
+                    .frameIconName("mobile")
                     .build();
             byte[] bytes = this.httpUtil.callApi(
                     dto,

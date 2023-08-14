@@ -8,3 +8,5 @@ data:
   auth_grpc_endpoint: {{ .Values.auth_grpc_endpoint }}
   inventory_grpc_endpoint: {{ .Values.inventory_grpc_endpoint }}
   auth_rest_endpoint: {{ .Values.auth_endpoint }}
+  redis_host: {{ .Values.redis.host }}
+  redis_port: {{ .Values.redis.port }}

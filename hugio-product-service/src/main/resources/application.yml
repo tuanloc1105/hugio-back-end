@@ -41,3 +41,6 @@ qr:
 chat:
   api:
     key: ${CHAT_API_KEY:}
+redis:
+  host: ${REDIS_HOST:}
+  port: ${REDIS_PORT:}

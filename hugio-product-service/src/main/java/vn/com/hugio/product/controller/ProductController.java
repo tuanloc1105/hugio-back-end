@@ -54,4 +54,9 @@ public class ProductController {
         return ResponseType.ok("ok");
     }
 
+    @PostMapping("/qr")
+    public ResponseType<String> getQr(@RequestBody RequestType<String> request) {
+        return this.productService.getProductQR(request.getRequest());
+    }
+
 }
