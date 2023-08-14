@@ -1,7 +1,9 @@
 package vn.com.hugio.product.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -41,6 +43,7 @@ import vn.com.hugio.product.service.ProductService;
 import vn.com.hugio.product.service.grpc.client.InventoryServiceGrpcClient;
 import vn.com.hugio.product.service.grpc.request.InventoryRequest;
 
+import java.time.Duration;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +64,6 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     private final InventoryServiceGrpcClient inventoryServiceGrpcClient;
     private final HttpUtil httpUtil;
     private final ObjectMapper objectMapper;
-    private final Gson gson;
     private final CurrentUserService currentUserService;
     private final RedisCacheService redisCacheService;
 
@@ -76,7 +78,6 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                               InventoryServiceGrpcClient inventoryServiceGrpcClient,
                               HttpUtil httpUtil,
                               ObjectMapper objectMapper,
-                              Gson gson,
                               CurrentUserService currentUserService,
                               RedisCacheService redisCacheService) {
         super(repository);
@@ -87,7 +88,6 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         this.inventoryServiceGrpcClient = inventoryServiceGrpcClient;
         this.httpUtil = httpUtil;
         this.objectMapper = objectMapper;
-        this.gson = gson;
         this.currentUserService = currentUserService;
         this.redisCacheService = redisCacheService;
     }
@@ -198,22 +198,35 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public PageResponse<ProductDto> getAllProduct(PagableRequest request) {
-        /*
-         * String redisKey = String.format(
-         *         REDIS_KEY_FORMAT,
-         *         request.getPageNumber(),
-         *         request.getPageSize(),
-         *         StringUtils.isNotEmpty(request.getProperty()) ? request.getProperty() : "none"
-         * );
-         */
+        String redisKey = String.format(
+                REDIS_KEY_FORMAT,
+                request.getPageNumber(),
+                request.getPageSize(),
+                StringUtils.isNotEmpty(request.getProperty()) ? request.getProperty() : "none"
+        );
         PageResponse<ProductDto> pageResponse;
-        PageLink pageLink = PageLink.create(request.getPageSize(), request.getPageNumber(), request.getSort());
-        Page<Product> products = this.repository.findByActiveIsTrue(pageLink.toPageable());
-        List<ProductDto> dtoList = products.stream()
-                .map(productMapper::productEntityToProductDto)
-                .toList().stream().peek(dto -> dto.setQuantity(inventoryServiceGrpcClient.getProductQuantity(dto.getProductUid())))
-                .toList();
-        pageResponse = PageResponse.create(products, dtoList, true);
+        // try get data from redis
+        pageResponse = this.redisCacheService.get(redisKey, new TypeReference<>() {
+        });
+        if (pageResponse == null) {
+            PageLink pageLink = PageLink.create(request.getPageSize(), request.getPageNumber(), request.getSort());
+            Page<Product> products = this.repository.findByActiveIsTrue(pageLink.toPageable());
+            List<ProductDto> dtoList = products.stream()
+                    .map(productMapper::productEntityToProductDto)
+                    .toList().stream().peek(dto -> dto.setQuantity(inventoryServiceGrpcClient.getProductQuantity(dto.getProductUid())))
+                    .toList();
+            pageResponse = PageResponse.create(products, dtoList, true);
+            try {
+                String dataJson = this.objectMapper.writeValueAsString(pageResponse);
+                this.redisCacheService.set(
+                        redisKey,
+                        dataJson,
+                        Duration.ofMinutes(30)
+                );
+            } catch (Exception e) {
+                LOG.warn(ExceptionStackTraceUtil.getStackTrace(e));
+            }
+        }
         return pageResponse;
     }
 

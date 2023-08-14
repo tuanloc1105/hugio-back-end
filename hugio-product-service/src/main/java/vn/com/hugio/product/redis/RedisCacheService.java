@@ -3,6 +3,8 @@ package vn.com.hugio.product.redis;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import vn.com.hugio.common.log.LOG;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -53,9 +56,11 @@ public class RedisCacheService implements CacheService {
     @Override
     public <V> V get(String key, TypeReference<V> typeReference) {
         try {
-            LOG.info("[REDIS GETTING VALUE] Key ({})", key);
-            return this.objectMapper.readValue((String) this.template.opsForValue().get(key),
-                    typeReference);
+            String content = this.get(key);
+            if (StringUtils.isEmpty(content)) {
+                return null;
+            }
+            return this.objectMapper.readValue(content, typeReference);
         } catch (Exception e) {
             LOG.error("[REDIS GET VALUE FAIL] {}", e.getMessage());
             return null;
@@ -66,7 +71,7 @@ public class RedisCacheService implements CacheService {
     public String get(String key) {
         try {
             LOG.info("[REDIS GETTING VALUE] Key ({})", key);
-            return (String) this.template.opsForValue().get(key);
+            return Objects.requireNonNull(StringEscapeUtils.unescapeJava((String) this.template.opsForValue().get(key))).replaceAll("^\"|\"$", "");
         } catch (Exception e) {
             LOG.error("[REDIS GET VALUE FAIL] {}", e.getMessage());
             return null;
@@ -78,8 +83,8 @@ public class RedisCacheService implements CacheService {
         Set<String> redisKeys = template.keys("*");
         redisKeys.forEach(rKey -> {
             if (rKey.contains(key)) {
-                LOG.info("[REDIS DELETING] Key ({})", rKey);
-                this.template.delete(key);
+                Boolean result = this.template.delete(key);
+                LOG.info("[REDIS DELETING] Key ({}) result ({})", rKey, result);
             }
         });
     }
