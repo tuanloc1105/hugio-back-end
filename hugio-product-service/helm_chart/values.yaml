@@ -15,4 +15,4 @@ chat:
   api_key: c2stNXU1M3VycndpeVg4Y2xCQzBqZkRUM0JsYmtGSklLRWtGZkdMMUpRdGdnWGFzbVZZ
 redis:
   host: 192.168.1.22
-  port: "6378"
+  port: \"6378\"
