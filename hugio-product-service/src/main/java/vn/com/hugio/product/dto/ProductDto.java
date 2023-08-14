@@ -15,9 +15,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class ProductDto extends BaseEntityDto {
 
-    @JsonProperty("id")
-    private Long id;
-
     @JsonProperty("product_uid")
     private String productUid;
 

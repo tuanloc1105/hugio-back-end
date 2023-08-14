@@ -15,9 +15,6 @@ import vn.com.hugio.common.dto.BaseEntityDto;
 @Builder
 public class ProductDto extends BaseEntityDto {
 
-    @JsonProperty("id")
-    private Long id;
-
     @JsonProperty("product_uid")
     private String productUid;
 

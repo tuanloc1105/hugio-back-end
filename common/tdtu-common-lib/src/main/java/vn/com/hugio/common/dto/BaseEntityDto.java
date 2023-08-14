@@ -1,6 +1,7 @@
 package vn.com.hugio.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,15 +14,25 @@ import java.util.Optional;
 @Data
 public abstract class BaseEntityDto {
 
+
+    @JsonProperty("id")
     private Long id;
+
+    @JsonProperty("active")
     private boolean active;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:MM:ss")
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:MM:ss")
+    @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
+
+    @JsonProperty("created_by")
     private String createdBy;
+
+    @JsonProperty("updated_by")
     private String updatedBy;
 
     public void mergeBase(BaseEntityDto anotherDto) {

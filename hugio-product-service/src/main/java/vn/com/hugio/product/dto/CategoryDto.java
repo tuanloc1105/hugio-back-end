@@ -13,9 +13,6 @@ import vn.com.hugio.common.dto.BaseEntityDto;
 @EqualsAndHashCode(callSuper = false)
 public class CategoryDto extends BaseEntityDto {
 
-    @JsonProperty("id")
-    private Long id;
-
     @JsonProperty("category_uid")
     private String categoryUid;
 
