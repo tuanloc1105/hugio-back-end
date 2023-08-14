@@ -1,5 +1,6 @@
 package vn.com.hugio.product.redis;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +17,11 @@ public class RedisConfig {
     private String host;
 
     @Value("${redis.port}")
-    private Integer port;
+    private String port;
 
     @Bean
     public LettuceConnectionFactory reidsConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(this.host, this.port));
+        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(this.host, Integer.parseInt(this.port.replace("_", Strings.EMPTY))));
     }
 
     @Bean
