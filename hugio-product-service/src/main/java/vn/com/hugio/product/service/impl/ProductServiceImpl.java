@@ -94,7 +94,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public void createProduct(CreateProductRequest request) {
-        //this.redisCacheService.delete("all");
+        this.redisCacheService.delete("all");
         Optional<Product> optionalProduct = this.repository.findByProductName(request.getName());
         if (optionalProduct.isPresent()) {
             throw new InternalServiceException(ErrorCodeEnum.EXISTS.getCode(), "this product has been existed");
@@ -138,7 +138,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public void updateProduct(EditProductRequest request) {
-        //this.redisCacheService.delete("all");
+        this.redisCacheService.delete("all");
         Product product = this.repository.findByProductUidAndActiveIsTrue(
                 request.getProductId()
         ).orElseThrow(
@@ -241,6 +241,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public void removeProduct(DeleteProductRequest request) {
+        this.redisCacheService.delete("all");
         if (request.getIsPermanent()) {
             Product product = this.repository.findByProductUid(request.getProductId()).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "product does not exist"));
             this.repository.delete(product);
@@ -266,6 +267,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public void importProductQuantity(ImportProductQuantityRequest request) {
+        this.redisCacheService.delete("all");
         this.repository.findByProductUidAndActiveIsTrue(request.getProductId()).orElseThrow(
                 () -> new InternalServiceException(ErrorCodeEnum.EXISTS.getCode(), "this product does not exist or removed")
         );
