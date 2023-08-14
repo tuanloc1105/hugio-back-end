@@ -75,8 +75,13 @@ public class RedisCacheService implements CacheService {
 
     @Override
     public void delete(String key) {
-        LOG.info("[REDIS DELETING] Key ({})", key);
-        this.template.delete(key);
+        Set<String> redisKeys = template.keys("*");
+        redisKeys.forEach(rKey -> {
+            if (rKey.contains(key)) {
+                LOG.info("[REDIS DELETING] Key ({})", key);
+                this.template.delete(key);
+            }
+        });
     }
 
     @Override

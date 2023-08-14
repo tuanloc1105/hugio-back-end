@@ -98,6 +98,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public void createProduct(CreateProductRequest request) {
+        this.redisCacheService.delete("all");
         Optional<Product> optionalProduct = this.repository.findByProductName(request.getName());
         if (optionalProduct.isPresent()) {
             throw new InternalServiceException(ErrorCodeEnum.EXISTS.getCode(), "this product has been existed");
@@ -141,6 +142,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public void updateProduct(EditProductRequest request) {
+        this.redisCacheService.delete("all");
         Product product = this.repository.findByProductUidAndActiveIsTrue(
                 request.getProductId()
         ).orElseThrow(
