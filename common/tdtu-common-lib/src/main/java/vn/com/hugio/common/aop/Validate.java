@@ -40,13 +40,15 @@ public class Validate {
                     throw new InternalServiceException(400, "Null request");
                 }
                 Object validateObject = requestType.getRequest();
-                emptyRequiredField.addAll(validate(validateObject));
-                if (!emptyRequiredField.isEmpty()) {
-                    String errMsg = String.format(
-                            "%1$s can not be empty",
-                            emptyRequiredField.stream().collect(Collectors.joining(", ", "[", "]"))
-                    );
-                    throw new InternalServiceException(400, errMsg);
+                if (validateObject.getClass().getName().contains("vn.com")) {
+                    emptyRequiredField.addAll(validate(validateObject));
+                    if (!emptyRequiredField.isEmpty()) {
+                        String errMsg = String.format(
+                                "%1$s can not be empty",
+                                emptyRequiredField.stream().collect(Collectors.joining(", ", "[", "]"))
+                        );
+                        throw new InternalServiceException(400, errMsg);
+                    }
                 }
             }
         }
