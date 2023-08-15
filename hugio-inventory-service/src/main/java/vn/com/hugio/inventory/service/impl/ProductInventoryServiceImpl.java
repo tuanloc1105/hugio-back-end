@@ -5,15 +5,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
+import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.service.BaseService;
+import vn.com.hugio.grpc.inventory.Inventory;
 import vn.com.hugio.inventory.entity.InventoryLog;
 import vn.com.hugio.inventory.entity.ProductInventory;
 import vn.com.hugio.inventory.entity.repository.ProductInventoryRepository;
 import vn.com.hugio.inventory.enums.ImportBehaviour;
 import vn.com.hugio.inventory.request.InventoryRequest;
+import vn.com.hugio.inventory.request.ReduceProductQuantityRequest;
 import vn.com.hugio.inventory.service.InventoryLogService;
 import vn.com.hugio.inventory.service.ProductInventoryService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -74,5 +78,18 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
         Optional<ProductInventory> productInventory = this.repository.findByProductUid(request.getProductUid());
         productInventory.ifPresent(inventory -> System.out.println(inventory.getQuantity()));
         return productInventory.isEmpty() ? 0L : productInventory.get().getQuantity();
+    }
+
+    @Override
+    public void reduceProductQuantity(List<ReduceProductQuantityRequest> request) {
+        for (ReduceProductQuantityRequest rq : request) {
+            Optional<ProductInventory> optionalProductInventory = this.repository.findByProductUid(rq.getProductUid());
+            if (optionalProductInventory.isEmpty()) {
+                LOG.info("product with uid %s is not present", rq.getProductUid());
+                continue;
+            }
+            ProductInventory productInventory = optionalProductInventory.get();
+            productInventory.setQuantity(productInventory.getQuantity() - rq.getQuantity());
+        }
     }
 }

@@ -17,7 +17,7 @@ import java.io.Serial;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "USERS")
+@Table(name = "ORDER_DETAIL")
 @EqualsAndHashCode(callSuper = false)
 @Builder
 @AllArgsConstructor

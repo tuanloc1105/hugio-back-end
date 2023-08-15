@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "USERS")
+@Table(name = "ORDERS")
 @EqualsAndHashCode(callSuper = false)
 @Builder
 @AllArgsConstructor

@@ -46,6 +46,8 @@ public class GrpcServer extends ProductServiceGrpc.ProductServiceImplBase {
                     .setProductDescription(dto.getProductDescription())
                     .build();
             responseBuilder.setResponse(output);
+            responseBuilder.setCode(ErrorCodeEnum.SUCCESS.getCode().toString());
+            responseBuilder.setMessage(ErrorCodeEnum.SUCCESS.getMessage());
         } catch (InternalServiceException e) {
             responseBuilder.setCode(e.getCode());
             responseBuilder.setMessage(e.getMessage());
