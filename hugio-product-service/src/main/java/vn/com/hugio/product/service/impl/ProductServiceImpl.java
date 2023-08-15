@@ -256,7 +256,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     public ResponseType<String> getProductQR(String productUid) {
         Product product = this.repository.findByProductUidAndActiveIsTrue(productUid).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "product does not exist"));
         byte[] byteData = new byte[0];
-        if (product.getProductQr().length != 0) {
+        if (product.getProductQr() != null && product.getProductQr().length != 0) {
             byteData = product.getProductQr();
         } else {
             ProductDto dto = this.productMapper.productEntityToProductDto(product);
