@@ -2,9 +2,9 @@ package vn.com.hugio.product.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
@@ -66,6 +66,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     private final ObjectMapper objectMapper;
     private final CurrentUserService currentUserService;
     private final RedisCacheService redisCacheService;
+    private final ModelMapper modelMapper;
 
     @Value("${qr.code.api-url}")
     private String qrCodeApiUrl;
@@ -79,7 +80,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                               HttpUtil httpUtil,
                               ObjectMapper objectMapper,
                               CurrentUserService currentUserService,
-                              RedisCacheService redisCacheService) {
+                              RedisCacheService redisCacheService,
+                              ModelMapper modelMapper) {
         super(repository);
         this.productDetailService = productDetailService;
         this.productMapper = productMapper;
@@ -90,6 +92,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         this.objectMapper = objectMapper;
         this.currentUserService = currentUserService;
         this.redisCacheService = redisCacheService;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -259,7 +262,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         if (product.getProductQr() != null && product.getProductQr().length != 0) {
             byteData = product.getProductQr();
         } else {
-            ProductDto dto = this.productMapper.productEntityToProductDto(product);
+            ProductDto dto = this.modelMapper.map(product, ProductDto.class);
             byteData = this.generateQrCode(dto);
             product.setProductQr(byteData);
             this.repository.save(product);
