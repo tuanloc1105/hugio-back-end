@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
 @Transactional(rollbackFor = {InternalServiceException.class, RuntimeException.class, Exception.class, Throwable.class})
 public class ProductServiceImpl extends BaseService<Product, ProductRepository> implements ProductService {
 
-    private static String REDIS_KEY_FORMAT = "all_%s_%s_%s";
+    private static String REDIS_KEY_FORMAT = "all_%s_%s_%s_%s";
 
     private final ProductDetailService productDetailService;
     private final ProductMapper productMapper;
@@ -202,7 +202,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 REDIS_KEY_FORMAT,
                 request.getPageNumber(),
                 request.getPageSize(),
-                StringUtils.isNotEmpty(request.getProperty()) ? request.getProperty() : "none"
+                StringUtils.isNotEmpty(request.getProperty()) ? request.getProperty() : "none",
+                request.getSort().name()
         );
         PageResponse<ProductDto> pageResponse;
         // try get data from redis
