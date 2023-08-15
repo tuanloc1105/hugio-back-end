@@ -11,6 +11,7 @@ database:
   password: MTIzNDU2
 auth_endpoint: http://172.18.255.201:8000/auth_service/auth/retrieve-info
 inventory_grpc_endpoint: inventory-service-svc-2:9030
+qr_url: https://api.qr-code-generator.com/v1/create?access-token=uTbjp9a5j1_r_1IDVNQc9LGJe8EJr2lZXBuiDJrDxuzKqL72WLDQY4GiUcYBRnaT
 chat:
   api_key: c2stNXU1M3VycndpeVg4Y2xCQzBqZkRUM0JsYmtGSklLRWtGZkdMMUpRdGdnWGFzbVZZ
 redis:

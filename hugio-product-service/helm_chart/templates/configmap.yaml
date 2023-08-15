@@ -10,3 +10,4 @@ data:
   auth_rest_endpoint: {{ .Values.auth_endpoint }}
   redis_host: {{ .Values.redis.host }}
   redis_port: {{ .Values.redis.port }}
+  qr_code: {{ .Values.qr_url }}

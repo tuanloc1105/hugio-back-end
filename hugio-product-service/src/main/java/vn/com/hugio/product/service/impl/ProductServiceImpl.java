@@ -261,6 +261,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         } else {
             ProductDto dto = this.productMapper.productEntityToProductDto(product);
             byteData = this.generateQrCode(dto);
+            product.setProductQr(byteData);
+            this.repository.save(product);
         }
         String base64 = Base64.getEncoder().encodeToString(byteData);
         return ResponseType.ok(base64);

@@ -63,3 +63,8 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-cf
                   key: redis_port
+            - name: QR_CODE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-cf
+                  key: qr_code
