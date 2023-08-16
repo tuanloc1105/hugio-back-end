@@ -262,7 +262,9 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         if (product.getProductQr() != null && product.getProductQr().length != 0) {
             byteData = product.getProductQr();
         } else {
-            ProductDto dto = this.modelMapper.map(product, ProductDto.class);
+            ProductDto dto = ProductDto.builder()
+                    .productUid(product.getProductUid())
+                    .build();
             byteData = this.generateQrCode(dto);
             product.setProductQr(byteData);
             this.repository.save(product);
@@ -305,7 +307,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                     .frameName("no-frame")
                     .qrCodeText(this.objectMapper.writeValueAsString(request))
                     .imageFormat("PNG")
-                    .imageWidth(500)
+                    .imageWidth(1000)
                     //.qrCodeLogo("scan-me-square")
                     .qrCodeLogo("no-logo")
                     .frameText("scan me")
@@ -326,7 +328,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                     new ParameterizedTypeReference<byte[]>() {
                     },
                     false,
-                    false
+                    true, false
             ).getBody();
             //return new String(Base64.getEncoder().encode(bytes));
             return bytes;

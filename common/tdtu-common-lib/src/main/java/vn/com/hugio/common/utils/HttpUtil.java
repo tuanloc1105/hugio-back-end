@@ -68,7 +68,7 @@ public class HttpUtil {
             } else {
                 response = this.noSslRestTemplate.exchange(url, method, requestEntity, respModel);
             }
-            if (isLog.length > 0 && isLog[0]) {
+            if (isLog.length >= 2 && isLog[1]) {
                 LOG.info("[API RESPONSE] \n %s", LoggingUtil.maskValue(this.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody())));
             }
             return response;
