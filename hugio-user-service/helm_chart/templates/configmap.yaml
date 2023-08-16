@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Release.Name }}-cf
-  namespace: {{ .Release.Namespace }}
-data:
-  database_url: {{ .Values.database.url }}
-  auth_grpc_endpoint: {{ .Values.auth_grpc_endpoint }}
-  auth_rest_endpoint: {{ .Values.auth_endpoint }}
