@@ -2,6 +2,7 @@ package vn.com.hugio.product.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.modelmapper.ModelMapper;
@@ -66,7 +67,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     private final ObjectMapper objectMapper;
     private final CurrentUserService currentUserService;
     private final RedisCacheService redisCacheService;
-    private final ModelMapper modelMapper;
+    private final Gson gson;
 
     @Value("${qr.code.api-url}")
     private String qrCodeApiUrl;
@@ -81,7 +82,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                               ObjectMapper objectMapper,
                               CurrentUserService currentUserService,
                               RedisCacheService redisCacheService,
-                              ModelMapper modelMapper) {
+                              Gson gson) {
         super(repository);
         this.productDetailService = productDetailService;
         this.productMapper = productMapper;
@@ -92,7 +93,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         this.objectMapper = objectMapper;
         this.currentUserService = currentUserService;
         this.redisCacheService = redisCacheService;
-        this.modelMapper = modelMapper;
+        this.gson = gson;
     }
 
     @Override
@@ -303,9 +304,10 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
      */
     public byte[] generateQrCode(ProductDto request) {
         try {
+
             QrCodeReqDto dto = QrCodeReqDto.builder()
                     .frameName("no-frame")
-                    .qrCodeText(this.objectMapper.writeValueAsString(request))
+                    .qrCodeText(this.gson.toJson(request))
                     .imageFormat("PNG")
                     .imageWidth(1000)
                     //.qrCodeLogo("scan-me-square")

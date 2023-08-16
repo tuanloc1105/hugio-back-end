@@ -33,6 +33,7 @@ public class GsonConfig {
                         LocalDate.class,
                         (JsonSerializer<LocalDate>) (localDate, type, jsonSerializationContext) -> new JsonPrimitive(localDate.toString())
                 )
+                //.setPrettyPrinting()
                 .create();
     }
 
