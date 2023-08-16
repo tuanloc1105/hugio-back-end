@@ -24,6 +24,7 @@ import vn.com.hugio.order.service.grpc.ProductServiceGrpcClient;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -54,7 +55,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         }
         Order order = Order.builder()
                 .totalPrice(0D)
-                .orderCode(StringUtil.addZeroLeadingNumber(numberOfOrderInDay + 1, "HUGIO"))
+                .orderCode(StringUtil.addZeroLeadingNumber(numberOfOrderInDay + 1, "HUGIO" + LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"))))
                 .build();
         order = this.save(order);
         AtomicReference<Order> atomicReferenceOrder = new AtomicReference<>(order);
