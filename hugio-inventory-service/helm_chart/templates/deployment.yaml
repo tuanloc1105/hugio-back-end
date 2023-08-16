@@ -26,7 +26,7 @@ spec:
             - name: GRPC_AUTH_SERVER
               value: "auth-service-svc-2:9000"
             - name: MYSQL_DB_URL
-              value: "jdbc:mysql://host:port/hugio_inventory_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
+              value: "jdbc:mysql://192.168.1.22:3310/hugio_inventory_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
             - name: MYSQL_DB_USERNAME
               value: "root"
             - name: MYSQL_DB_PASSWORD
