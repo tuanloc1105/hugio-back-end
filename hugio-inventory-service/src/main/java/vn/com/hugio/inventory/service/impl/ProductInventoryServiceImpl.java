@@ -89,7 +89,11 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
                 continue;
             }
             ProductInventory productInventory = optionalProductInventory.get();
-            productInventory.setQuantity(productInventory.getQuantity() - rq.getQuantity());
+            long newQuantity = productInventory.getQuantity() - rq.getQuantity();
+            if (newQuantity < 0L) {
+                throw new InternalServiceException(ErrorCodeEnum.FAILURE, "product out of stock: " + rq.getProductUid());
+            }
+            productInventory.setQuantity(newQuantity);
         }
     }
 }

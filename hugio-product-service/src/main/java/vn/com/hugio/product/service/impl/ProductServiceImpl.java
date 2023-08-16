@@ -305,6 +305,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                     .frameName("no-frame")
                     .qrCodeText(this.objectMapper.writeValueAsString(request))
                     .imageFormat("PNG")
+                    .imageWidth(500)
                     //.qrCodeLogo("scan-me-square")
                     .qrCodeLogo("no-logo")
                     .frameText("scan me")

@@ -3,10 +3,13 @@ package vn.com.hugio.order.service.impl;
 import com.google.common.util.concurrent.AtomicDouble;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import vn.com.hugio.common.exceptions.ErrorCodeEnum;
+import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.service.BaseService;
+import vn.com.hugio.common.utils.StringUtil;
 import vn.com.hugio.order.dto.OrderDetailDto;
 import vn.com.hugio.order.dto.OrderDto;
 import vn.com.hugio.order.dto.ProductDto;
@@ -16,8 +19,11 @@ import vn.com.hugio.order.entity.repository.OrderRepo;
 import vn.com.hugio.order.request.PlaceOrderRequest;
 import vn.com.hugio.order.service.OrderDetailService;
 import vn.com.hugio.order.service.OrderService;
+import vn.com.hugio.order.service.grpc.InventoryServiceGrpcClient;
 import vn.com.hugio.order.service.grpc.ProductServiceGrpcClient;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -27,19 +33,28 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
 
     private final ProductServiceGrpcClient productServiceGrpcClient;
     private final OrderDetailService orderDetailService;
+    private final InventoryServiceGrpcClient inventoryServiceGrpcClient;
 
     public OrderServiceImpl(OrderRepo repository,
                             ProductServiceGrpcClient productServiceGrpcClient,
-                            OrderDetailService orderDetailService) {
+                            OrderDetailService orderDetailService,
+                            InventoryServiceGrpcClient inventoryServiceGrpcClient) {
         super(repository);
         this.productServiceGrpcClient = productServiceGrpcClient;
         this.orderDetailService = orderDetailService;
+        this.inventoryServiceGrpcClient = inventoryServiceGrpcClient;
     }
 
     @Override
     public void placeOrder(PlaceOrderRequest request) {
+        this.inventoryServiceGrpcClient.reduceProductQuantity(request.getOrderInformation());
+        Long numberOfOrderInDay = this.repository.countByCreatedAtBetweenAndActiveIsTrue(LocalDate.now().atTime(LocalTime.MIN), LocalDate.now().atTime(LocalTime.MAX));
+        if (numberOfOrderInDay > 9999) {
+            throw new InternalServiceException(ErrorCodeEnum.FAILURE, "max order in a day");
+        }
         Order order = Order.builder()
                 .totalPrice(0D)
+                .orderCode(StringUtil.addZeroLeadingNumber(numberOfOrderInDay + 1, "HUGIO"))
                 .build();
         order = this.save(order);
         AtomicReference<Order> atomicReferenceOrder = new AtomicReference<>(order);

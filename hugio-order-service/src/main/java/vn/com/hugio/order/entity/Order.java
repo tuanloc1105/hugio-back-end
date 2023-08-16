@@ -27,6 +27,9 @@ public class Order extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 690221254719037208L;
 
+    @Column(name = "ORDER_CODE")
+    private String orderCode;
+
     @Column(name = "TOTAL_PRICE")
     private Double totalPrice;
 

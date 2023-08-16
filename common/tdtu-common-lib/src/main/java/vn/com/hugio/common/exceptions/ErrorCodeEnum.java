@@ -2,11 +2,11 @@ package vn.com.hugio.common.exceptions;
 
 public enum ErrorCodeEnum implements ErrorCode {
     SUCCESS("Successful", 0),
-    FAILURE("Failure", 1),
+    FAILURE("Failure. %s", 1),
     SP_ERROR("Error in SP '%s' with resultCode = %s", 2),
-    CANNOT_DECRYPT("Can not decrypt data", 3),
-    CANNOT_ENCRYPT("Can not encrypt data", 4),
-    FORMAT_ERROR("Format error", 5),
+    CANNOT_DECRYPT("Can not decrypt data. %s", 3),
+    CANNOT_ENCRYPT("Can not encrypt data. %s", 4),
+    FORMAT_ERROR("Format error. %s", 5),
     CANNOT_CALL_SP("Can not call SP %s in Java", 6),
     EXISTS("Data Exists", 7),
     VALIDATE_FAILURE("Validate failure: %s", 8),
