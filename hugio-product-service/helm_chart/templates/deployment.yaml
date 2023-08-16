@@ -24,9 +24,9 @@ spec:
             - containerPort: {{ .Values.grpc_port }}
           env:
             - name: GRPC_AUTH_SERVER
-              value: "localhost:9000"
+              value: "auth-service-svc-2:9000"
             - name: GRPC_INVENTORY_SERVER
-              value: "localhost:9030"
+              value: "inventory-service-svc-2:9030"
             - name: MYSQL_DB_URL
               value: "jdbc:mysql://192.168.1.22:3310/hugio_product_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
             - name: MYSQL_DB_USERNAME
