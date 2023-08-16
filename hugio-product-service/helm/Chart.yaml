@@ -1,0 +1,9 @@
+apiVersion: v2
+name: product-service
+description: A Helm chart for Kubernetes to deploy the product-service service
+
+type: application
+
+version: 0.1.0
+
+appVersion: latest

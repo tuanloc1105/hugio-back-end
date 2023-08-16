@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  replicas: {{ .Values.replica }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: log
+          emptyDir: {}
+      containers:
+        - name: {{ .Release.Name }}
+          image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent #Always
+          ports:
+            - containerPort: {{ .Values.tcp_port }}
+            - containerPort: {{ .Values.grpc_port }}
+          env:
+            - name: GRPC_AUTH_SERVER
+              value: "auth-service-svc-2:9000"
+            - name: MYSQL_DB_URL
+              value: "jdbc:mysql://192.168.1.22:3310/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
+            - name: MYSQL_DB_USERNAME
+              value: "root"
+            - name: MYSQL_DB_PASSWORD
+              value: "123456"
+            - name: AUTH_ENDPOINT
+              value: "http://172.18.255.201:8000/auth_service/auth/retrieve-info"
+            - name: DEFAULT_PASSWORD
+              value: "Hugio!@#123"

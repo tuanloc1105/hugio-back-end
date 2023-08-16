@@ -1,0 +1,7 @@
+image:
+  name: tuanloc/hugio
+  tag: auth-service
+tcp_port: 8010
+tcp_svc_type: NodePort
+grpc_port: 9010
+replica: 1
