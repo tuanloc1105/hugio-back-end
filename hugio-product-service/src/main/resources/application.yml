@@ -8,6 +8,8 @@ grpc:
     auth_server: ${GRPC_AUTH_SERVER:localhost:9000}
     inventory_server: ${GRPC_INVENTORY_SERVER:localhost:9030}
 spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}
   jpa:
     open-in-view: false
   application:
