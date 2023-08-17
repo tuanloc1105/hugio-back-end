@@ -43,3 +43,11 @@ spec:
               value: "192.168.1.22"
             - name: REDIS_PORT
               value: "6378"
+            - name: KAFKA_SERVER
+              value: "192.168.1.22:9092"
+            - name: KAFKA_SECURITY_PROTOCOL
+              value: "PLAINTEXT"
+            - name: KAFKA_SASL_MECHANISM
+              value: "GSSAPI"
+            - name: KAFKA_GROUP_ID
+              value: "hugio_listener"

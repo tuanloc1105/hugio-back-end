@@ -6,6 +6,7 @@
     <modules>
         <module>tdtu-common-lib</module>
         <module>tdtu-proto-lib</module>
+        <module>tdtu-kafka-lib</module>
     </modules>
 
     <groupId>common.com</groupId>

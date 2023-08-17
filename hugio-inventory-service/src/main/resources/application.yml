@@ -37,3 +37,15 @@ management:
 aes_secret_key: iXlCmp4pcEZ2YBUqfelapUH2wGRDDSar
 auth:
   endpoint: ${AUTH_ENDPOINT:http://192.168.1.22:8000/auth_service/auth/retrieve-info}
+kafka:
+  server: ${KAFKA_SERVER:127.0.0.1:9092}
+  security:
+    protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+  sasl:
+    mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
+  group-id: ${KAFKA_GROUP_ID:hugio_listener}
+  topic:
+    create: inventory_create
+    import_product: inventory_import_product
+    update_product: inventory_update_product
+    reduce_product_quantity: inventory_reduce_product_quantity

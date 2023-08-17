@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
@@ -43,6 +42,7 @@ import vn.com.hugio.product.service.ProductDetailService;
 import vn.com.hugio.product.service.ProductService;
 import vn.com.hugio.product.service.grpc.client.InventoryServiceGrpcClient;
 import vn.com.hugio.product.service.grpc.request.InventoryRequest;
+import vn.com.hugio.product.service.kafka.KafkaProductService;
 
 import java.time.Duration;
 import java.util.Base64;
@@ -68,6 +68,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     private final CurrentUserService currentUserService;
     private final RedisCacheService redisCacheService;
     private final Gson gson;
+    private final KafkaProductService kafkaProductService;
 
     @Value("${qr.code.api-url}")
     private String qrCodeApiUrl;
@@ -82,7 +83,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                               ObjectMapper objectMapper,
                               CurrentUserService currentUserService,
                               RedisCacheService redisCacheService,
-                              Gson gson) {
+                              Gson gson,
+                              KafkaProductService kafkaProductService) {
         super(repository);
         this.productDetailService = productDetailService;
         this.productMapper = productMapper;
@@ -94,6 +96,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         this.currentUserService = currentUserService;
         this.redisCacheService = redisCacheService;
         this.gson = gson;
+        this.kafkaProductService = kafkaProductService;
     }
 
     @Override
@@ -342,10 +345,15 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     }
 
     private void callInventory(InventoryRequest request, InventoryCallMethod method) {
+        //switch (method) {
+        //    case CREATE -> this.inventoryServiceGrpcClient.create(request);
+        //    case IMPORT -> this.inventoryServiceGrpcClient.importProduct(request);
+        //    case UPDATE -> this.inventoryServiceGrpcClient.updateProduct(request);
+        //}
         switch (method) {
-            case CREATE -> this.inventoryServiceGrpcClient.create(request);
-            case IMPORT -> this.inventoryServiceGrpcClient.importProduct(request);
-            case UPDATE -> this.inventoryServiceGrpcClient.updateProduct(request);
+            case CREATE -> this.kafkaProductService.send(request, "inventory_create");
+            case IMPORT -> this.kafkaProductService.send(request, "inventory_import_product");
+            case UPDATE -> this.kafkaProductService.send(request, "inventory_update_product");
         }
         /*
         switch (method) {

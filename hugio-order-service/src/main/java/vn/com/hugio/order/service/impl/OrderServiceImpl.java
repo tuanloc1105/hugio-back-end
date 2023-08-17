@@ -21,6 +21,7 @@ import vn.com.hugio.order.service.OrderDetailService;
 import vn.com.hugio.order.service.OrderService;
 import vn.com.hugio.order.service.grpc.InventoryServiceGrpcClient;
 import vn.com.hugio.order.service.grpc.ProductServiceGrpcClient;
+import vn.com.hugio.order.service.kafka.KafkaProductService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -35,20 +36,23 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
     private final ProductServiceGrpcClient productServiceGrpcClient;
     private final OrderDetailService orderDetailService;
     private final InventoryServiceGrpcClient inventoryServiceGrpcClient;
+    private final KafkaProductService kafkaProductService;
 
     public OrderServiceImpl(OrderRepo repository,
                             ProductServiceGrpcClient productServiceGrpcClient,
                             OrderDetailService orderDetailService,
-                            InventoryServiceGrpcClient inventoryServiceGrpcClient) {
+                            InventoryServiceGrpcClient inventoryServiceGrpcClient,
+                            KafkaProductService kafkaProductService) {
         super(repository);
         this.productServiceGrpcClient = productServiceGrpcClient;
         this.orderDetailService = orderDetailService;
         this.inventoryServiceGrpcClient = inventoryServiceGrpcClient;
+        this.kafkaProductService = kafkaProductService;
     }
 
     @Override
     public void placeOrder(PlaceOrderRequest request) {
-        this.inventoryServiceGrpcClient.reduceProductQuantity(request.getOrderInformation());
+        this.kafkaProductService.send(request.getOrderInformation(), "inventory_reduce_product_quantity");
         Long numberOfOrderInDay = this.repository.countByCreatedAtBetweenAndActiveIsTrue(LocalDate.now().atTime(LocalTime.MIN), LocalDate.now().atTime(LocalTime.MAX));
         if (numberOfOrderInDay > 9999) {
             throw new InternalServiceException(ErrorCodeEnum.FAILURE, "max order in a day");
