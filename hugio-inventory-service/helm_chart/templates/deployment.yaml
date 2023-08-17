@@ -34,7 +34,7 @@ spec:
             - name: AUTH_ENDPOINT
               value: "http://172.18.255.201:8000/auth_service/auth/retrieve-info"
             - name: KAFKA_SERVER
-              value: "192.168.1.22:9092"
+              value: "PLAINTEXT://192.168.1.22:9092"
             - name: KAFKA_SECURITY_PROTOCOL
               value: "PLAINTEXT"
             - name: KAFKA_SASL_MECHANISM
