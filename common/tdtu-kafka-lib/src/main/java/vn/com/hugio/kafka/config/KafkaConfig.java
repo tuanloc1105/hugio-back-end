@@ -6,6 +6,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.config.SaslConfigs;
+import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.support.DefaultKafkaHeaderMapper;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 
 import java.util.HashMap;
@@ -53,6 +55,7 @@ public class KafkaConfig {
         configMap.put(ConsumerConfig.GROUP_ID_CONFIG, this.kafkaGroupId);
         configMap.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, this.kafkaSecurityControl);
         configMap.put(SaslConfigs.SASL_MECHANISM, this.kafkaSaslMechanism);
+        configMap.put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "");
         configMap.put("enable.idempotence", "false");
         return new DefaultKafkaConsumerFactory<>(configMap);
     }
@@ -68,6 +71,11 @@ public class KafkaConfig {
     }
 
     @Bean
+    public DefaultKafkaHeaderMapper headerMapper() {
+        return new DefaultKafkaHeaderMapper();
+    }
+
+    @Bean
     public ProducerFactory<String, Object> producerEventMessage() {
         System.out.println("producerEventMessage: " + this.kafkaServer);
         Map<String, Object> configMap = new HashMap<>();
@@ -76,6 +84,8 @@ public class KafkaConfig {
         configMap.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringSerializer.class);
         configMap.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, this.kafkaSecurityControl);
         configMap.put(SaslConfigs.SASL_MECHANISM, this.kafkaSaslMechanism);
+        configMap.put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "");
+        configMap.put("enable.idempotence", "false");
         return new DefaultKafkaProducerFactory<>(configMap);
     }
 
