@@ -86,6 +86,7 @@ public class KafkaConfig {
         return new KafkaTemplate<>(producerEventMessage);
     }
 
+    /*
     @Bean
     public KafkaAdmin kafkaAdmin() {
         LOG.info("[KAFKA - kafkaAdmin] GENERATE KafkaAdmin");
@@ -115,5 +116,6 @@ public class KafkaConfig {
     public NewTopic createInventoryReduceProductQuantity() {
         return new NewTopic("inventory_reduce_product_quantity", 1, (short) 1);
     }
+    */
 
 }
