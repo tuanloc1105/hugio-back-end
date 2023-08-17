@@ -8,8 +8,6 @@ grpc:
     auth_server: ${GRPC_AUTH_SERVER:localhost:9000}
     inventory_server: ${GRPC_INVENTORY_SERVER:localhost:9030}
 spring:
-  kafka:
-    bootstrap-servers: ${KAFKA_SERVER}
   jpa:
     open-in-view: false
   application:
@@ -18,8 +16,8 @@ spring:
     user:
       name: user
       password: E2$s3U07L#wu
-#  main:
-#    allow-bean-definition-overriding: true
+  main:
+    allow-bean-definition-overriding: true
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -47,7 +45,7 @@ redis:
   host: ${REDIS_HOST:localhost}
   port: ${REDIS_PORT:6378}
 kafka:
-  server: ${KAFKA_SERVER}
+  server: ${KAFKA_SERVER:127.0.0.1:9092}
   security:
     protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
   sasl:

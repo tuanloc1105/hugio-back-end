@@ -14,8 +14,8 @@ spring:
     user:
       name: user
       password: E2$s3U07L#wu
-#  main:
-#    allow-bean-definition-overriding: true
+  main:
+    allow-bean-definition-overriding: true
 token:
   secret: jtgLdUg80hwnaklzvG6P9qoOit5yryHt
   time: 432000 # seconds

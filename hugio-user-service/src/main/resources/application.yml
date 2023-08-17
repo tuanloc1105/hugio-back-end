@@ -15,8 +15,8 @@ spring:
     user:
       name: user
       password: E2$s3U07L#wu
-#  main:
-#    allow-bean-definition-overriding: true
+  main:
+    allow-bean-definition-overriding: true
 security:
   enable: false
 springdoc:

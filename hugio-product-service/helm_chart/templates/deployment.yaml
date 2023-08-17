@@ -44,7 +44,7 @@ spec:
             - name: REDIS_PORT
               value: "6378"
             - name: KAFKA_SERVER
-              value: "PLAINTEXT://192.168.1.22:9092"
+              value: "192.168.1.22:9092"
             - name: KAFKA_SECURITY_PROTOCOL
               value: "PLAINTEXT"
             - name: KAFKA_SASL_MECHANISM
