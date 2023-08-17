@@ -18,6 +18,8 @@ spring:
       password: E2$s3U07L#wu
   main:
     allow-bean-definition-overriding: true
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

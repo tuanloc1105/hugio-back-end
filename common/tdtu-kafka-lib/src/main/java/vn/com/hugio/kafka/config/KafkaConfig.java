@@ -20,7 +20,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
-import vn.com.hugio.common.log.LOG;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +59,7 @@ public class KafkaConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerConfigs) {
-        LOG.info("kafkaListenerContainerFactory");
+        System.out.println("kafkaListenerContainerFactory");
         ConcurrentKafkaListenerContainerFactory<String, String>
                 factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerConfigs);
@@ -70,7 +69,7 @@ public class KafkaConfig {
 
     @Bean
     public ProducerFactory<String, Object> producerEventMessage() {
-        LOG.info("producerEventMessage: " + this.kafkaServer);
+        System.out.println("producerEventMessage: " + this.kafkaServer);
         Map<String, Object> configMap = new HashMap<>();
         configMap.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, this.kafkaServer);
         configMap.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringSerializer.class);
@@ -82,13 +81,13 @@ public class KafkaConfig {
 
     @Bean
     public KafkaTemplate<String, Object> kafkaTemplate(ProducerFactory<String, Object> producerEventMessage) {
-        LOG.info("kafkaTemplate");
+        System.out.println("kafkaTemplate");
         return new KafkaTemplate<>(producerEventMessage);
     }
 
     @Bean
     public KafkaAdmin kafkaAdmin() {
-        LOG.info("[KAFKA - kafkaAdmin] GENERATE KafkaAdmin: " + this.kafkaServer);
+        System.out.println("[KAFKA - kafkaAdmin] GENERATE KafkaAdmin: " + this.kafkaServer);
         Map<String, Object> configs = new HashMap<>();
         configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, this.kafkaServer);
         configs.put("security.protocol", this.kafkaSecurityControl);
