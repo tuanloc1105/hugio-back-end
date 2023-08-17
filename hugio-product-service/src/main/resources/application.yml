@@ -45,7 +45,7 @@ redis:
   host: ${REDIS_HOST:localhost}
   port: ${REDIS_PORT:6378}
 kafka:
-  server: ${KAFKA_SERVER:127.0.0.1:9092}
+  server: ${KAFKA_SERVER}
   security:
     protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
   sasl:

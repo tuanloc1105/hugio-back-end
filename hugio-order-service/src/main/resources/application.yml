@@ -39,7 +39,7 @@ aes_secret_key: iXlCmp4pcEZ2YBUqfelapUH2wGRDDSar
 auth:
   endpoint: ${AUTH_ENDPOINT:http://localhost:8000/auth_service/auth/retrieve-info}
 kafka:
-  server: ${KAFKA_SERVER:127.0.0.1:9092}
+  server: ${KAFKA_SERVER}
   security:
     protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
   sasl:
