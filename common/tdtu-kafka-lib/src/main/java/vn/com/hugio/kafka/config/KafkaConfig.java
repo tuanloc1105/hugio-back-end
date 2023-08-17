@@ -70,7 +70,7 @@ public class KafkaConfig {
 
     @Bean
     public ProducerFactory<String, Object> producerEventMessage() {
-        LOG.info("producerEventMessage");
+        LOG.info("producerEventMessage: " + this.kafkaServer);
         Map<String, Object> configMap = new HashMap<>();
         configMap.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, this.kafkaServer);
         configMap.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringSerializer.class);
@@ -88,7 +88,7 @@ public class KafkaConfig {
 
     @Bean
     public KafkaAdmin kafkaAdmin() {
-        LOG.info("[KAFKA - kafkaAdmin] GENERATE KafkaAdmin");
+        LOG.info("[KAFKA - kafkaAdmin] GENERATE KafkaAdmin: " + this.kafkaServer);
         Map<String, Object> configs = new HashMap<>();
         configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, this.kafkaServer);
         configs.put("security.protocol", this.kafkaSecurityControl);
