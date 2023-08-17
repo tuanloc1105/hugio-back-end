@@ -7,6 +7,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.inventory.request.InventoryRequest;
 import vn.com.hugio.inventory.request.ReduceProductQuantityRequest;
@@ -33,7 +34,7 @@ public class KafkaEventListener {
     public void create(@Payload ConsumerRecord<String, String> data, Acknowledgment ack) throws Exception {
         LOG.info(data.toString());
         try {
-            InventoryRequest inventoryRequest = this.objectMapper.convertValue(data.value(), new TypeReference<InventoryRequest>() {
+            InventoryRequest inventoryRequest = this.objectMapper.readValue(data.value(), new TypeReference<InventoryRequest>() {
             });
             this.productInventoryService.create(inventoryRequest);
         } catch (Exception e) {
@@ -50,7 +51,7 @@ public class KafkaEventListener {
     public void importProduct(@Payload ConsumerRecord<String, String> data, Acknowledgment ack) throws Exception {
         LOG.info(data.toString());
         try {
-            InventoryRequest inventoryRequest = this.objectMapper.convertValue(data.value(), new TypeReference<InventoryRequest>() {
+            InventoryRequest inventoryRequest = this.objectMapper.readValue(data.value(), new TypeReference<InventoryRequest>() {
             });
             this.productInventoryService.importProduct(inventoryRequest);
         } catch (Exception e) {
@@ -67,9 +68,13 @@ public class KafkaEventListener {
     public void updateProduct(@Payload ConsumerRecord<String, String> data, Acknowledgment ack) throws Exception {
         LOG.info(data.toString());
         try {
-            InventoryRequest inventoryRequest = this.objectMapper.convertValue(data.value(), new TypeReference<InventoryRequest>() {
+            InventoryRequest inventoryRequest = this.objectMapper.readValue(data.value(), new TypeReference<InventoryRequest>() {
             });
-            this.productInventoryService.updateProduct(inventoryRequest);
+            try {
+                this.productInventoryService.updateProduct(inventoryRequest);
+            } catch (InternalServiceException e) {
+                this.productInventoryService.create(inventoryRequest);
+            }
         } catch (Exception e) {
             LOG.error("[EVENT LISTENER ERROR] {}", e.getMessage());
         } finally {
@@ -84,7 +89,7 @@ public class KafkaEventListener {
     public void reduceProductQuantity(@Payload ConsumerRecord<String, String> data, Acknowledgment ack) throws Exception {
         LOG.info(data.toString());
         try {
-            List<ReduceProductQuantityRequest> request = this.objectMapper.convertValue(data.value(), new TypeReference<List<ReduceProductQuantityRequest>>() {
+            List<ReduceProductQuantityRequest> request = this.objectMapper.readValue(data.value(), new TypeReference<List<ReduceProductQuantityRequest>>() {
             });
             this.productInventoryService.reduceProductQuantity(request);
         } catch (Exception e) {
