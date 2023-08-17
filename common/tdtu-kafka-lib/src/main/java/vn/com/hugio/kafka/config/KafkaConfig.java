@@ -93,6 +93,7 @@ public class KafkaConfig {
         configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, this.kafkaServer);
         configs.put("security.protocol", this.kafkaSecurityControl);
         configs.put("sasl.mechanism", this.kafkaSaslMechanism);
+        System.out.println(configs);
         return new KafkaAdmin(configs);
     }
 
