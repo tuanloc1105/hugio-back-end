@@ -52,7 +52,8 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
 
     @Override
     public void placeOrder(PlaceOrderRequest request) {
-        this.kafkaProductService.send(request.getOrderInformation(), "inventory_reduce_product_quantity");
+        //this.kafkaProductService.send(request.getOrderInformation(), "inventory_reduce_product_quantity");
+        this.inventoryServiceGrpcClient.reduceProductQuantity(request.getOrderInformation());
         Long numberOfOrderInDay = this.repository.countByCreatedAtBetweenAndActiveIsTrue(LocalDate.now().atTime(LocalTime.MIN), LocalDate.now().atTime(LocalTime.MAX));
         if (numberOfOrderInDay > 9999) {
             throw new InternalServiceException(ErrorCodeEnum.FAILURE, "max order in a day");
