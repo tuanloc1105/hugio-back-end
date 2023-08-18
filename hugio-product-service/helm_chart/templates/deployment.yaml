@@ -34,7 +34,7 @@ spec:
             - name: MYSQL_DB_PASSWORD
               value: "123456"
             - name: AUTH_ENDPOINT
-              value: "http://172.18.255.201:8000/auth_service/auth/retrieve-info"
+              value: "http://172.18.255.200:8000/auth_service/auth/retrieve-info"
             - name: QR_CODE_API_URL
               value: "https://api.qr-code-generator.com/v1/create?access-token=uTbjp9a5j1_r_1IDVNQc9LGJe8EJr2lZXBuiDJrDxuzKqL72WLDQY4GiUcYBRnaT"
             - name: CHAT_API_KEY
