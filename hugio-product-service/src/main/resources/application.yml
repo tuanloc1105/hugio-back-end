@@ -22,7 +22,7 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 mysql:
-  url: ${MYSQL_DB_URL:jdbc:mysql://host:port/hugio_product_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}
+  url: ${MYSQL_DB_URL:jdbc:mysql://0.tcp.ap.ngrok.io:17056/hugio_product_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}
   username: ${MYSQL_DB_USERNAME:root}
   password: ${MYSQL_DB_PASSWORD:123456}
   driver_class_name: com.mysql.cj.jdbc.Driver
@@ -34,7 +34,7 @@ management:
     sampling:
       probability: '1.0'
 auth:
-  endpoint: ${AUTH_ENDPOINT:http://192.168.1.22:8000/auth_service/auth/retrieve-info}
+  endpoint: ${AUTH_ENDPOINT:http://hugio.ngrok.app/auth_service/auth/retrieve-info}
 qr:
   code:
     api-url: ${QR_CODE_API_URL:https://api.qr-code-generator.com/v1/create?access-token=QjA1SUNdr2dck1C9mBZPMCAQDWZgYJ9sxV4vE59kZPXkdP4RjQxuvzKE8Tge8MtR}
