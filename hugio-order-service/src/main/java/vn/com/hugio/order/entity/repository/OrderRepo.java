@@ -37,4 +37,28 @@ public interface OrderRepo extends BaseRepository<Order> {
     List<SaleStatisticDto> statisticGroupByCustomerPhoneNumber(
     );
 
+    @Query("select count(o) from Order o where o.createdAt between :fromDate and :toDate and o.active = true")
+    Long totalOrder(
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDate") LocalDateTime toDate
+    );
+
+    @Query("select sum(o.totalPrice) from Order o where o.createdAt between :fromDate and :toDate and o.active = true")
+    Double totalSale(
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDate") LocalDateTime toDate
+    );
+
+    @Query("select count(o) from Order o where o.createdAt between :fromDate and :toDate and o.active = false")
+    Long totalCancel(
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDate") LocalDateTime toDate
+    );
+
+    @Query(value = "select DATE_FORMAT(CAST(o.CREATED_AT as DATE), '%d-%m-%Y'), count(*) from ORDERS o where o.CREATED_AT between :fromDate and :toDate and o.ACTIVE = 1 group by CAST(o.CREATED_AT as DATE)", nativeQuery = true)
+    List<Object[]> totalOrderEachDay(
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDate") LocalDateTime toDate
+    );
+
 }

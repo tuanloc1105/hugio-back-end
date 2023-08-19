@@ -15,10 +15,13 @@ import vn.com.hugio.order.dto.OrderDetailDto;
 import vn.com.hugio.order.dto.OrderDto;
 import vn.com.hugio.order.dto.ProductDto;
 import vn.com.hugio.order.dto.SaleStatisticDto;
+import vn.com.hugio.order.dto.StatisticDto;
+import vn.com.hugio.order.dto.TotalSaleEachDayDto;
 import vn.com.hugio.order.entity.Order;
 import vn.com.hugio.order.entity.OrderDetail;
 import vn.com.hugio.order.entity.repository.OrderRepo;
 import vn.com.hugio.order.request.PlaceOrderRequest;
+import vn.com.hugio.order.request.StatisticRequest;
 import vn.com.hugio.order.request.value.OrderInformation;
 import vn.com.hugio.order.service.OrderDetailService;
 import vn.com.hugio.order.service.OrderService;
@@ -27,9 +30,12 @@ import vn.com.hugio.order.service.grpc.ProductServiceGrpcClient;
 import vn.com.hugio.order.service.kafka.KafkaProductService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -132,5 +138,92 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
             dto = this.repository.statisticGroupByCustomerPhoneNumber();
         }
         return dto;
+    }
+
+    @Override
+    public StatisticDto statistic(StatisticRequest date) {
+        return StatisticDto.builder()
+                .totalCancelOrder(this.totalCancelOrder(date.getYear(), date.getMonth()))
+                .totalOrderInMonth(this.totalOrderInMonth(date.getYear(), date.getMonth()))
+                .totalSaleInMonth(this.totalSaleInMonth(date.getYear(), date.getMonth()))
+                .saleEachDay(this.totalOrderEachDay(date.getYear(), date.getMonth()))
+                .build();
+    }
+
+    /**
+     * <code><strong><i><b>java.time.YearMonth methods atDay & atEndOfMonth</b></i></strong></code>
+     * <pre>
+     * YearMonth yearMonth = YearMonth.of( 2015, 1 );     // 2015-01. January of 2015.
+     * LocalDate firstOfMonth = yearMonth.atDay( 1 );     // 2015-01-01
+     * LocalDate lastOfMonth = yearMonth.atEndOfMonth();  // 2015-01-31
+     * </pre>
+     *
+     * <b>First day:</b>
+     * <pre>
+     * Calendar.getInstance().getActualMinimum(Calendar.DAY_OF_MONTH);
+     * </pre>
+     * <b>Last day of month:</b>
+     * <pre>
+     * Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
+     * </pre>
+     *
+     *
+     */
+    public Integer totalOrderInMonth(Integer year, Integer month) {
+        var current = LocalDate.now();
+        YearMonth yearMonth = YearMonth.of(
+                year == null || year == 0 || year < 2023 ? current.getYear() : year,
+                month == null || month < 1 || month > 12 ? current.getMonthValue() : month
+        );
+        LocalDateTime firstOfMonth = yearMonth.atDay(1).atTime(LocalTime.MIN);
+        LocalDateTime lastOfMonth = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        return this.repository.totalOrder(firstOfMonth, lastOfMonth).intValue();
+    }
+
+    public Double totalSaleInMonth(Integer year, Integer month) {
+        var current = LocalDate.now();
+        YearMonth yearMonth = YearMonth.of(
+                year == null || year == 0 || year < 2023 ? current.getYear() : year,
+                month == null || month < 1 || month > 12 ? current.getMonthValue() : month
+        );
+        LocalDateTime firstOfMonth = yearMonth.atDay(1).atTime(LocalTime.MIN);
+        LocalDateTime lastOfMonth = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        return this.repository.totalSale(firstOfMonth, lastOfMonth);
+    }
+
+    public Integer totalCancelOrder(Integer year, Integer month) {
+        var current = LocalDate.now();
+        YearMonth yearMonth = YearMonth.of(
+                year == null || year == 0 || year < 2023 ? current.getYear() : year,
+                month == null || month < 1 || month > 12 ? current.getMonthValue() : month
+        );
+        LocalDateTime firstOfMonth = yearMonth.atDay(1).atTime(LocalTime.MIN);
+        LocalDateTime lastOfMonth = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        return this.repository.totalCancel(firstOfMonth, lastOfMonth).intValue();
+    }
+
+    public List<TotalSaleEachDayDto> totalOrderEachDay(Integer year, Integer month) {
+        var current = LocalDate.now();
+        YearMonth yearMonth = YearMonth.of(
+                year == null || year == 0 || year < 2023 ? current.getYear() : year,
+                month == null || month < 1 || month > 12 ? current.getMonthValue() : month
+        );
+        LocalDateTime firstOfMonth = yearMonth.atDay(1).atTime(LocalTime.MIN);
+        LocalDateTime lastOfMonth = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        List<TotalSaleEachDayDto> result = new ArrayList<>();
+        List<Object[]> list = this.repository.totalOrderEachDay(firstOfMonth, lastOfMonth);
+        list.forEach(o -> {
+            TotalSaleEachDayDto dto = new TotalSaleEachDayDto();
+            dto.setDate((String) o[0]);
+            dto.setTotal((Integer) o[1]);
+            result.add(dto);
+        });
+        return result;
+    }
+
+
+
+    public static void main(String[] args) {
+        System.out.println(Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH));
     }
 }
