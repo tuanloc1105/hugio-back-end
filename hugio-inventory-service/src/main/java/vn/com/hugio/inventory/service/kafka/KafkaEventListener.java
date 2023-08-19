@@ -53,7 +53,11 @@ public class KafkaEventListener {
         try {
             InventoryRequest inventoryRequest = this.objectMapper.readValue(data.value(), new TypeReference<InventoryRequest>() {
             });
-            this.productInventoryService.importProduct(inventoryRequest);
+            try {
+                this.productInventoryService.importProduct(inventoryRequest);
+            } catch (InternalServiceException e) {
+                this.productInventoryService.create(inventoryRequest);
+            }
         } catch (Exception e) {
             LOG.error("[EVENT LISTENER ERROR] {}", e.getMessage());
         } finally {

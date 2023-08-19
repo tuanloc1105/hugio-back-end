@@ -203,7 +203,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 .importedFee(request.getFee())
                 .note(Strings.EMPTY)
                 .build();
-        this.callInventory(inventoryRequest, InventoryCallMethod.UPDATE);
+        this.callInventory(inventoryRequest, InventoryCallMethod.IMPORT);
     }
 
     @Override

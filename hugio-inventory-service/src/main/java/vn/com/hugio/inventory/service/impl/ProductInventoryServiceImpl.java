@@ -69,7 +69,7 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
         productInventory.setQuantity(request.getImportedQuantity());
         this.save(productInventory);
         InventoryLog inventoryLog = this.modelMapper.map(request, InventoryLog.class);
-        inventoryLog.setBehaviour(ImportBehaviour.IMPORT);
+        inventoryLog.setBehaviour(ImportBehaviour.UPDATE);
         inventoryLogService.saveEntity(inventoryLog);
     }
 
