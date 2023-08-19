@@ -36,10 +36,11 @@ public class SwaggerConfig {
                 )
                 .info(
                         new Info()
-                                .title("Project 1 apis")
+                                .title("HUGIO SERVICE API DOCUMENT")
                                 .version(appVersion)
                                 .license(
-                                        new License().name("Apache 2.0").url("http://springdoc.org")
+                                        //new License().name("Apache 2.0").url("http://springdoc.org")
+                                        new License().name("Author: Loc Vo Tuan").url("https://www.facebook.com/hiiamlcx/")
                                 )
                 );
     }
