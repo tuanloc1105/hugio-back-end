@@ -44,7 +44,10 @@ message RequestTypeProductInput {
 }
 
 message ProductQuantityOutput {
-  int64 quantity = 1;
+  string productUid = 1;
+  int64 quantity = 2;
+  int64 importedQuantity = 3;
+  double fee = 4;
 }
 
 message ResponseTypeProductQuantityOutput {

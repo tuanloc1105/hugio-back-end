@@ -24,6 +24,7 @@ import vn.com.hugio.common.utils.ExceptionStackTraceUtil;
 import vn.com.hugio.common.utils.HttpUtil;
 import vn.com.hugio.common.utils.StringUtil;
 import vn.com.hugio.product.dto.ProductDto;
+import vn.com.hugio.product.dto.ProductQuantityDto;
 import vn.com.hugio.product.dto.QrCodeReqDto;
 import vn.com.hugio.product.entity.Category;
 import vn.com.hugio.product.entity.Product;
@@ -223,7 +224,12 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
             Page<Product> products = this.repository.findByActiveIsTrue(pageLink.toPageable());
             List<ProductDto> dtoList = products.stream()
                     .map(productMapper::productEntityToProductDto)
-                    .toList().stream().peek(dto -> dto.setQuantity(inventoryServiceGrpcClient.getProductQuantity(dto.getProductUid())))
+                    .toList().stream().peek(dto -> {
+                        ProductQuantityDto dto1 = inventoryServiceGrpcClient.getProductQuantity(dto.getProductUid());
+                        dto.setQuantity(dto1.getQuantity());
+                        dto.setImportedQuantity(dto.getImportedQuantity());
+                        dto.setFee(dto1.getFee());
+                    })
                     .toList();
             pageResponse = PageResponse.create(products, dtoList, true);
             try {

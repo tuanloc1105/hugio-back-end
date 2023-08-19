@@ -13,6 +13,7 @@ import vn.com.hugio.grpc.inventory.RequestTypeProductInput;
 import vn.com.hugio.grpc.inventory.RequestTypeReduceProductInput;
 import vn.com.hugio.grpc.inventory.ResponseTypeProductQuantityOutput;
 import vn.com.hugio.grpc.inventory.ResponseTypeVoid;
+import vn.com.hugio.inventory.dto.ProductQuantityDto;
 import vn.com.hugio.inventory.request.InventoryRequest;
 import vn.com.hugio.inventory.request.ReduceProductQuantityRequest;
 import vn.com.hugio.inventory.service.ProductInventoryService;
@@ -155,8 +156,12 @@ public class InventoryGrpcServer extends InventoryServiceGrpc.InventoryServiceIm
             InventoryRequest request1 = InventoryRequest.builder()
                     .productUid(request.getRequest().getProductUid())
                     .build();
+            ProductQuantityDto dto = this.productInventoryService.getProductQuantity(request1);
             ProductQuantityOutput productQuantityOutput = ProductQuantityOutput.newBuilder()
-                    .setQuantity(this.productInventoryService.getProductQuantity(request1))
+                    .setProductUid(dto.getProductUid())
+                    .setQuantity(dto.getQuantity())
+                    .setImportedQuantity(dto.getImportedQuantity())
+                    .setFee(dto.getFee())
                     .build();
             responseBuilder.setCode(ErrorCodeEnum.SUCCESS.getErrorCode());
             responseBuilder.setMessage(ErrorCodeEnum.SUCCESS.getMessage());

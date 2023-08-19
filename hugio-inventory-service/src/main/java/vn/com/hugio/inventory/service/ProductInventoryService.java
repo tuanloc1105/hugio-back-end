@@ -1,5 +1,6 @@
 package vn.com.hugio.inventory.service;
 
+import vn.com.hugio.inventory.dto.ProductQuantityDto;
 import vn.com.hugio.inventory.request.InventoryRequest;
 import vn.com.hugio.inventory.request.ReduceProductQuantityRequest;
 
@@ -12,7 +13,7 @@ public interface ProductInventoryService {
 
     void updateProduct(InventoryRequest request);
 
-    Long getProductQuantity(InventoryRequest request);
+    ProductQuantityDto getProductQuantity(InventoryRequest request);
 
     void reduceProductQuantity(List<ReduceProductQuantityRequest> request);
 }

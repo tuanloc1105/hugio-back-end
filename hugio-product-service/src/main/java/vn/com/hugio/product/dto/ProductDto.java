@@ -30,6 +30,14 @@ public class ProductDto extends BaseEntityDto {
     @SerializedName("product_quantity")
     private Long quantity;
 
+    @JsonProperty("product_imported_quantity")
+    @SerializedName("product_imported_quantity")
+    private Long importedQuantity;
+
+    @JsonProperty("fee")
+    @SerializedName("fee")
+    private Double fee;
+
     @JsonProperty("raw_product_name")
     @SerializedName("raw_product_name")
     private String rawProductName;

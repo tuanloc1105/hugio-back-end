@@ -9,10 +9,12 @@ import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.service.CurrentUserService;
 import vn.com.hugio.grpc.inventory.InventoryServiceGrpc;
 import vn.com.hugio.grpc.inventory.ProductInput;
+import vn.com.hugio.grpc.inventory.ProductQuantityOutput;
 import vn.com.hugio.grpc.inventory.RequestTypeInventoryRequest;
 import vn.com.hugio.grpc.inventory.RequestTypeProductInput;
 import vn.com.hugio.grpc.inventory.ResponseTypeProductQuantityOutput;
 import vn.com.hugio.grpc.inventory.ResponseTypeVoid;
+import vn.com.hugio.product.dto.ProductQuantityDto;
 import vn.com.hugio.product.service.grpc.request.InventoryRequest;
 import vn.com.hugio.proto.common.TraceTypeGRPC;
 import vn.com.hugio.proto.utils.GrpcUtil;
@@ -98,7 +100,7 @@ public class InventoryServiceGrpcClient {
         }
     }
 
-    public long getProductQuantity(String productUid) {
+    public ProductQuantityDto getProductQuantity(String productUid) {
         TraceTypeGRPC traceTypeGRPC = GrpcUtil.createTraceTypeGrpc();
         ProductInput productInput = ProductInput.newBuilder()
                 .setProductUid(productUid)
@@ -115,6 +117,12 @@ public class InventoryServiceGrpcClient {
         ) {
             throw new InternalServiceException(responseType.getCode(), responseType.getMessage());
         }
-        return responseType.getResponse().getQuantity();
+        ProductQuantityOutput output = responseType.getResponse();
+        return ProductQuantityDto.builder()
+                .productUid(output.getProductUid())
+                .quantity(output.getQuantity())
+                .importedQuantity(output.getImportedQuantity())
+                .fee(output.getFee())
+                .build();
     }
 }

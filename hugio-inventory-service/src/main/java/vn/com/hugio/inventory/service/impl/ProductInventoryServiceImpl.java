@@ -7,7 +7,7 @@ import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.service.BaseService;
-import vn.com.hugio.grpc.inventory.Inventory;
+import vn.com.hugio.inventory.dto.ProductQuantityDto;
 import vn.com.hugio.inventory.entity.InventoryLog;
 import vn.com.hugio.inventory.entity.ProductInventory;
 import vn.com.hugio.inventory.entity.repository.ProductInventoryRepository;
@@ -74,10 +74,8 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
     }
 
     @Override
-    public Long getProductQuantity(InventoryRequest request) {
-        Optional<ProductInventory> productInventory = this.repository.findByProductUid(request.getProductUid());
-        productInventory.ifPresent(inventory -> System.out.println(inventory.getQuantity()));
-        return productInventory.isEmpty() ? 0L : productInventory.get().getQuantity();
+    public ProductQuantityDto getProductQuantity(InventoryRequest request) {
+        return this.repository.findQuantityInfo(request.getProductUid());
     }
 
     @Override
