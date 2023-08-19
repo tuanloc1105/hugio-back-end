@@ -28,7 +28,7 @@ mysql:
   username: ${MYSQL_DB_USERNAME:root}
   password: ${MYSQL_DB_PASSWORD:123456}
   driver_class_name: com.mysql.cj.jdbc.Driver
-  ddl_auto: update
+  ddl_auto: none
   dialect: org.hibernate.dialect.MySQLDialect
   show_sql: false
 management:
@@ -37,7 +37,7 @@ management:
       probability: '1.0'
 aes_secret_key: iXlCmp4pcEZ2YBUqfelapUH2wGRDDSar
 auth:
-  endpoint: ${AUTH_ENDPOINT:http://localhost:8000/auth_service/auth/retrieve-info}
+  endpoint: ${AUTH_ENDPOINT:https://hugio.ngrok.app/auth_service/auth/retrieve-info}
 kafka:
   server: ${KAFKA_SERVER:127.0.0.1:9092}
   security:
@@ -45,3 +45,15 @@ kafka:
   sasl:
     mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
   group-id: ${KAFKA_GROUP_ID:hugio_listener}
+logging:
+  level:
+    org:
+      hibernate:
+        nodeValue: info
+        stat: debug
+        SQL_SLOW: info
+        SQL: debug
+        cache: debug
+        orm:
+          jdbc:
+            bind: trace

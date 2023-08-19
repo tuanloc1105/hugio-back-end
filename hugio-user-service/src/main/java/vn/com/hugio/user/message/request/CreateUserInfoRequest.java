@@ -32,6 +32,10 @@ public class CreateUserInfoRequest {
     @FieldNotNull
     private String fullName;
 
+    @JsonProperty("phone_number")
+    @FieldNotNull
+    private String phoneNumber;
+
     @JsonProperty("roles")
     private List<String> roles;
 

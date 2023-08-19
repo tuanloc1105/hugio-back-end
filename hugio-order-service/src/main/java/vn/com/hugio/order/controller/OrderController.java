@@ -12,8 +12,12 @@ import vn.com.hugio.common.object.ResponseType;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.order.dto.OrderDto;
+import vn.com.hugio.order.dto.SaleStatisticDto;
 import vn.com.hugio.order.request.PlaceOrderRequest;
+import vn.com.hugio.order.request.SaleStatisticRequest;
 import vn.com.hugio.order.service.OrderService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -33,6 +37,13 @@ public class OrderController {
     public ResponseType<PageResponse<OrderDto>> all(@RequestBody RequestType<PagableRequest> request) {
         return ResponseType.ok(
                 this.orderService.allOrder(request.getRequest())
+        );
+    }
+
+    @PostMapping("/statistic_sale")
+    public ResponseType<List<SaleStatisticDto>> statistic(@RequestBody RequestType<SaleStatisticRequest> request) {
+        return ResponseType.ok(
+                this.orderService.salesStatisticsByCustomer(request.getRequest().getDate())
         );
     }
 

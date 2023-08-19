@@ -14,6 +14,7 @@ import vn.com.hugio.common.utils.StringUtil;
 import vn.com.hugio.order.dto.OrderDetailDto;
 import vn.com.hugio.order.dto.OrderDto;
 import vn.com.hugio.order.dto.ProductDto;
+import vn.com.hugio.order.dto.SaleStatisticDto;
 import vn.com.hugio.order.entity.Order;
 import vn.com.hugio.order.entity.OrderDetail;
 import vn.com.hugio.order.entity.repository.OrderRepo;
@@ -109,5 +110,19 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
             return dto1;
         }).toList();
         return PageResponse.create(page, dto, true);
+    }
+
+    @Override
+    public List<SaleStatisticDto> salesStatisticsByCustomer(LocalDate date) {
+        List<SaleStatisticDto> dto;
+        if (date != null) {
+            dto = this.repository.statisticGroupByCustomerPhoneNumberInDay(
+                    LocalDate.now().atTime(LocalTime.MIN),
+                    LocalDate.now().atTime(LocalTime.MAX)
+            );
+        } else {
+            dto = this.repository.statisticGroupByCustomerPhoneNumber();
+        }
+        return dto;
     }
 }

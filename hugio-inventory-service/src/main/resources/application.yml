@@ -27,7 +27,7 @@ mysql:
   username: ${MYSQL_DB_USERNAME:root}
   password: ${MYSQL_DB_PASSWORD:123456}
   driver_class_name: com.mysql.cj.jdbc.Driver
-  ddl_auto: update
+  ddl_auto: none
   dialect: org.hibernate.dialect.MySQLDialect
   show_sql: false
 management:
@@ -49,3 +49,15 @@ kafka:
     import_product: inventory_import_product
     update_product: inventory_update_product
     reduce_product_quantity: inventory_reduce_product_quantity
+logging:
+  level:
+    org:
+      hibernate:
+        nodeValue: info
+        stat: debug
+        SQL_SLOW: info
+        SQL: debug
+        cache: debug
+        orm:
+          jdbc:
+            bind: trace

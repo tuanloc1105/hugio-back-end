@@ -53,6 +53,7 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
         userInfo.setEmail(request.getEmail());
         userInfo.setAddress(request.getAddress());
         userInfo.setFullName(request.getFullName());
+        userInfo.setPhoneNumber(request.getPhoneNumber());
         Integer numberUserCreatedInDay = this.repository.countByCreatedAtBetween(
                 currentDate.atTime(LocalTime.MIN),
                 currentDate.atTime(LocalTime.MAX)

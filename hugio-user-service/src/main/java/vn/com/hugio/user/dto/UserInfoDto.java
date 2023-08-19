@@ -36,6 +36,9 @@ public class UserInfoDto extends BaseEntityDto {
     @JsonProperty("username")
     private String username;
 
+    @JsonProperty("phone_number")
+    private String phoneNumber;
+
     @JsonProperty("roles")
     private List<String> roles;
 
@@ -47,6 +50,7 @@ public class UserInfoDto extends BaseEntityDto {
         this.address = Optional.ofNullable(anotherDto.getAddress()).isPresent() ? anotherDto.getAddress() : this.address;
         this.fullName = Optional.ofNullable(anotherDto.getFullName()).isPresent() ? anotherDto.getFullName() : this.fullName;
         this.username = Optional.ofNullable(anotherDto.getUsername()).isPresent() ? anotherDto.getUsername() : this.username;
+        this.phoneNumber = Optional.ofNullable(anotherDto.getPhoneNumber()).isPresent() ? anotherDto.getPhoneNumber() : this.phoneNumber;
         this.roles = Optional.ofNullable(anotherDto.getRoles()).isPresent() ? anotherDto.getRoles() : this.roles;
     }
 

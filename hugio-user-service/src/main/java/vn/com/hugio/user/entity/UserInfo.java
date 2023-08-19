@@ -37,13 +37,32 @@ public class UserInfo extends BaseEntity {
     @Column(name = "FULL_NAME", nullable = false, updatable = false)
     private String fullName;
 
+    @Column(name = "PHONE_NUMBER", nullable = false, updatable = false)
+    private String phoneNumber;
+
     public UserInfo(String userUid) {
         this.userUid = userUid;
     }
 
     @Builder
-    public UserInfo(Long id, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy, String userUid) {
+    public UserInfo(Long id,
+                    boolean active,
+                    LocalDateTime createdAt,
+                    LocalDateTime updatedAt,
+                    String createdBy,
+                    String updatedBy,
+                    String userUid,
+                    String cif,
+                    String email,
+                    String address,
+                    String fullName,
+                    String phoneNumber) {
         super(id, active, createdAt, updatedAt, createdBy, updatedBy);
         this.userUid = userUid;
+        this.cif = cif;
+        this.email = email;
+        this.address = address;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
     }
 }
