@@ -83,7 +83,7 @@ public class RedisCacheService implements CacheService {
         Set<String> redisKeys = template.keys("*");
         redisKeys.forEach(rKey -> {
             if (rKey.contains(key)) {
-                Boolean result = this.template.delete(key);
+                Boolean result = this.template.delete(rKey);
                 LOG.info("[REDIS DELETING] Key ({}) result ({})", rKey, result);
             }
         });
