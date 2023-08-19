@@ -84,13 +84,27 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
             Optional<ProductInventory> optionalProductInventory = this.repository.findByProductUid(rq.getProductUid());
             if (optionalProductInventory.isEmpty()) {
                 LOG.info("product with uid %s is not present", rq.getProductUid());
-                continue;
+                throw new InternalServiceException(ErrorCodeEnum.FAILURE, "product with uid " + rq.getProductUid() + " is not present");
             }
             ProductInventory productInventory = optionalProductInventory.get();
             long newQuantity = productInventory.getQuantity() - rq.getQuantity();
             if (newQuantity < 0L) {
                 throw new InternalServiceException(ErrorCodeEnum.FAILURE, "product out of stock: " + rq.getProductUid());
             }
+            productInventory.setQuantity(newQuantity);
+        }
+    }
+
+    @Override
+    public void recoveryProductQuantity(List<ReduceProductQuantityRequest> request) {
+        for (ReduceProductQuantityRequest rq : request) {
+            Optional<ProductInventory> optionalProductInventory = this.repository.findByProductUid(rq.getProductUid());
+            if (optionalProductInventory.isEmpty()) {
+                LOG.info("product with uid %s is not present", rq.getProductUid());
+                continue;
+            }
+            ProductInventory productInventory = optionalProductInventory.get();
+            long newQuantity = productInventory.getQuantity() + rq.getQuantity();
             productInventory.setQuantity(newQuantity);
         }
     }

@@ -49,6 +49,7 @@ kafka:
     import_product: inventory_import_product
     update_product: inventory_update_product
     reduce_product_quantity: inventory_reduce_product_quantity
+    recovery_product_quantity: recovery_product_quantity
 logging:
   level:
     org:

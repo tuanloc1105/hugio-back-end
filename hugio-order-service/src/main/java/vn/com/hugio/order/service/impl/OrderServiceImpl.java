@@ -19,10 +19,12 @@ import vn.com.hugio.order.entity.Order;
 import vn.com.hugio.order.entity.OrderDetail;
 import vn.com.hugio.order.entity.repository.OrderRepo;
 import vn.com.hugio.order.request.PlaceOrderRequest;
+import vn.com.hugio.order.request.value.OrderInformation;
 import vn.com.hugio.order.service.OrderDetailService;
 import vn.com.hugio.order.service.OrderService;
 import vn.com.hugio.order.service.grpc.InventoryServiceGrpcClient;
 import vn.com.hugio.order.service.grpc.ProductServiceGrpcClient;
+import vn.com.hugio.order.service.kafka.KafkaProductService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,15 +39,18 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
     private final ProductServiceGrpcClient productServiceGrpcClient;
     private final OrderDetailService orderDetailService;
     private final InventoryServiceGrpcClient inventoryServiceGrpcClient;
+    private final KafkaProductService kafkaProductService;
 
     public OrderServiceImpl(OrderRepo repository,
                             ProductServiceGrpcClient productServiceGrpcClient,
                             OrderDetailService orderDetailService,
-                            InventoryServiceGrpcClient inventoryServiceGrpcClient) {
+                            InventoryServiceGrpcClient inventoryServiceGrpcClient,
+                            KafkaProductService kafkaProductService) {
         super(repository);
         this.productServiceGrpcClient = productServiceGrpcClient;
         this.orderDetailService = orderDetailService;
         this.inventoryServiceGrpcClient = inventoryServiceGrpcClient;
+        this.kafkaProductService = kafkaProductService;
     }
 
     @Override
@@ -85,7 +90,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
 
     @Override
     public PageResponse<OrderDto> allOrder(PagableRequest request) {
-        Page<Order> page = this.repository.findAll(PageLink.create(request).toPageable());
+        Page<Order> page = this.repository.findByActiveIsTrue(PageLink.create(request).toPageable());
         List<OrderDto> dto = page.getContent().stream().map(order -> {
             // lặp qua từng order
             OrderDto dto1 = new OrderDto();
@@ -106,6 +111,13 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
             return dto1;
         }).toList();
         return PageResponse.create(page, dto, true);
+    }
+
+    @Override
+    public void cancelOrder(String orderCode) {
+        var order = this.repository.findByOrderCodeAndActiveIsTrue(orderCode).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
+        List<OrderInformation> orderInformations = order.getOrderDetails().stream().map(o -> new OrderInformation(o.getProductUid(), o.getQuantity())).toList();
+        this.kafkaProductService.send(orderInformations, "inventory_reduce_product_quantity");
     }
 
     @Override

@@ -68,8 +68,8 @@ public class AuthServiceImpl extends BaseService<User, UserRepo> implements Auth
         if (Optional.ofNullable(dto).isEmpty()) {
             throw new InternalServiceException(ErrorCodeEnum.AUTH_FAILURE.getCode(), "Authentication is required");
         }
-        this.repository.findByUsernameAndActiveIsTrue(dto.getUsername())
-                .orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exists"));
+        //this.repository.findByUsernameAndActiveIsTrue(dto.getUsername())
+        //        .orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exists"));
         return dto;
     }
 

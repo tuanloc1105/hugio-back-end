@@ -16,4 +16,6 @@ public interface ProductInventoryService {
     ProductQuantityDto getProductQuantity(InventoryRequest request);
 
     void reduceProductQuantity(List<ReduceProductQuantityRequest> request);
+
+    void recoveryProductQuantity(List<ReduceProductQuantityRequest> request);
 }

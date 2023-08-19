@@ -34,7 +34,7 @@ public class AuthController {
         return ResponseType.ok(AuthenResponse.builder()
                 .roles(dto.getRoles())
                 .username(dto.getUsername())
-                .userUid(dto.getUserUid().toString())
+                .userUid(dto.getUserUid())
                 .build());
     }
 

@@ -14,5 +14,7 @@ public interface OrderService {
 
     PageResponse<OrderDto> allOrder(PagableRequest request);
 
+    void cancelOrder(String orderCode);
+
     List<SaleStatisticDto> salesStatisticsByCustomer(LocalDate date);
 }

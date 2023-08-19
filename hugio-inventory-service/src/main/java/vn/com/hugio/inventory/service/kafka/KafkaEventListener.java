@@ -99,4 +99,21 @@ public class KafkaEventListener {
         }
     }
 
+    @KafkaListener(
+            groupId = "${kafka.group-id}",
+            topics = "${kafka.topic.recovery_product_quantity}"
+    )
+    public void recoveryProductQuantity(@Payload ConsumerRecord<String, String> data, Acknowledgment ack) throws Exception {
+        LOG.info(data.toString());
+        try {
+            List<ReduceProductQuantityRequest> request = this.objectMapper.readValue(data.value(), new TypeReference<List<ReduceProductQuantityRequest>>() {
+            });
+            this.productInventoryService.recoveryProductQuantity(request);
+        } catch (Exception e) {
+            LOG.error("[EVENT LISTENER ERROR] {}", e.getMessage());
+        } finally {
+            ack.acknowledge();
+        }
+    }
+
 }

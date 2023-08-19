@@ -47,4 +47,18 @@ public class OrderController {
         );
     }
 
+    @PostMapping("/total_orders")
+    public ResponseType<List<SaleStatisticDto>> totalOrders(@RequestBody RequestType<SaleStatisticRequest> request) {
+        return ResponseType.ok(
+                this.orderService.salesStatisticsByCustomer(request.getRequest().getDate())
+        );
+    }
+
+    @PostMapping("/total_sales")
+    public ResponseType<List<SaleStatisticDto>> totalSales(@RequestBody RequestType<SaleStatisticRequest> request) {
+        return ResponseType.ok(
+                this.orderService.salesStatisticsByCustomer(request.getRequest().getDate())
+        );
+    }
+
 }
