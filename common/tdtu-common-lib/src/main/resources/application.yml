@@ -1,15 +1,34 @@
-spring:
-  jpa:
-    open-in-view: false
-logging:
-  level:
-    org:
-      hibernate:
-        nodeValue: info
-        stat: debug
-        SQL_SLOW: info
-        SQL: debug
-        cache: debug
-        orm:
-          jdbc:
-            bind: trace
+#spring:
+#  jpa:
+#    open-in-view: false
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        nodeValue: info
+#        stat: debug
+#        SQL_SLOW: info
+#        SQL: debug
+#        cache: debug
+#        orm:
+#          jdbc:
+#            bind: trace
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health, info, prometheus
+#  endpoint:
+#    loggers:
+#      enabled: false
+#  tracing:
+#    sampling:
+#      probability: 1.0
+#  metrics:
+#    tags:
+#      application: springboot-3
+#    distribution:
+#      percentiles-histogram:
+#        http:
+#          server:
+#            requests: true

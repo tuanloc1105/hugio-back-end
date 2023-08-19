@@ -117,8 +117,8 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         List<SaleStatisticDto> dto;
         if (date != null) {
             dto = this.repository.statisticGroupByCustomerPhoneNumberInDay(
-                    LocalDate.now().atTime(LocalTime.MIN),
-                    LocalDate.now().atTime(LocalTime.MAX)
+                    date.atTime(LocalTime.MIN),
+                    date.atTime(LocalTime.MAX)
             );
         } else {
             dto = this.repository.statisticGroupByCustomerPhoneNumber();
