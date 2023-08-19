@@ -93,6 +93,9 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
             // lặp qua từng order
             OrderDto dto1 = new OrderDto();
             dto1.setTotalPrice(order.getTotalPrice());
+            dto1.setOrderCode(order.getOrderCode());
+            dto1.setCustomerName(order.getCustomerName());
+            dto1.setCustomerPhoneNumber(order.getCustomerPhoneNumber());
             List<OrderDetailDto> orderDetailDto = new ArrayList<>();
             order.getOrderDetails().forEach(detail -> {
                 // lặp qua từng order detail của order

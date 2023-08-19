@@ -15,6 +15,15 @@ import java.util.List;
 @Data
 public class OrderDto extends BaseEntityDto {
 
+    @JsonProperty("order_code")
+    private String orderCode;
+
+    @JsonProperty("customer_name")
+    private String customerName;
+
+    @JsonProperty("customer_phone_number")
+    private String customerPhoneNumber;
+
     @JsonProperty("total_price")
     private Double totalPrice;
 
