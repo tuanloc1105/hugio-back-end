@@ -14,6 +14,7 @@ public class InventoryRequest {
     private String productUid;
     private String importedFrom;
     private Long importedQuantity;
+    private Double importedFee;
     private String importedBy;
     private String note;
 

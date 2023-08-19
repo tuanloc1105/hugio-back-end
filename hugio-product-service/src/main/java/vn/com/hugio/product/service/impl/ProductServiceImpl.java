@@ -120,6 +120,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 .productUid(product.getProductUid())
                 .importedBy(this.currentUserService.getUsername())
                 .importedQuantity(request.getQuantity())
+                .importedFee(request.getFee())
                 .importedFrom(Strings.EMPTY)
                 .note(Strings.EMPTY)
                 .build();
@@ -198,6 +199,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 .importedBy(this.currentUserService.getUsername())
                 .importedQuantity(request.getQuantity())
                 .importedFrom(Strings.EMPTY)
+                .importedFee(request.getFee())
                 .note(Strings.EMPTY)
                 .build();
         this.callInventory(inventoryRequest, InventoryCallMethod.UPDATE);
@@ -250,12 +252,15 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     @Override
     public void removeProduct(DeleteProductRequest request) {
         this.redisCacheService.delete("all");
+        /*
         if (request.getIsPermanent()) {
             Product product = this.repository.findByProductUid(request.getProductId()).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "product does not exist"));
             this.repository.delete(product);
         } else {
             this.repository.softDeleteByProductUid(request.getProductId());
         }
+        */
+        this.repository.softDeleteByProductUid(request.getProductId());
         LOG.info("REMOVED A PRODUCT WITH UID %s", request.getProductId());
     }
 

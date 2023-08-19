@@ -31,6 +31,9 @@ public class EditProductRequest {
     @JsonProperty("discount")
     private Double discount;
 
+    @JsonProperty("fee")
+    private Double fee;
+
     @JsonProperty("product_description")
     private String productDescription;
 

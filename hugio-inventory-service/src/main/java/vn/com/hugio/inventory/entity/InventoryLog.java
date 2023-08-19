@@ -36,6 +36,9 @@ public class InventoryLog extends BaseEntity {
     @Column(name = "IMPORTED_QUANTITY")
     private Long importedQuantity;
 
+    @Column(name = "IMPORTED_FEE")
+    private Double importedFee;
+
     @Column(name = "IMPORTED_BY")
     private String importedBy;
 

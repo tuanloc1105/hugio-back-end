@@ -23,7 +23,6 @@ import vn.com.hugio.order.service.OrderDetailService;
 import vn.com.hugio.order.service.OrderService;
 import vn.com.hugio.order.service.grpc.InventoryServiceGrpcClient;
 import vn.com.hugio.order.service.grpc.ProductServiceGrpcClient;
-import vn.com.hugio.order.service.kafka.KafkaProductService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -38,18 +37,15 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
     private final ProductServiceGrpcClient productServiceGrpcClient;
     private final OrderDetailService orderDetailService;
     private final InventoryServiceGrpcClient inventoryServiceGrpcClient;
-    private final KafkaProductService kafkaProductService;
 
     public OrderServiceImpl(OrderRepo repository,
                             ProductServiceGrpcClient productServiceGrpcClient,
                             OrderDetailService orderDetailService,
-                            InventoryServiceGrpcClient inventoryServiceGrpcClient,
-                            KafkaProductService kafkaProductService) {
+                            InventoryServiceGrpcClient inventoryServiceGrpcClient) {
         super(repository);
         this.productServiceGrpcClient = productServiceGrpcClient;
         this.orderDetailService = orderDetailService;
         this.inventoryServiceGrpcClient = inventoryServiceGrpcClient;
-        this.kafkaProductService = kafkaProductService;
     }
 
     @Override

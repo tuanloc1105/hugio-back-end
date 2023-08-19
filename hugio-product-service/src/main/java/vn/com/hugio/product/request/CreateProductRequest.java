@@ -30,6 +30,9 @@ public class CreateProductRequest {
     @FieldNotNull
     private Long quantity;
 
+    @JsonProperty("fee")
+    private Double fee;
+
     @JsonProperty("categories")
     private List<String> category;
 
