@@ -3,7 +3,7 @@ FROM tuanloc/ubuntu:java17.0.8
 #WORKDIR /app
 #COPY . /app
 #COPY ./target/auth-service.jar /app/app.jar
-COPY . .
+#COPY . .
 COPY ./target/app.jar app.jar
 COPY ./logback.xml logback.xml
 
