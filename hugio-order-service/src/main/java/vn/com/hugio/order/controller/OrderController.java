@@ -40,6 +40,12 @@ public class OrderController {
         );
     }
 
+    @PostMapping("/cancel")
+    public ResponseType<String> cancel(@RequestBody RequestType<String> request) {
+        this.orderService.cancelOrder(request.getRequest());
+        return ResponseType.ok("ok");
+    }
+
     @PostMapping("/statistic_sale")
     public ResponseType<List<SaleStatisticDto>> statistic(@RequestBody RequestType<SaleStatisticRequest> request) {
         return ResponseType.ok(
