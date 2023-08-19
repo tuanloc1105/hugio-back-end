@@ -55,7 +55,20 @@ public class UserInfoDto extends BaseEntityDto {
     }
 
     @Builder
-    public UserInfoDto(Long id, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy, String userUid, String cif, String email, String address, String fullName, String username, List<String> roles) {
+    public UserInfoDto(Long id,
+                       boolean active,
+                       LocalDateTime createdAt,
+                       LocalDateTime updatedAt,
+                       String createdBy,
+                       String updatedBy,
+                       String userUid,
+                       String cif,
+                       String email,
+                       String address,
+                       String fullName,
+                       String username,
+                       String phoneNumber,
+                       List<String> roles) {
         super(id, active, createdAt, updatedAt, createdBy, updatedBy);
         this.userUid = userUid;
         this.cif = cif;
@@ -63,6 +76,7 @@ public class UserInfoDto extends BaseEntityDto {
         this.address = address;
         this.fullName = fullName;
         this.username = username;
+        this.phoneNumber = phoneNumber;
         this.roles = roles;
     }
 }

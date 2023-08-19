@@ -1,13 +1,11 @@
 package vn.com.hugio.product;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import vn.com.hugio.common.constant.ConsoleColors;
-import vn.com.hugio.product.service.ProductService;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -17,9 +15,6 @@ import java.nio.charset.Charset;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @ComponentScan(value = {"vn.com"})
 public class ProductApplication implements CommandLineRunner {
-
-    @Autowired
-    private ProductService productService;
 
     public static void main(String[] args) {
         //Model model = MavenUtil.getProjectInfo();
@@ -69,8 +64,6 @@ public class ProductApplication implements CommandLineRunner {
                 ConsoleColors.printYellow("Default Charset by InputStreamReader"),
                 ConsoleColors.printRed(getCharacterEncoding())
         );
-
-        productService.getProductDetail("e2f74144-597a-44e3-8aa3-938fcec63d20");
 
         // Getting character encoding by InputStreamReader
         // System.out.println("Default Charset by InputStreamReader: " + getCharacterEncoding());

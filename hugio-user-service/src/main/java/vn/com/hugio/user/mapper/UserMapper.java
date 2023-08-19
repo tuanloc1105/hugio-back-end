@@ -18,6 +18,7 @@ public final class UserMapper {
                 .email(userInfo.getEmail())
                 .address(userInfo.getAddress())
                 .fullName(userInfo.getFullName())
+                .phoneNumber(userInfo.getPhoneNumber())
                 .build();
     }
 

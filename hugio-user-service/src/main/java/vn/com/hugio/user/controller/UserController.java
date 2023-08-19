@@ -14,6 +14,7 @@ import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.user.dto.UserInfoDto;
 import vn.com.hugio.user.message.request.ChangeUserDetailRequest;
 import vn.com.hugio.user.message.request.CreateUserInfoRequest;
+import vn.com.hugio.user.message.request.EditUserInfoRequest;
 import vn.com.hugio.user.message.request.UserDetailRequest;
 import vn.com.hugio.user.service.UserService;
 
@@ -32,10 +33,16 @@ public class UserController {
         return ResponseType.ok("OK");
     }
 
+    @PostMapping("/edit")
+    @HasRoles(roles = "ADMIN")
+    public ResponseType<String> edit(@RequestBody RequestType<EditUserInfoRequest> request) {
+        this.userService.updateUser(request.getRequest());
+        return ResponseType.ok("OK");
+    }
+
     @PostMapping("/detail")
     @HasRoles(roles = "ADMIN")
     public ResponseType<UserInfoDto> detail(@RequestBody RequestType<UserDetailRequest> request) {
-        ;
         return ResponseType.ok(this.userService.detail(request.getRequest().getUserUid()));
     }
 

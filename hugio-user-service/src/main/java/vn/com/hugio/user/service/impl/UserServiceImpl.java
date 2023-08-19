@@ -22,6 +22,7 @@ import vn.com.hugio.user.entity.repository.UserInfoRepo;
 import vn.com.hugio.user.mapper.UserInfoMapper;
 import vn.com.hugio.user.mapper.UserMapper;
 import vn.com.hugio.user.message.request.CreateUserInfoRequest;
+import vn.com.hugio.user.message.request.EditUserInfoRequest;
 import vn.com.hugio.user.service.UserService;
 import vn.com.hugio.user.service.grpc.client.AuthServiceGrpcClient;
 
@@ -97,6 +98,16 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
                 })
                 .toList();
         return PageResponse.create(page, dto, true);
+    }
+
+    @Override
+    public void updateUser(EditUserInfoRequest request) {
+        var userInfo = this.repository.findByUserUid(request.getUserUid()).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exist"));
+        userInfo.setEmail(request.getEmail());
+        userInfo.setAddress(request.getAddress());
+        userInfo.setFullName(request.getFullName());
+        userInfo.setPhoneNumber(request.getPhoneNumber());
+        this.save(userInfo);
     }
 
     @Override

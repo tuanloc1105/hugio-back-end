@@ -227,7 +227,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                     .toList().stream().peek(dto -> {
                         ProductQuantityDto dto1 = inventoryServiceGrpcClient.getProductQuantity(dto.getProductUid());
                         dto.setQuantity(dto1.getQuantity());
-                        dto.setImportedQuantity(dto.getImportedQuantity());
+                        dto.setImportedQuantity(dto1.getImportedQuantity());
                         dto.setFee(dto1.getFee());
                     })
                     .toList();

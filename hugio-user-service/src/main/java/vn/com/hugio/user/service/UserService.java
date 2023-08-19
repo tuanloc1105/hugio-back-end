@@ -5,6 +5,7 @@ import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.user.dto.UserInfoDto;
 import vn.com.hugio.user.message.request.CreateUserInfoRequest;
+import vn.com.hugio.user.message.request.EditUserInfoRequest;
 
 public interface UserService {
     void createUser(CreateUserInfoRequest request);
@@ -12,6 +13,8 @@ public interface UserService {
     UserInfoDto detail(String uid);
 
     PageResponse<UserInfoDto> getAllUser(PagableRequest request);
+
+    void updateUser(EditUserInfoRequest request);
 
     ResponseType<?> deleteUser(String id);
 

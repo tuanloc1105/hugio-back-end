@@ -3,6 +3,8 @@ package vn.com.hugio.inventory.service.grpc;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
@@ -157,12 +159,22 @@ public class InventoryGrpcServer extends InventoryServiceGrpc.InventoryServiceIm
                     .productUid(request.getRequest().getProductUid())
                     .build();
             ProductQuantityDto dto = this.productInventoryService.getProductQuantity(request1);
-            ProductQuantityOutput productQuantityOutput = ProductQuantityOutput.newBuilder()
-                    .setProductUid(dto.getProductUid())
-                    .setQuantity(dto.getQuantity())
-                    .setImportedQuantity(dto.getImportedQuantity())
-                    .setFee(dto.getFee())
-                    .build();
+            ProductQuantityOutput productQuantityOutput;
+            if (dto == null) {
+                productQuantityOutput = ProductQuantityOutput.newBuilder()
+                        .setProductUid(Strings.EMPTY)
+                        .setQuantity(0L)
+                        .setImportedQuantity(0L)
+                        .setFee(0D)
+                        .build();
+            } else {
+                productQuantityOutput = ProductQuantityOutput.newBuilder()
+                        .setProductUid(StringUtils.isEmpty(dto.getProductUid()) ? Strings.EMPTY : dto.getProductUid())
+                        .setQuantity(dto.getQuantity() == null ? 0L : dto.getQuantity())
+                        .setImportedQuantity(dto.getImportedQuantity() == null ? 0L : dto.getImportedQuantity())
+                        .setFee(dto.getFee() == null ? 0D : dto.getFee())
+                        .build();
+            }
             responseBuilder.setCode(ErrorCodeEnum.SUCCESS.getErrorCode());
             responseBuilder.setMessage(ErrorCodeEnum.SUCCESS.getMessage());
             responseBuilder.setResponse(productQuantityOutput);
