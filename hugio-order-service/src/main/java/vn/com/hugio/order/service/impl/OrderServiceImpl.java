@@ -1,6 +1,7 @@
 package vn.com.hugio.order.service.impl;
 
 import com.google.common.util.concurrent.AtomicDouble;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
@@ -52,6 +53,12 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
 
     @Override
     public void placeOrder(PlaceOrderRequest request) {
+        if (
+                (StringUtils.isNotEmpty(request.getCustomerName()) && StringUtils.isEmpty(request.getCustomerPhoneNumber())) ||
+                        (StringUtils.isNotEmpty(request.getCustomerPhoneNumber()) && StringUtils.isEmpty(request.getCustomerName()))
+        ) {
+            throw new InternalServiceException(ErrorCodeEnum.FORMAT_ERROR, "full customer info must be provide. can not be non empty and empty");
+        }
         //this.kafkaProductService.send(request.getOrderInformation(), "inventory_reduce_product_quantity");
         this.inventoryServiceGrpcClient.reduceProductQuantity(request.getOrderInformation());
         Long numberOfOrderInDay = this.repository.countByCreatedAtBetweenAndActiveIsTrue(LocalDate.now().atTime(LocalTime.MIN), LocalDate.now().atTime(LocalTime.MAX));
@@ -60,6 +67,8 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         }
         Order order = Order.builder()
                 .totalPrice(0D)
+                .customerPhoneNumber(request.getCustomerPhoneNumber())
+                .customerName(request.getCustomerName())
                 .orderCode(StringUtil.addZeroLeadingNumber(numberOfOrderInDay + 1, "HUGIO" + LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"))))
                 .build();
         order = this.save(order);

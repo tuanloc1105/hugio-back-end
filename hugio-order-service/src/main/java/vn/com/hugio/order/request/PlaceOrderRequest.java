@@ -13,6 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class PlaceOrderRequest {
+    
+    @JsonProperty("customer_name")
+    private String customerName;
+
+    @JsonProperty("customer_phone_number")
+    private String customerPhoneNumber;
 
     @JsonProperty("order_information")
     @FieldNotNull
