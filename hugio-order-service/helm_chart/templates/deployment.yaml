@@ -44,4 +44,4 @@ spec:
             - name: KAFKA_GROUP_ID
               value: "hugio_listener"
             - name: CHAT_API_KEY
-              value: "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"
+              value: "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"

@@ -2,6 +2,7 @@ package vn.com.hugio.common.log;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import vn.com.hugio.common.utils.ExceptionStackTraceUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -145,7 +146,7 @@ public class LOG {
                 methodName,
                 String.valueOf(line),
                 clazz.getSimpleName(),
-                Optional.ofNullable(e.getMessage()).isPresent() ? e.getMessage() : "Null pointer"
+                ExceptionStackTraceUtil.getStackTrace(e)
         );
     }
 

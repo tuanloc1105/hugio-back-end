@@ -1,6 +1,7 @@
 package vn.com.hugio.order.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.service.BaseService;
@@ -10,6 +11,7 @@ import vn.com.hugio.order.entity.repository.OrderDetailRepo;
 import vn.com.hugio.order.service.OrderDetailService;
 
 @Service
+@Transactional(rollbackFor = {Exception.class, Throwable.class, RuntimeException.class, Error.class})
 public class OrderDetailServiceImpl extends BaseService<OrderDetail, OrderDetailRepo> implements OrderDetailService {
     public OrderDetailServiceImpl(OrderDetailRepo repository) {
         super(repository);
