@@ -195,15 +195,17 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
             product.setProductCategories(productCategories);
             this.repository.save(product);
         }
-        InventoryRequest inventoryRequest = InventoryRequest.builder()
-                .productUid(product.getProductUid())
-                .importedBy(this.currentUserService.getUsername())
-                .importedQuantity(request.getQuantity())
-                .importedFrom(Strings.EMPTY)
-                .importedFee(request.getFee())
-                .note(Strings.EMPTY)
-                .build();
-        this.callInventory(inventoryRequest, InventoryCallMethod.IMPORT);
+        if (request.getQuantity() != null && request.getQuantity() > 0) {
+            InventoryRequest inventoryRequest = InventoryRequest.builder()
+                    .productUid(product.getProductUid())
+                    .importedBy(this.currentUserService.getUsername())
+                    .importedQuantity(request.getQuantity())
+                    .importedFrom(Strings.EMPTY)
+                    .importedFee(request.getFee())
+                    .note(Strings.EMPTY)
+                    .build();
+            this.callInventory(inventoryRequest, InventoryCallMethod.IMPORT);
+        }
     }
 
     @Override

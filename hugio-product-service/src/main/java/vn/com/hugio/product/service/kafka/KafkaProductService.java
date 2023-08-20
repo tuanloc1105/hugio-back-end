@@ -25,12 +25,12 @@ public class KafkaProductService {
     }
 
     public void send(Object input, String topic, int... partition) {
-        LOG.info("[KAFKA] Sending message");
         if (input == null) {
             throw new InternalServiceException(ErrorCodeEnum.FAILURE, "input can not be null");
         }
         try {
             String messageString = this.objectMapper.writeValueAsString(input);
+            LOG.info("[KAFKA] Sending message: " + messageString);
             ProducerRecord<String, Object> message = new ProducerRecord<>(topic, partition.length > 0 ? partition[0] : 0, "key", messageString, new ArrayList<>());
             kafkaTemplate.send(message);
         } catch (Exception e) {

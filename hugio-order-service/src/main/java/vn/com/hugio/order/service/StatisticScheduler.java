@@ -26,7 +26,7 @@ public class StatisticScheduler {
 
     @Scheduled(cron = CRON_RUN_END_OF_DAY)
     public void runEOD() {
-        StringBuilder question = new StringBuilder("Tôi có dữ liệu bán hàng trong hôm nay như sau:");
+        StringBuilder question = new StringBuilder("Tôi có dữ liệu bán hàng trong hôm nay như sau:\n");
         List<Order> orders = this.orderRepo.getOrderEOD(
                 LocalDate.now().atTime(LocalTime.MIN),
                 LocalDate.now().atTime(LocalTime.MAX)
@@ -35,7 +35,7 @@ public class StatisticScheduler {
             return;
         }
         orders.forEach(o -> {
-            question.append("\n\t- Đơn hàng ")
+            question.append("\t- Đơn hàng ")
                     .append(o.getOrderCode())
                     .append(" được mua bởi khách hàng ")
                     .append(o.getCustomerName())
@@ -43,8 +43,16 @@ public class StatisticScheduler {
                     .append(o.getCustomerPhoneNumber())
                     .append(" có tổng giá là ")
                     .append(o.getTotalPrice())
-                    .append(" VNĐ");
+                    .append(" VNĐ. Chi tiết đơn hàng bao gồm:\n");
+            o.getOrderDetails().forEach(d -> {
+                question.append("\t\t+ Mã hàng ")
+                        .append(d.getProductUid())
+                        .append(" được mua với số lượng ")
+                        .append(d.getQuantity())
+                        .append("\n");
+            });
         });
+        question.append("Bạn hãy cho tôi biết các thông tin sau đây:\n").append("\t- Mã hàng nào được mua nhiều nhất trong hôm nay?\n").append("\t- Đơn hàng nào có giá trị cao nhất và được mua bởi khách hàng nào?\n");
         System.out.println(question);
     }
 
