@@ -23,7 +23,7 @@ public interface OrderRepo extends BaseRepository<Order> {
     Long countByCreatedAtBetweenAndActiveIsTrue(LocalDateTime start, LocalDateTime end);
 
     @Modifying
-    @Query("update Order set orderStatus = :orderStatus, updatedBy = :updatedBy, updatedAt = :updatedAt where orderCode = :orderCode and orderStatus = :currentOrderStatus and active is true")
+    @Query("update Order set orderStatus = :orderStatus, updatedBy = :updatedBy, updatedAt = :updatedAt where orderCode = :orderCode and orderStatus = :currentOrderStatus and active = true")
     Integer updateOrderStatus(
             @Param("orderStatus") OrderStatus orderStatus,
             @Param("updatedBy") String updatedBy,
