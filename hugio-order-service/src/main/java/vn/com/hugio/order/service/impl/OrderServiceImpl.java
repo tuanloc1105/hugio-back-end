@@ -165,11 +165,11 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         if (result == null || result == 0) {
             throw new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "can not cancel order");
         }
-        List<OrderInformation> orderInformations = order.getOrderDetails()
-                .stream()
-                .map(o -> new OrderInformation(o.getProductUid(), o.getQuantity()))
-                .toList();
-        this.kafkaProductService.send(orderInformations, "recovery_product_quantity");
+        //List<OrderInformation> orderInformations = order.getOrderDetails()
+        //        .stream()
+        //        .map(o -> new OrderInformation(o.getProductUid(), o.getQuantity()))
+        //        .toList();
+        //this.kafkaProductService.send(orderInformations, "recovery_product_quantity");
     }
 
     @Override

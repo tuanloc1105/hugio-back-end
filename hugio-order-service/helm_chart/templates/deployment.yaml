@@ -43,3 +43,5 @@ spec:
               value: "GSSAPI"
             - name: KAFKA_GROUP_ID
               value: "hugio_listener"
+            - name: CHAT_API_KEY
+              value: "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"

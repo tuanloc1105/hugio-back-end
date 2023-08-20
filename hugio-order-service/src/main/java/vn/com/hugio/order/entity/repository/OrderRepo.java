@@ -59,6 +59,17 @@ public interface OrderRepo extends BaseRepository<Order> {
             @Param("toDate") LocalDateTime toDate
     );
 
+    @Query("select o " +
+            "from Order o " +
+            "where o.createdAt between :fromDate and :toDate " +
+            "and o.active = true " +
+            "and o.orderStatus = vn.com.hugio.order.enums.OrderStatus.DONE " +
+            "and o.customerPhoneNumber is not null and o.customerName is not null")
+    List<Order> getOrderEOD(
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDate") LocalDateTime toDate
+    );
+
     @Query("select sum(o.totalPrice) " +
             "from Order o " +
             "where o.createdAt between :fromDate and :toDate " +
