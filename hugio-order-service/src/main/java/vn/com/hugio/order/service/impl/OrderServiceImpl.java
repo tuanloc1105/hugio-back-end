@@ -106,7 +106,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
     public void confirmOrder(String orderCode) {
         var order = this.repository.findByOrderCodeAndActiveIsTrue(orderCode).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
         Integer result = this.repository.updateOrderStatus(
-                OrderStatus.CANCELED,
+                OrderStatus.DONE,
                 this.currentUserService.getUsername(),
                 LocalDateTime.now(),
                 orderCode,
@@ -132,6 +132,11 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
             dto1.setOrderCode(order.getOrderCode());
             dto1.setCustomerName(order.getCustomerName());
             dto1.setCustomerPhoneNumber(order.getCustomerPhoneNumber());
+            dto1.setCreatedAt(order.getCreatedAt());
+            dto1.setCreatedBy(order.getCreatedBy());
+            dto1.setUpdatedAt(order.getUpdatedAt());
+            dto1.setUpdatedBy(order.getUpdatedBy());
+            dto1.setOrderStatus(order.getOrderStatus());
             List<OrderDetailDto> orderDetailDto = new ArrayList<>();
             order.getOrderDetails().forEach(detail -> {
                 // lặp qua từng order detail của order
@@ -164,7 +169,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
                 .stream()
                 .map(o -> new OrderInformation(o.getProductUid(), o.getQuantity()))
                 .toList();
-        this.kafkaProductService.send(orderInformations, "inventory_reduce_product_quantity");
+        this.kafkaProductService.send(orderInformations, "recovery_product_quantity");
     }
 
     @Override
