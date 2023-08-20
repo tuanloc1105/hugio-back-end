@@ -36,8 +36,8 @@ public class OrderController {
     }
 
     @PostMapping("/confirm")
-    public ResponseType<String> confirm(@RequestBody RequestType<PlaceOrderRequest> request) {
-        this.orderService.placeOrder(request.getRequest());
+    public ResponseType<String> confirm(@RequestBody RequestType<String> request) {
+        this.orderService.confirmOrder(request.getRequest());
         return ResponseType.ok("ok");
     }
 
