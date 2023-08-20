@@ -125,7 +125,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                 .importedFrom(Strings.EMPTY)
                 .note(Strings.EMPTY)
                 .build();
-        this.save(product);
+        this.repository.save(product);
         this.callInventory(inventoryRequest, InventoryCallMethod.CREATE);
         LOG.info("SAVE PRODUCT {} SUCCESS, SAVE PRODUCT DETAIL", request.getName());
         this.productDetailService.addOrSaveProductDetail(product, request.getDetails());
@@ -141,7 +141,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
             ).collect(Collectors.toList());
             product.setProductCategories(productCategories);
             this.productCategoryService.saveEntities(productCategories);
-            this.save(product);
+            this.repository.save(product);
         }
     }
 
@@ -175,7 +175,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         );
         byte[] image = this.generateQrCode(this.productMapper.productEntityToProductDto(product));
         product.setProductQr(image);
-        product = this.save(product);
+        product = this.repository.save(product);
         LOG.info("UPDATE PRODUCT {} SUCCESS, UPDATE PRODUCT DETAIL", request.getName());
         if (request.getDetails() != null && !(request.getDetails().isEmpty())) {
             LOG.info("UPDATE PRODUCT DETAIL", request.getName());
@@ -193,7 +193,7 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
                             .build()
             ).collect(Collectors.toList());
             product.setProductCategories(productCategories);
-            this.save(product);
+            this.repository.save(product);
         }
         InventoryRequest inventoryRequest = InventoryRequest.builder()
                 .productUid(product.getProductUid())

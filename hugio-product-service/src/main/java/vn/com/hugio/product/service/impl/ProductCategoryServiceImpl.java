@@ -20,7 +20,7 @@ public class ProductCategoryServiceImpl extends BaseService<ProductCategory, Pro
 
     @Override
     public void saveEntities(List<ProductCategory> productCategories) {
-        this.saveAll(productCategories);
+        this.repository.saveAll(productCategories);
     }
 
     @Override

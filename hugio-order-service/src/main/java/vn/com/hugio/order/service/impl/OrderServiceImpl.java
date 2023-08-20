@@ -4,12 +4,14 @@ import com.google.common.util.concurrent.AtomicDouble;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.service.BaseService;
+import vn.com.hugio.common.service.CurrentUserService;
 import vn.com.hugio.common.utils.StringUtil;
 import vn.com.hugio.order.dto.OrderDetailDto;
 import vn.com.hugio.order.dto.OrderDto;
@@ -20,6 +22,7 @@ import vn.com.hugio.order.dto.TotalSaleEachDayDto;
 import vn.com.hugio.order.entity.Order;
 import vn.com.hugio.order.entity.OrderDetail;
 import vn.com.hugio.order.entity.repository.OrderRepo;
+import vn.com.hugio.order.enums.OrderStatus;
 import vn.com.hugio.order.request.PlaceOrderRequest;
 import vn.com.hugio.order.request.StatisticRequest;
 import vn.com.hugio.order.request.value.OrderInformation;
@@ -40,23 +43,27 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
+@Transactional(rollbackFor = {Exception.class, Throwable.class, RuntimeException.class, Error.class})
 public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements OrderService {
 
     private final ProductServiceGrpcClient productServiceGrpcClient;
     private final OrderDetailService orderDetailService;
     private final InventoryServiceGrpcClient inventoryServiceGrpcClient;
     private final KafkaProductService kafkaProductService;
+    private final CurrentUserService currentUserService;
 
     public OrderServiceImpl(OrderRepo repository,
                             ProductServiceGrpcClient productServiceGrpcClient,
                             OrderDetailService orderDetailService,
                             InventoryServiceGrpcClient inventoryServiceGrpcClient,
-                            KafkaProductService kafkaProductService) {
+                            KafkaProductService kafkaProductService,
+                            CurrentUserService currentUserService) {
         super(repository);
         this.productServiceGrpcClient = productServiceGrpcClient;
         this.orderDetailService = orderDetailService;
         this.inventoryServiceGrpcClient = inventoryServiceGrpcClient;
         this.kafkaProductService = kafkaProductService;
+        this.currentUserService = currentUserService;
     }
 
     @Override
@@ -68,7 +75,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
             throw new InternalServiceException(ErrorCodeEnum.FORMAT_ERROR, "full customer info must be provide. can not be non empty and empty");
         }
         //this.kafkaProductService.send(request.getOrderInformation(), "inventory_reduce_product_quantity");
-        this.inventoryServiceGrpcClient.reduceProductQuantity(request.getOrderInformation());
+        //this.inventoryServiceGrpcClient.reduceProductQuantity(request.getOrderInformation());
         Long numberOfOrderInDay = this.repository.countByCreatedAtBetweenAndActiveIsTrue(LocalDate.now().atTime(LocalTime.MIN), LocalDate.now().atTime(LocalTime.MAX));
         if (numberOfOrderInDay > 9999) {
             throw new InternalServiceException(ErrorCodeEnum.FAILURE, "max order in a day");
@@ -79,7 +86,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
                 .customerName(request.getCustomerName())
                 .orderCode(StringUtil.addZeroLeadingNumber(numberOfOrderInDay + 1, "HUGIO" + LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy"))))
                 .build();
-        order = this.save(order);
+        order = this.repository.save(order);
         AtomicReference<Order> atomicReferenceOrder = new AtomicReference<>(order);
         AtomicDouble atomicTotalPrice = new AtomicDouble(0D);
         List<OrderDetail> details = new ArrayList<>();
@@ -91,7 +98,28 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         });
         order.setOrderDetails(details);
         order.setTotalPrice(atomicTotalPrice.get());
-        this.save(order);
+        order.setOrderStatus(OrderStatus.PENDING);
+        this.repository.save(order);
+    }
+
+    @Override
+    public void confirmOrder(String orderCode) {
+        var order = this.repository.findByOrderCodeAndActiveIsTrue(orderCode).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
+        Integer result = this.repository.updateOrderStatus(
+                OrderStatus.CANCELED,
+                this.currentUserService.getUsername(),
+                LocalDateTime.now(),
+                orderCode,
+                OrderStatus.PENDING
+        );
+        if (result == null || result == 0) {
+            throw new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "can not cancel order");
+        }
+        List<OrderInformation> orderInformations = order.getOrderDetails()
+                .stream()
+                .map(o -> new OrderInformation(o.getProductUid(), o.getQuantity()))
+                .toList();
+        this.inventoryServiceGrpcClient.reduceProductQuantity(orderInformations);
     }
 
     @Override
@@ -122,7 +150,20 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
     @Override
     public void cancelOrder(String orderCode) {
         var order = this.repository.findByOrderCodeAndActiveIsTrue(orderCode).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
-        List<OrderInformation> orderInformations = order.getOrderDetails().stream().map(o -> new OrderInformation(o.getProductUid(), o.getQuantity())).toList();
+        Integer result = this.repository.updateOrderStatus(
+                OrderStatus.CANCELED,
+                this.currentUserService.getUsername(),
+                LocalDateTime.now(),
+                orderCode,
+                OrderStatus.PENDING
+        );
+        if (result == null || result == 0) {
+            throw new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "can not cancel order");
+        }
+        List<OrderInformation> orderInformations = order.getOrderDetails()
+                .stream()
+                .map(o -> new OrderInformation(o.getProductUid(), o.getQuantity()))
+                .toList();
         this.kafkaProductService.send(orderInformations, "inventory_reduce_product_quantity");
     }
 

@@ -35,6 +35,12 @@ public class OrderController {
         return ResponseType.ok("ok");
     }
 
+    @PostMapping("/confirm")
+    public ResponseType<String> confirm(@RequestBody RequestType<PlaceOrderRequest> request) {
+        this.orderService.placeOrder(request.getRequest());
+        return ResponseType.ok("ok");
+    }
+
     @PostMapping("/all")
     public ResponseType<PageResponse<OrderDto>> all(@RequestBody RequestType<PagableRequest> request) {
         return ResponseType.ok(

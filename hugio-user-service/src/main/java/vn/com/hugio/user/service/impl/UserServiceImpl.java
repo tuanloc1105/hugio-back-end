@@ -12,6 +12,7 @@ import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.service.BaseService;
+import vn.com.hugio.common.service.CurrentUserService;
 import vn.com.hugio.common.utils.DateTimeUtil;
 import vn.com.hugio.common.utils.ExceptionStackTraceUtil;
 import vn.com.hugio.common.utils.StringUtil;
@@ -27,6 +28,7 @@ import vn.com.hugio.user.service.UserService;
 import vn.com.hugio.user.service.grpc.client.AuthServiceGrpcClient;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -36,14 +38,17 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
 
     private final AuthServiceGrpcClient authServiceGrpcClient;
     private final UserInfoMapper userInfoMapper;
+    private final CurrentUserService currentUserService;
 
     @Autowired
     public UserServiceImpl(UserInfoRepo repository,
                            AuthServiceGrpcClient authServiceGrpcClient,
-                           UserInfoMapper userInfoMapper) {
+                           UserInfoMapper userInfoMapper,
+                           CurrentUserService currentUserService) {
         super(repository);
         this.authServiceGrpcClient = authServiceGrpcClient;
         this.userInfoMapper = userInfoMapper;
+        this.currentUserService = currentUserService;
     }
 
     @Override
@@ -102,12 +107,18 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
 
     @Override
     public void updateUser(EditUserInfoRequest request) {
-        var userInfo = this.repository.findByUserUid(request.getUserUid()).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "User not exist"));
-        userInfo.setEmail(request.getEmail());
-        userInfo.setAddress(request.getAddress());
-        userInfo.setFullName(request.getFullName());
-        userInfo.setPhoneNumber(request.getPhoneNumber());
-        this.save(userInfo);
+        Integer result = this.repository.updateUserInfo(
+                request.getEmail(),
+                request.getAddress(),
+                request.getFullName(),
+                request.getPhoneNumber(),
+                LocalDateTime.now(),
+                currentUserService.getUsername(),
+                request.getUserUid()
+        );
+        if (result == null || result == 0) {
+            throw new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "user not exist");
+        }
     }
 
     @Override
@@ -131,6 +142,6 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
         }
         userInfo.setActive(status);
         this.authServiceGrpcClient.changeUserStatus(userInfo.getUserUid(), status);
-        this.save(userInfo);
+        this.repository.save(userInfo);
     }
 }

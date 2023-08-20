@@ -14,6 +14,8 @@ import java.util.List;
 public interface OrderService {
     void placeOrder(PlaceOrderRequest request);
 
+    void confirmOrder(String orderCode);
+
     PageResponse<OrderDto> allOrder(PagableRequest request);
 
     void cancelOrder(String orderCode);

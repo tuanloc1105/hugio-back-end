@@ -2,11 +2,13 @@ package vn.com.hugio.order.entity.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import vn.com.hugio.common.entity.repository.BaseRepository;
 import vn.com.hugio.order.dto.SaleStatisticDto;
 import vn.com.hugio.order.entity.Order;
+import vn.com.hugio.order.enums.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +21,16 @@ public interface OrderRepo extends BaseRepository<Order> {
     Optional<Order> findByOrderCodeAndActiveIsTrue(String orderCode);
 
     Long countByCreatedAtBetweenAndActiveIsTrue(LocalDateTime start, LocalDateTime end);
+
+    @Modifying
+    @Query("update Order set orderStatus = :orderStatus, updatedBy = :updatedBy, updatedAt = :updatedAt where orderCode = :orderCode and orderStatus = :currentOrderStatus and active is true")
+    Integer updateOrderStatus(
+            @Param("orderStatus") OrderStatus orderStatus,
+            @Param("updatedBy") String updatedBy,
+            @Param("updatedAt") LocalDateTime updatedAt,
+            @Param("orderCode") String orderCode,
+            @Param("currentOrderStatus") OrderStatus currentOrderStatus
+    );
 
     @Query("select new vn.com.hugio.order.dto.SaleStatisticDto(o.customerPhoneNumber, sum(od.quantity)) " +
             "from Order o left join OrderDetail od on o.id = od.order.id " +

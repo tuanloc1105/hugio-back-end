@@ -41,7 +41,7 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
         if (optionalProductInventory.isPresent()) {
             throw new InternalServiceException(ErrorCodeEnum.EXISTS);
         }
-        this.save(
+        this.repository.save(
                 ProductInventory.builder()
                         .productUid(request.getProductUid())
                         .quantity(request.getImportedQuantity())
@@ -57,7 +57,7 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
         ProductInventory productInventory = this.repository.findByProductUid(request.getProductUid()).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
         Long currentQuantity = productInventory.getQuantity();
         productInventory.setQuantity(currentQuantity + request.getImportedQuantity());
-        this.save(productInventory);
+        this.repository.save(productInventory);
         InventoryLog inventoryLog = this.modelMapper.map(request, InventoryLog.class);
         inventoryLog.setBehaviour(ImportBehaviour.IMPORT);
         inventoryLogService.saveEntity(inventoryLog);
@@ -67,7 +67,7 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
     public void updateProduct(InventoryRequest request) {
         ProductInventory productInventory = this.repository.findByProductUid(request.getProductUid()).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
         productInventory.setQuantity(request.getImportedQuantity());
-        this.save(productInventory);
+        this.repository.save(productInventory);
         InventoryLog inventoryLog = this.modelMapper.map(request, InventoryLog.class);
         inventoryLog.setBehaviour(ImportBehaviour.UPDATE);
         inventoryLogService.saveEntity(inventoryLog);

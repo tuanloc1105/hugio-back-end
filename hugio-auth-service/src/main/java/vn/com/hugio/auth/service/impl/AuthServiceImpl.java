@@ -106,7 +106,7 @@ public class AuthServiceImpl extends BaseService<User, UserRepo> implements Auth
                 .username(username)
                 .password(BCryptUtil.hashPassword(password))
                 .build();
-        user = this.save(user);
+        user = this.repository.save(user);
         var userRoleList = new ArrayList<UserRole>();
         for (Role role : roles) {
             var userRole = new UserRole(user, role);

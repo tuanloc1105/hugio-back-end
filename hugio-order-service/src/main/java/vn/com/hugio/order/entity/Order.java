@@ -3,6 +3,8 @@ package vn.com.hugio.order.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -12,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import vn.com.hugio.common.entity.BaseEntity;
+import vn.com.hugio.order.enums.OrderStatus;
 
 import java.io.Serial;
 import java.util.List;
@@ -38,6 +41,10 @@ public class Order extends BaseEntity {
 
     @Column(name = "TOTAL_PRICE")
     private Double totalPrice;
+
+    @Column(name = "ORDER_STATUS")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "order", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<OrderDetail> orderDetails;

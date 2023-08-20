@@ -43,7 +43,7 @@ public class CategoryServiceImpl extends BaseService<Category, CategoryRepositor
                 .categoryUid(UUID.randomUUID().toString())
                 .categoryName(request.getCategoryName())
                 .build();
-        this.save(category);
+        this.repository.save(category);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CategoryServiceImpl extends BaseService<Category, CategoryRepositor
         Category category = this.repository.findByCategoryUid(request.getCategoryId())
                 .orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "category not exist"));
         category.setCategoryName(request.getCategoryName());
-        this.save(category);
+        this.repository.save(category);
     }
 
     @Override

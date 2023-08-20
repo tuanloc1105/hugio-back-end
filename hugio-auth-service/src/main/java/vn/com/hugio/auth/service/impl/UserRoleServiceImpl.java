@@ -19,7 +19,7 @@ public class UserRoleServiceImpl extends BaseService<UserRole, UserRoleRepo> imp
 
     @Override
     public void saveNew(UserRole userRole) {
-        this.save(userRole);
+        this.repository.save(userRole);
     }
 
 }
