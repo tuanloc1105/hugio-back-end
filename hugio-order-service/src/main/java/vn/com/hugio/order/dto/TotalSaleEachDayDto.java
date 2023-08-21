@@ -14,5 +14,5 @@ public class TotalSaleEachDayDto {
     private String date;
 
     @JsonProperty("total")
-    private Integer total;
+    private Long total;
 }

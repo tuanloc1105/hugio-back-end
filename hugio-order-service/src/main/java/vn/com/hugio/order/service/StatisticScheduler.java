@@ -24,8 +24,8 @@ import java.util.List;
 @Transactional(rollbackFor = {Exception.class, Throwable.class, RuntimeException.class, Error.class})
 public class StatisticScheduler {
 
-    private final static String CRON_RUN_EVERY_LAST_MONTH_AT_22 = "0 0 22 28-31 * *";
-    private final static String CRON_RUN_END_OF_DAY = "0 0 22 * * *";
+    private final static String CRON_RUN_EVERY_LAST_MONTH_AT_22 = "0 0 22 L * ?";
+    private final static String CRON_RUN_END_OF_DAY = "0 0 22 ? * *";
     private final OrderRepo orderRepo;
     private final OrderStatisticHistoryRepo orderStatisticHistoryRepo;
     private final ChatGPT chatGPT;

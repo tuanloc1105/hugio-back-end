@@ -261,7 +261,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         list.forEach(o -> {
             TotalSaleEachDayDto dto = new TotalSaleEachDayDto();
             dto.setDate((String) o[0]);
-            dto.setTotal((Integer) o[1]);
+            dto.setTotal((Long) o[1]);
             result.add(dto);
         });
         return result;
