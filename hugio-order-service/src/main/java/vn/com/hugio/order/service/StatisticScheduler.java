@@ -32,10 +32,12 @@ public class StatisticScheduler {
 
     @Scheduled(cron = CRON_RUN_EVERY_LAST_MONTH_AT_22)
     public void runEOMAt22() {
+        LOG.info("run a cron job");
     }
 
     @Scheduled(cron = CRON_RUN_END_OF_DAY)
     public void runEOD() {
+        LOG.info("run a cron job");
         StringBuilder question = new StringBuilder("Tôi có dữ liệu bán hàng trong hôm nay như sau:\n");
         List<Order> orders = this.orderRepo.getOrderEOD(
                 LocalDate.now().atTime(LocalTime.MIN),
