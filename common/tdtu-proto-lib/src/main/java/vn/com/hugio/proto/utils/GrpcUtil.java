@@ -4,6 +4,8 @@ import org.slf4j.MDC;
 import org.springframework.util.StringUtils;
 import vn.com.hugio.proto.common.TraceTypeGRPC;
 
+import java.util.UUID;
+
 public class GrpcUtil {
 
     private static final String HYPHEN = "-";
@@ -11,7 +13,7 @@ public class GrpcUtil {
     public static TraceTypeGRPC createTraceTypeGrpc() {
         return TraceTypeGRPC
                 .newBuilder()
-                .setCid(MDC.get("cid"))
+                .setCid(MDC.get("cid") == null ? UUID.randomUUID().toString() : MDC.get("cid"))
                 .setSid(MDC.get("traceId"))
                 .build();
     }

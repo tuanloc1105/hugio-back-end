@@ -31,7 +31,7 @@ public class TestController {
 
     @PostMapping()
     public ResponseType<String> test() {
-        this.statisticScheduler.runEOD();
+        this.statisticScheduler.runEOMAt22();
         return ResponseType.ok("ok");
     }
 

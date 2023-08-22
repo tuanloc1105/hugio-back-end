@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import vn.com.hugio.common.entity.repository.BaseRepository;
+import vn.com.hugio.order.dto.ProductInfoDto;
 import vn.com.hugio.order.dto.SaleStatisticDto;
 import vn.com.hugio.order.entity.Order;
 import vn.com.hugio.order.enums.OrderStatus;
@@ -98,6 +99,16 @@ public interface OrderRepo extends BaseRepository<Order> {
             "group by CAST(o.CREATED_AT as DATE)",
             nativeQuery = true)
     List<Object[]> totalOrderEachDay(
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDate") LocalDateTime toDate
+    );
+
+    @Query("select new vn.com.hugio.order.dto.ProductInfoDto(od.productUid, sum(od.quantity), sum(o.totalPrice)) " +
+            "from Order o left join OrderDetail od on od.order.id = o.id " +
+            "where o.orderStatus = vn.com.hugio.order.enums.OrderStatus.DONE " +
+            "and o.createdAt between :fromDate and :toDate " +
+            "group by od.productUid")
+    List<ProductInfoDto> getProductInfo(
             @Param("fromDate") LocalDateTime fromDate,
             @Param("toDate") LocalDateTime toDate
     );

@@ -27,7 +27,9 @@ public class ChatGPT {
         data.put("model", "text-davinci-003");
         data.put("prompt", text);
         //data.put("max_tokens", 4000);
-        data.put("max_tokens", text.length());
+        //data.put("max_tokens", 50);
+        data.put("max_tokens", 800);
+        //data.put("max_tokens", text.length());
         data.put("temperature", 1.0);
 
         con.setDoOutput(true);

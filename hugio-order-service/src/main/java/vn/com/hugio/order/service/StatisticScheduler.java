@@ -8,14 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.constant.ConsoleColors;
 import vn.com.hugio.common.gpt.ChatGPT;
 import vn.com.hugio.common.log.LOG;
+import vn.com.hugio.order.dto.ProductInfoDto;
+import vn.com.hugio.order.dto.ProductQuantityDto;
 import vn.com.hugio.order.entity.Order;
 import vn.com.hugio.order.entity.OrderStatisticHistory;
 import vn.com.hugio.order.entity.repository.OrderRepo;
 import vn.com.hugio.order.entity.repository.OrderStatisticHistoryRepo;
 import vn.com.hugio.order.enums.StatisticType;
+import vn.com.hugio.order.service.grpc.InventoryServiceGrpcClient;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
 
 @EnableScheduling
@@ -29,10 +34,53 @@ public class StatisticScheduler {
     private final OrderRepo orderRepo;
     private final OrderStatisticHistoryRepo orderStatisticHistoryRepo;
     private final ChatGPT chatGPT;
+    private final InventoryServiceGrpcClient grpcClient;
 
     @Scheduled(cron = CRON_RUN_EVERY_LAST_MONTH_AT_22)
     public void runEOMAt22() {
         LOG.info("run a cron job");
+        var current = LocalDate.now();
+        var yearMonth = YearMonth.of(
+                current.getYear(),
+                current.getMonthValue()
+        );
+        var firstOfMonth = yearMonth.atDay(1).atTime(LocalTime.MIN);
+        var lastOfMonth = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        StringBuilder question = new StringBuilder("Tôi có dữ liệu bán hàng trong tháng hiện tại như sau:\n");
+        List<ProductInfoDto> dtos = this.orderRepo.getProductInfo(
+                firstOfMonth,
+                lastOfMonth
+        );
+        dtos.forEach(d -> {
+            try {
+                ProductQuantityDto quantityDto = grpcClient.getProductQuantity(d.getProductUid());
+                question.append("\t- Mã hàng ")
+                        .append(d.getProductUid())
+                        .append(" bán được với tổng ")
+                        .append(d.getQuantity())
+                        .append(" món. Tổng số tiền bán được là ")
+                        .append(d.getTotalPrice())
+                        .append(" VNĐ. Hiện tại trong kho còn ")
+                        .append(quantityDto.getQuantity())
+                        .append(" món. Món hàng đã được nhập với tổng số hàng là ")
+                        .append(quantityDto.getImportedQuantity())
+                        .append(" với tổng số tiền là ")
+                        .append(String.format("%.0f", quantityDto.getFee()))
+                        .append("\n");
+            } catch (Exception e) {
+                LOG.exception(e);
+            }
+        });
+        //question.append("Bạn hãy thống kê thông tin trên giúp tôi");
+        //question.append("Bạn hãy dự đoán khả năng bán hàng cho tôi. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi");
+        question.append("Bạn hãy dự đoán khả năng bán hàng trong tháng tiếp theo cho tôi, đồng thời hãy xem món hàng nào là tốt nhất. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi");
+        try {
+            String answer = this.chatGPT.chatGPT(question.toString());
+            System.out.println(ConsoleColors.printYellow(question.toString()) + "\n" + ConsoleColors.printGreen(answer));
+        } catch (Exception e) {
+            LOG.exception(e);
+        }
+
     }
 
     @Scheduled(cron = CRON_RUN_END_OF_DAY)
@@ -44,6 +92,7 @@ public class StatisticScheduler {
                 LocalDate.now().atTime(LocalTime.MAX)
         );
         if (orders.isEmpty()) {
+        LOG.info("there are no order");
             return;
         }
         orders.forEach(o -> {
