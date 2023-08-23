@@ -15,7 +15,7 @@ public class ChatGPT {
     @Value("${chat.api.key:}")
     private String chatApiKey;
 
-    public String chatGPT(String text) throws Exception {
+    public String chatGPT(String text, int... maxToken) throws Exception {
         String url = "https://api.openai.com/v1/completions";
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
 
@@ -28,7 +28,7 @@ public class ChatGPT {
         data.put("prompt", text);
         //data.put("max_tokens", 4000);
         //data.put("max_tokens", 50);
-        data.put("max_tokens", 800);
+        data.put("max_tokens", maxToken.length > 0 ? maxToken[0] : 800);
         //data.put("max_tokens", text.length());
         data.put("temperature", 1.0);
 
