@@ -358,11 +358,9 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
     }
 
     private void callInventory(InventoryRequest request, InventoryCallMethod method) {
-        //switch (method) {
-        //    case CREATE -> this.inventoryServiceGrpcClient.create(request);
-        //    case IMPORT -> this.inventoryServiceGrpcClient.importProduct(request);
-        //    case UPDATE -> this.inventoryServiceGrpcClient.updateProduct(request);
-        //}
+        if (request.getImportedQuantity() == null || request.getImportedQuantity() == 0L) {
+            return;
+        }
         switch (method) {
             case CREATE -> this.kafkaProductService.send(request, "inventory_create");
             case IMPORT -> this.kafkaProductService.send(request, "inventory_import_product");

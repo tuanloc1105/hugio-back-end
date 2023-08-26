@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.com.hugio.common.aop.FieldGreaterThan;
 import vn.com.hugio.common.aop.FieldNotNull;
 import vn.com.hugio.product.request.value.ProductDetailReqDto;
 
@@ -28,6 +29,7 @@ public class CreateProductRequest {
 
     @JsonProperty("product_quantity")
     @FieldNotNull
+    @FieldGreaterThan(0)
     private Long quantity;
 
     @JsonProperty("fee")
