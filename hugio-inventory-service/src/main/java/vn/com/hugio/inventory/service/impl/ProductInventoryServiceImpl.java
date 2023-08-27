@@ -92,6 +92,7 @@ public class ProductInventoryServiceImpl extends BaseService<ProductInventory, P
                 throw new InternalServiceException(ErrorCodeEnum.FAILURE, "product out of stock: " + rq.getProductUid());
             }
             productInventory.setQuantity(newQuantity);
+            this.repository.save(productInventory);
         }
     }
 
