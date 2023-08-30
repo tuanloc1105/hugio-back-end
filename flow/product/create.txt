@@ -1,0 +1,48 @@
+title create product
+
+actor "Client" as c
+participant "product-service" as p
+participant "auth-service" as a
+participant "kafka" as k
+participant "inventory-service" as i
+participant "hugio_product_db" as db
+participant "hugio_inventory_db" as dbi
+
+activate c
+c->p: send request
+activate p
+activate a
+p->a: validate access token
+deactivate a
+alt access token is invalid
+    activate a
+    a-->p: return error
+    p-->c: return error
+    deactivate a
+end 
+a-->p: return user info
+p->p: check user permission
+alt user does not have enough permission
+	p-->c: return error
+end
+activate db
+p->db: create product
+alt create product fail due to product existed or error
+	db-->p: return error
+    p-->c: return error
+end
+db->p: return success
+activate k
+p->k: push message to kafka to create product
+activate i
+k->i: receive message from kafka
+activate dbi
+i->dbi: create inventory info for product
+dbi->i: return result
+deactivate dbi
+p->c: return success
+deactivate i
+deactivate k
+deactivate db
+deactivate c 
+deactivate p
