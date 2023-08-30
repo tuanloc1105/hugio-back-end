@@ -3,6 +3,7 @@ package vn.com.hugio.user.service.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
@@ -104,10 +105,14 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
                     }
                 })
                 .filter(user -> {
-                    if (request.getContent().equals("client")) {
-                        return user.getRoles().stream().anyMatch(role -> role.equals("CUSTOMER"));
+                    if (StringUtils.isNotBlank(request.getContent())) {
+                        if (request.getContent().equals("client")) {
+                            return user.getRoles().stream().anyMatch(role -> role.equals("CUSTOMER"));
+                        } else {
+                            return user.getRoles().stream().anyMatch(role -> !role.equals("CUSTOMER"));
+                        }
                     } else {
-                        return user.getRoles().stream().anyMatch(role -> !role.equals("CUSTOMER"));
+                        return true;
                     }
                 })
                 .toList();
