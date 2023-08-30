@@ -108,8 +108,10 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
                     if (StringUtils.isNotBlank(request.getContent())) {
                         if (request.getContent().equals("client")) {
                             return user.getRoles().stream().anyMatch(role -> role.equals("CUSTOMER"));
-                        } else {
+                        } else if (request.getContent().equals("user")) {
                             return user.getRoles().stream().anyMatch(role -> !role.equals("CUSTOMER"));
+                        } else {
+                            return true;
                         }
                     } else {
                         return true;
