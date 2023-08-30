@@ -56,12 +56,6 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
     @Override
     public void createUser(CreateUserInfoRequest request) {
         LocalDate currentDate = DateTimeUtil.generateCurrentLocalDateDefault();
-        UserInfoGrpcDto grpcDto = this.authServiceGrpcClient.create(request);
-        var userInfo = new UserInfo();
-        userInfo.setEmail(request.getEmail());
-        userInfo.setAddress(request.getAddress());
-        userInfo.setFullName(request.getFullName());
-        userInfo.setPhoneNumber(request.getPhoneNumber());
         Integer numberUserCreatedInDay = this.repository.countByCreatedAtBetween(
                 currentDate.atTime(LocalTime.MIN),
                 currentDate.atTime(LocalTime.MAX)
@@ -69,6 +63,12 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
         if (numberUserCreatedInDay > 999) {
             throw new InternalServiceException(ErrorCodeEnum.FAILURE.getCode(), "Max user create in a day");
         }
+        UserInfoGrpcDto grpcDto = this.authServiceGrpcClient.create(request);
+        var userInfo = new UserInfo();
+        userInfo.setEmail(request.getEmail());
+        userInfo.setAddress(request.getAddress());
+        userInfo.setFullName(request.getFullName());
+        userInfo.setPhoneNumber(request.getPhoneNumber());
         //Long cif = (Long.parseLong(currentDate.format(DateTimeFormatter.ofPattern("yyMMdd"))) * 1000) + numberUserCreatedInDay;
         //userInfo.setCif(cif);
         userInfo.setCif(StringUtil.addZeroLeadingNumber(numberUserCreatedInDay == 0 ? numberUserCreatedInDay + 1 : numberUserCreatedInDay, "C"));
