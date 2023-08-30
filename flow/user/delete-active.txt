@@ -1,0 +1,43 @@
+title delete/active user
+
+actor "Client" as c
+participant "user-service" as u
+participant "auth-service" as a
+participant "hugio_user_db" as db
+
+activate c
+c->u: send request
+activate u
+activate a
+u->a: validate access token
+deactivate a
+alt access token is invalid
+    activate a
+    a-->u: return error
+    u-->c: return error
+    deactivate a
+end 
+a-->u: return user info
+u->u: check user permission
+alt user does not have enough permission
+	u-->c: return error
+end
+activate db
+u->db: delete/active user
+alt delete/active fail due to user not exist or error occure
+	db-->u: return error
+    u-->c: return error
+end 
+db-->u: return success
+activate a
+u->a: send request to delete/active user
+alt delete/active fail
+	a-->u: return error
+    u-->c: return error
+end 
+a-->u: return success
+deactivate a
+u->c: return success
+deactivate db
+deactivate c 
+deactivate u 
