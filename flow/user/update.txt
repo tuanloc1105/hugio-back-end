@@ -1,0 +1,35 @@
+title update user
+
+actor "Client" as c
+participant "user-service" as u
+participant "auth-service" as a
+participant "hugio_user_db" as db
+
+activate c
+c->u: send request
+activate u
+activate a
+u->a: validate access token
+deactivate a
+alt access token is invalid
+    activate a
+    a-->u: return error
+    u-->c: return error
+    deactivate a
+end 
+a-->u: return user info
+u->u: check user permission
+alt user does not have enough permission
+	u-->c: return error
+end
+activate db
+u->db: update user info
+alt update fail
+	db-->u: return error
+    u-->c: return error
+end 
+db-->u: return success
+u->c: return success
+deactivate db
+deactivate c 
+deactivate u 
