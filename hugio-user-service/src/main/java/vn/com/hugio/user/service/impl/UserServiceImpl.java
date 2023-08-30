@@ -87,7 +87,7 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
     @Override
     public PageResponse<UserInfoDto> getAllUser(PagableRequest request) {
         PageLink pageLink = new PageLink(request);
-        Page<UserInfo> page = StringUtils.isNotBlank(request.getContent()) ?
+        Page<UserInfo> page = StringUtils.isNotBlank(request.getContent()) && !request.getContent().equals("client") && !request.getContent().equals("user") ?
                 this.repository.findByContent(request.getContent(), pageLink.toPageable()) : this.repository.findAll(pageLink.toPageable());
         List<UserInfoDto> dto = page.getContent()
                 .stream()
@@ -101,6 +101,13 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
                         user.setUsername(dto1.getUsername());
                     } catch (InternalServiceException e) {
                         LOG.warn(ExceptionStackTraceUtil.getStackTrace(e));
+                    }
+                })
+                .filter(user -> {
+                    if (request.getContent().equals("client")) {
+                        return user.getRoles().stream().anyMatch(role -> role.equals("CUSTOMER"));
+                    } else {
+                        return user.getRoles().stream().anyMatch(role -> !role.equals("CUSTOMER"));
                     }
                 })
                 .toList();
