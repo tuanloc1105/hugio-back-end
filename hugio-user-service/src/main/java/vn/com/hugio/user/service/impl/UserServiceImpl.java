@@ -1,5 +1,6 @@
 package vn.com.hugio.user.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -86,7 +87,8 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
     @Override
     public PageResponse<UserInfoDto> getAllUser(PagableRequest request) {
         PageLink pageLink = new PageLink(request);
-        Page<UserInfo> page = this.repository.findAll(pageLink.toPageable());
+        Page<UserInfo> page = StringUtils.isNotBlank(request.getContent()) ?
+                this.repository.findByContent(request.getContent(), pageLink.toPageable()) : this.repository.findAll(pageLink.toPageable());
         List<UserInfoDto> dto = page.getContent()
                 .stream()
                 .map(UserMapper::map)

@@ -1,5 +1,7 @@
 package vn.com.hugio.user.entity.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,6 +12,14 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface UserInfoRepo extends BaseRepository<UserInfo> {
+
+    @Query("select ui " +
+            "from UserInfo ui " +
+            "where ui.cif like :content " +
+            "or ui.fullName like :content " +
+            "or ui.email like :content " +
+            "or ui.phoneNumber like :content")
+    Page<UserInfo> findByContent(@Param("content") String content, Pageable pageable);
 
     Integer countByCreatedAtBetween(LocalDateTime fromDate, LocalDateTime toDate);
 

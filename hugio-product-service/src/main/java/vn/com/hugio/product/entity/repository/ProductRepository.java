@@ -12,6 +12,12 @@ import java.util.Optional;
 
 public interface ProductRepository extends BaseRepository<Product> {
 
+    @Query("select p " +
+            "from Product p " +
+            "where p.productName like :content " +
+            "or p.rawProductName like :content")
+    Page<Product> findByContent(@Param("content") String content, Pageable pageable);
+
     Optional<Product> findByProductName(String productName);
 
     Optional<Product> findByProductUid(String productUid);

@@ -28,6 +28,9 @@ public class PagableRequest {
     @FieldNotNull
     private Direction sort;
 
+    @JsonProperty("content")
+    private String content;
+
     public Integer getPageNumber() {
         return pageNumber > 0 ? pageNumber - 1 : 0;
     }
@@ -58,5 +61,13 @@ public class PagableRequest {
 
     public void setProperty(String property) {
         this.property = property;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

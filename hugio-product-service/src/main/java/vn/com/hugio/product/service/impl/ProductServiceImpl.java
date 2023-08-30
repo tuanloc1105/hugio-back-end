@@ -210,6 +210,31 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
     @Override
     public PageResponse<ProductDto> getAllProduct(PagableRequest request) {
+        if (StringUtils.isBlank(request.getContent())) {
+            return this.getWithNoContent(request);
+        } else {
+            return this.getWithContent(request);
+        }
+    }
+
+    private PageResponse<ProductDto> getWithContent(PagableRequest request) {
+        PageResponse<ProductDto> pageResponse;
+        PageLink pageLink = PageLink.create(request.getPageSize(), request.getPageNumber(), request.getSort());
+        Page<Product> products = this.repository.findByContent(request.getContent(), pageLink.toPageable());
+        List<ProductDto> dtoList = products.stream()
+                .map(productMapper::productEntityToProductDto)
+                .toList().stream().peek(dto -> {
+                    ProductQuantityDto dto1 = inventoryServiceGrpcClient.getProductQuantity(dto.getProductUid());
+                    dto.setQuantity(dto1.getQuantity());
+                    dto.setImportedQuantity(dto1.getImportedQuantity());
+                    dto.setFee(dto1.getFee());
+                })
+                .toList();
+        pageResponse = PageResponse.create(products, dtoList, true);
+        return pageResponse;
+    }
+
+    private PageResponse<ProductDto> getWithNoContent(PagableRequest request) {
         String redisKey = String.format(
                 REDIS_KEY_FORMAT,
                 request.getPageNumber(),
