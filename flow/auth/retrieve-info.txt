@@ -1,20 +1,20 @@
-title Login
+title Retrieve user info
 
 actor Client
 participant "authentication-service" as A
 participant "hugio_user_db" as DB
 
-Client->A: send login request
+activate Client
+activate A
+activate DB
+
+Client->A: send request with access token
+A->A: decode JWT Token
 A->DB: query user information
-alt Can not found user information 
+alt Can not found user information
     A<--DB: return null
-    A-->Client: return error (User not found)
+    A-->Client: return error (User not found or block)
 else found user information
 	A<--DB: return user information
-	A->A: validate password
-    alt invalid password
-    	A->Client: return error (invalid password)
-	else valid password
-    	A->Client: return access token
-    end 
+    A-->Client: return information
 end

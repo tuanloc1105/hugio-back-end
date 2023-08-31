@@ -4,9 +4,12 @@ actor Client
 participant "authentication-service" as A
 participant "hugio_user_db" as DB
 
+activate Client
+activate A
+activate DB
 Client->A: send login request
 A->DB: query user information
-alt Can not found user information 
+alt Can not found user information
     A<--DB: return null
     A-->Client: return error (User not found)
 else found user information
@@ -16,5 +19,6 @@ else found user information
     	A->Client: return error (invalid password)
 	else valid password
     	A->Client: return access token
-    end 
+    end
 end
+deactivate Client
