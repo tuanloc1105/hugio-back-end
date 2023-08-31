@@ -1,0 +1,44 @@
+title get all product
+
+actor "Client" as c
+participant "product-service" as p
+participant "auth-service" as a
+participant "inventory-service" as i
+participant "hugio_product_db" as db
+participant "hugio_inventory_db" as dbi
+
+activate c
+c->p: send request
+activate p
+activate a
+p->a: validate access token
+deactivate a
+alt access token is invalid
+    activate a
+    a-->p: return error
+    p-->c: return error
+    deactivate a
+end 
+a-->p: return user info
+p->p: check user permission
+alt user does not have enough permission
+	p-->c: return error
+end
+activate db
+p->db: get all product
+db->p: return list of product
+deactivate db
+alt	return empty list
+	p-->c: return empty list
+end
+activate i
+p->i: query quantity for each product
+activate dbi
+i->dbi: get product inventory info
+dbi-->i: return product inventory info
+deactivate dbi
+i-->p: return quanity info for each product
+p-->c: return list of product
+deactivate i
+deactivate c 
+deactivate p
