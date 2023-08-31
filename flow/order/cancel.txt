@@ -1,0 +1,31 @@
+title cancel order
+
+actor "Client" as c
+participant "order-service" as o
+participant "auth-service" as a
+participant "hugio_product_db" as db
+
+activate c
+c->o: send request
+activate o
+activate a
+o->a: validate access token
+deactivate a
+alt access token is invalid
+    activate a
+    a-->o: return error
+    o-->c: return error
+    deactivate a
+end 
+a-->o: return user info
+o->o: check user permission
+alt user does not have enough permission
+	o-->c: return error
+end
+activate db
+o->db: update order status to CANCEL
+
+db-->o: return success
+o-->c: return success
+deactivate c 
+deactivate o
