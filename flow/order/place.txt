@@ -4,6 +4,8 @@ actor "Client" as c
 participant "order-service" as o
 participant "auth-service" as a
 participant "hugio_product_db" as db
+participant "product-service" as p
+participant "hugio_product_db" as dbp
 
 activate c
 c->o: send request
@@ -16,12 +18,20 @@ alt access token is invalid
     a-->o: return error
     o-->c: return error
     deactivate a
-end 
+end
 a-->o: return user info
 o->o: check user permission
 alt user does not have enough permission
 	o-->c: return error
 end
+activate p
+o->p: get product information
+activate dbp
+p->dbp: get product information
+dbp-->p: return product information
+deactivate dbp
+p-->o: return product information
+deactivate p
 activate db
 o->db: create order info with status WAITTING
 db-->o: return success
