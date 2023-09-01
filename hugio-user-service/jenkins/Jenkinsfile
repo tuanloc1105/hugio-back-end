@@ -1,0 +1,87 @@
+def dockerImage = "tuanloc/user-service"
+def dockerTag = ""
+def k8sReplica = 1
+def k8sNamespace = 'hugio'
+def userIdCause = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')
+def now = (new Date()).format("yyMMddHHmmss", TimeZone.getTimeZone('Asia/Ho_Chi_Minh'))
+
+pipeline {
+    agent any
+    tools {
+        maven "3.9.3"
+        jdk "17"
+    }
+    environment {
+        GIT_CREDENTIALS_ID = 'tuanloc-github'
+        APPLICATION_GIT_BRANCH = 'master'
+        APPLICATION_GIT_REPOSITRY = 'https://github.com/tuanloc1105/hugio-back-end.git'
+        TARGET_DIR = '/home/ae403/hugio/user_service'
+    }
+    stages {
+        stage('Checkout source') {
+            steps {
+                script {
+                    def checkoutDetails = checkout([
+                        $class: 'GitSCM',
+                        branches: [[ name: ('*/' + APPLICATION_GIT_BRANCH) ]],
+                        doGenerateSubmoduleConfigurations: false,
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[ credentialsId: GIT_CREDENTIALS_ID, url: APPLICATION_GIT_REPOSITRY ]]
+                    ])
+                }
+
+            }
+        }
+        stage('Build user service') {
+            steps {
+                script {
+                    CURRENT_DATE = new java.text.SimpleDateFormat('yyyyMMdd').format(new Date())
+                    CURRENT_TIME = new java.text.SimpleDateFormat('HHmmss').format(new Date())
+                    dir('common') {
+                        dockerTag = "$CURRENT_DATE" + "$CURRENT_TIME"
+                        sh 'mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml'
+                    }
+                    dir('hugio-user-service') {
+                        sh 'mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml'
+                    }
+                }
+            }
+        }
+        stage('Copy source') {
+            steps {
+                script {
+                    dir('hugio-user-service') {
+                        sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 mkdir -p $TARGET_DIR"
+                        sh "scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@192.168.1.22:$TARGET_DIR"
+                        sh "scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:$TARGET_DIR"
+                        sh "scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./Dockerfile ae403@192.168.1.22:$TARGET_DIR"
+                        sh "scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./logback.xml ae403@192.168.1.22:$TARGET_DIR"
+                    }
+                }
+            }
+        }
+        stage('Deploy source') {
+            steps {
+                script {
+                    // sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 echo \">>>>>>>>>>>>> Build image\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker build . -t $dockerImage:$dockerTag\""
+
+                    // sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 echo \">>>>>>>>>>>>> Push image\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; kind load docker-image $dockerImage:$dockerTag\""
+
+                    // sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 echo \">>>>>>>>>>>>> Ugrade helm\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; helm upgrade -i --set image.name=$dockerImage,image.tag=$dockerTag,replica=$k8sReplica -n $k8sNamespace user-service ./helm_chart\""
+
+                    // sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 echo \">>>>>>>>>>>>> Clean image\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker rmi $dockerImage:$dockerTag\""
+                }
+            }
+        }
+    }
+
+	post {
+		always {
+			cleanWs()
+		}
+	}
+}
