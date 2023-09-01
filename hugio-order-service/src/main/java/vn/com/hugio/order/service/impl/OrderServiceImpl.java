@@ -253,7 +253,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
                 .append("\t- Mã hàng nào được mua nhiều nhất trong hôm nay?\n")
                 .append("\t- Đơn hàng nào có giá trị cao nhất và được mua bởi khách hàng nào?\nBạn chỉ cần cung cấp cho tôi số liệu cụ thể, không cần giải thích và diễn giải\n");
         try {
-            String answer = this.chatGPT.chatGPT(question.toString());
+            String answer = this.chatGPT.chatGPT2(question.toString());
             System.out.println(ConsoleColors.printYellow(question.toString()) + "\n" + ConsoleColors.printGreen(answer));
             Integer updateResult = orderStatisticHistoryRepo.update(answer, question.toString(), LocalDate.now(), StatisticType.ORDER);
             if (updateResult == null || updateResult == 0) {
@@ -304,7 +304,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
                 .append("\t- Mã hàng nào được mua nhiều nhất trong hôm nay?\n")
                 .append("\t- Đơn hàng nào có giá trị cao nhất và được mua bởi khách hàng nào?\nBạn chỉ cần cung cấp cho tôi số liệu cụ thể, không cần giải thích và diễn giải\n");
         try {
-            String answer = this.chatGPT.chatGPT(question.toString());
+            String answer = this.chatGPT.chatGPT2(question.toString());
             System.out.println(ConsoleColors.printYellow(question.toString()) + "\n" + ConsoleColors.printGreen(answer));
             Integer updateResult = orderStatisticHistoryRepo.update(answer, question.toString(), LocalDate.now(), StatisticType.ORDER);
             if (updateResult == null || updateResult == 0) {
@@ -360,7 +360,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         //question.append("Bạn hãy dự đoán khả năng bán hàng cho tôi. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi");
         question.append("Bạn hãy dự đoán khả năng bán hàng trong tháng tiếp theo cho tôi, đồng thời hãy xem món hàng nào là tệ nhất. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi");
         try {
-            String answer = this.chatGPT.chatGPT(question.toString());
+            String answer = this.chatGPT.chatGPT2(question.toString());
             System.out.println(ConsoleColors.printYellow(question.toString()) + "\n" + ConsoleColors.printGreen(answer));
             return answer;
         } catch (Exception e) {
@@ -407,7 +407,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         //question.append("Bạn hãy dự đoán khả năng bán hàng cho tôi. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi");
         question.append("Bạn hãy dự đoán khả năng bán hàng trong tháng tiếp theo cho tôi, đồng thời hãy xem món hàng nào là tốt nhất. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi");
         try {
-            String answer = this.chatGPT.chatGPT(question.toString());
+            String answer = this.chatGPT.chatGPT2(question.toString());
             System.out.println(ConsoleColors.printYellow(question.toString()) + "\n" + ConsoleColors.printGreen(answer));
             return answer;
         } catch (Exception e) {
