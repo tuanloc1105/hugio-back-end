@@ -249,7 +249,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
                         .append("\n");
             });
         });
-        question.append("Bạn hãy cho tôi biết các thông tin sau đây:\n")
+        question.append("Bạn hãy cho tôi biết các thông tin sau đây và hãy trả lời bằng tiếng Anh:\n")
                 .append("\t- Mã hàng nào được mua nhiều nhất trong hôm nay?\n")
                 .append("\t- Đơn hàng nào có giá trị cao nhất và được mua bởi khách hàng nào?\nBạn chỉ cần cung cấp cho tôi số liệu cụ thể, không cần giải thích và diễn giải\n");
         try {
@@ -300,7 +300,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
                         .append("\n");
             });
         });
-        question.append("Bạn hãy cho tôi biết các thông tin sau đây:\n")
+        question.append("Bạn hãy cho tôi biết các thông tin sau đây và hãy trả lời bằng tiếng Anh:\n")
                 .append("\t- Mã hàng nào được mua nhiều nhất trong hôm nay?\n")
                 .append("\t- Đơn hàng nào có giá trị cao nhất và được mua bởi khách hàng nào?\nBạn chỉ cần cung cấp cho tôi số liệu cụ thể, không cần giải thích và diễn giải\n");
         try {
@@ -358,7 +358,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         });
         //question.append("Bạn hãy thống kê thông tin trên giúp tôi");
         //question.append("Bạn hãy dự đoán khả năng bán hàng cho tôi. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi");
-        question.append("Bạn hãy dự đoán khả năng bán hàng trong tháng tiếp theo cho tôi, đồng thời hãy xem món hàng nào là tệ nhất. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi");
+        question.append("Bạn hãy dự đoán khả năng bán hàng trong tháng tiếp theo cho tôi, đồng thời hãy xem món hàng nào là tệ nhất. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi và hãy trả lời bằng tiếng Anh");
         try {
             String answer = this.chatGPT.chatGPT2(question.toString());
             System.out.println(ConsoleColors.printYellow(question.toString()) + "\n" + ConsoleColors.printGreen(answer));
@@ -405,7 +405,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         });
         //question.append("Bạn hãy thống kê thông tin trên giúp tôi");
         //question.append("Bạn hãy dự đoán khả năng bán hàng cho tôi. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi");
-        question.append("Bạn hãy dự đoán khả năng bán hàng trong tháng tiếp theo cho tôi, đồng thời hãy xem món hàng nào là tốt nhất. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi");
+        question.append("Bạn hãy dự đoán khả năng bán hàng trong tháng tiếp theo cho tôi, đồng thời hãy xem món hàng nào là tốt nhất. Tôi không cần dự đoán quá chính xác. Hãy dự đoán một phần cho tôi và hãy trả lời bằng tiếng Anh");
         try {
             String answer = this.chatGPT.chatGPT2(question.toString());
             System.out.println(ConsoleColors.printYellow(question.toString()) + "\n" + ConsoleColors.printGreen(answer));

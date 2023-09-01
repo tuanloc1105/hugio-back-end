@@ -33,7 +33,7 @@ public class ChatController {
             } else if (request.getRequest().equals("sp2")) {
                 return ResponseType.ok(this.orderService.gptStatisticSaleByMonthRecommend());
             } else {
-                return ResponseType.ok(this.chatGPT.chatGPT(request.getRequest(), 1000));
+                return ResponseType.ok(this.chatGPT.chatGPT2(request.getRequest()));
             }
         } catch (Exception e) {
             LOG.exception(e);
