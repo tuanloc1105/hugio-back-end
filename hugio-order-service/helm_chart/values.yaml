@@ -5,3 +5,6 @@ tcp_port: 8040
 tcp_svc_type: NodePort
 grpc_port: 9040
 replica: 1
+database_username: cm9vdA==
+database_password: MTIzNDU2
+chat_gpt_key: c2stY250dXFVdGtOZURTZXNJU2dzMldUM0JsYmtGSm03ZWltY2ZnNEJhN043VzhyQnBu

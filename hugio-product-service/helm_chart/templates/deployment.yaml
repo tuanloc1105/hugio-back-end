@@ -30,15 +30,24 @@ spec:
             - name: MYSQL_DB_URL
               value: "jdbc:mysql://192.168.1.22:3310/hugio_product_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
             - name: MYSQL_DB_USERNAME
-              value: "root"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: database_username
             - name: MYSQL_DB_PASSWORD
-              value: "123456"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: database_password
             - name: AUTH_ENDPOINT
               value: "http://172.18.255.200:8000/auth_service/auth/retrieve-info"
             - name: QR_CODE_API_URL
               value: "https://api.qr-code-generator.com/v1/create?access-token=uTbjp9a5j1_r_1IDVNQc9LGJe8EJr2lZXBuiDJrDxuzKqL72WLDQY4GiUcYBRnaT"
             - name: CHAT_API_KEY
-              value: "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"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: chat_gpt_key
             - name: REDIS_HOST
               value: "192.168.1.22"
             - name: REDIS_PORT

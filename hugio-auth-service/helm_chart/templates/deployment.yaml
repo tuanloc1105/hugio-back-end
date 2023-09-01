@@ -26,6 +26,12 @@ spec:
             - name: MYSQL_DB_URL
               value: "jdbc:mysql://192.168.1.22:3310/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
             - name: MYSQL_DB_USERNAME
-              value: "root"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: database_username
             - name: MYSQL_DB_PASSWORD
-              value: "123456"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: database_password

@@ -5,3 +5,5 @@ tcp_port: 8000
 tcp_svc_type: NodePort
 grpc_port: 9000
 replica: 1
+database_username: cm9vdA==
+database_password: MTIzNDU2
