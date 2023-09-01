@@ -17,6 +17,7 @@ import vn.com.hugio.proto.utils.GrpcUtil;
 import vn.com.hugio.user.dto.UserInfoDto;
 import vn.com.hugio.user.dto.UserInfoGrpcDto;
 import vn.com.hugio.user.message.request.CreateUserInfoRequest;
+import vn.com.hugio.user.service.grpc.input.UpdateUserRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +106,41 @@ public class AuthServiceGrpcClient {
         }
         UserInfo userInfo = responseType.getResponse();
         return new UserInfoGrpcDto(userInfo.getUserUid());
+    }
+
+    public void update(UpdateUserRequest request) {
+        TraceTypeGRPC traceTypeGRPC = GrpcUtil.createTraceTypeGrpc();
+        LOG.info("SEND A GRPC MESSAGE");
+        UpdateUserInput.Builder grpcInput = UpdateUserInput
+                .newBuilder()
+                .setUserId(request.getUserUid());
+        if (request.getRoles().isEmpty()) {
+            grpcInput.addRoles("CUSTOMER");
+        } else {
+            for (String role : request.getRoles()) {
+                grpcInput.addRoles(role);
+            }
+        }
+        if (request.getRoles().isEmpty()) {
+            grpcInput.addRoles("CUSTOMER");
+        } else {
+            for (String role : request.getRoles()) {
+                grpcInput.addRoles(role);
+            }
+        }
+        RequestTypeUpdateUserInput build = RequestTypeUpdateUserInput
+                .newBuilder()
+                .setTrace(traceTypeGRPC)
+                .setRequest(grpcInput.build())
+                .build();
+        UserServiceGrpc.UserServiceBlockingStub blockingStub = UserServiceGrpc.newBlockingStub(authManagedChannel);
+        ResponseTypeVoid responseType = blockingStub.updateUser(build);
+        LOG.info("RETRIEVE A GRPC MESSAGE");
+        if (
+                !(responseType.getCode().equals(ErrorCodeEnum.SUCCESS.getCode().toString()))
+        ) {
+            throw new InternalServiceException(responseType.getCode(), responseType.getMessage());
+        }
     }
 
     public List<String> getRoles(PagableRequest request) {

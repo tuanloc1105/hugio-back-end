@@ -2,6 +2,7 @@ package vn.com.hugio.auth.service;
 
 import vn.com.hugio.auth.dto.UserDto;
 import vn.com.hugio.auth.message.request.CreateUserRequest;
+import vn.com.hugio.auth.message.request.UpdateUserRequest;
 import vn.com.hugio.auth.message.response.LoginResponse;
 
 public interface AuthService {
@@ -12,6 +13,8 @@ public interface AuthService {
     UserDto getInfo(String userUid);
 
     UserDto createUser(CreateUserRequest request);
+
+    void updateUser(UpdateUserRequest request);
 
     void deleteUser(String userUid);
 

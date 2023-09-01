@@ -22,4 +22,14 @@ public class UserRoleServiceImpl extends BaseService<UserRole, UserRoleRepo> imp
         this.repository.save(userRole);
     }
 
+    @Override
+    public void update(UserRole userRole) {
+        this.repository.save(userRole);
+    }
+
+    @Override
+    public void deleteByUserId(Long userId) {
+        this.repository.deleteByUser_Id(userId);
+    }
+
 }

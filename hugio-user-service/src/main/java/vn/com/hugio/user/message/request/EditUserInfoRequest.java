@@ -33,4 +33,8 @@ public class EditUserInfoRequest {
     @FieldNotNull
     private String phoneNumber;
 
+    @JsonProperty("roles")
+    @FieldNotNull
+    private List<String> roles;
+
 }

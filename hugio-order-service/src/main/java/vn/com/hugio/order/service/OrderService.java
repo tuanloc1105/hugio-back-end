@@ -23,4 +23,12 @@ public interface OrderService {
     List<SaleStatisticDto> salesStatisticsByCustomer(LocalDate date);
 
     StatisticDto statistic(StatisticRequest date);
+
+    String gptStatisticProductByDay();
+
+    String gptStatisticProductByMonth();
+
+    String statisticProductByMonthNoRecommend();
+
+    String gptStatisticSaleByMonthRecommend();
 }

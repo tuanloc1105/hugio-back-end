@@ -12,6 +12,7 @@ import vn.com.hugio.auth.entity.repository.UserRepo;
 import vn.com.hugio.auth.mapper.UserMap;
 import vn.com.hugio.auth.mapper.UserMapper;
 import vn.com.hugio.auth.message.request.CreateUserRequest;
+import vn.com.hugio.auth.message.request.UpdateUserRequest;
 import vn.com.hugio.auth.message.response.LoginResponse;
 import vn.com.hugio.auth.service.AuthService;
 import vn.com.hugio.auth.service.JwtService;
@@ -115,6 +116,24 @@ public class AuthServiceImpl extends BaseService<User, UserRepo> implements Auth
         }
         user.setUserRoles(userRoleList);
         return this.userMapper.userDtoMapper(user);
+    }
+
+    @Override
+    public void updateUser(UpdateUserRequest request) {
+        User user = this.repository.findByUserUidAndActiveIsTrue(request.getUserUid()).orElseThrow(() -> new InternalServiceException(ErrorCodeEnum.NOT_EXISTS));
+        var roles = this.roleService.findRoleByList(request.getRoles());
+        if (roles.size() != request.getRoles().size()) {
+            throw new InternalServiceException(ErrorCodeEnum.NOT_EXISTS.getCode(), "Role input is not valid");
+        }
+        this.userRoleService.deleteByUserId(user.getId());
+        var userRoleList = new ArrayList<UserRole>();
+        for (Role role : roles) {
+            var userRole = new UserRole(user, role);
+            this.userRoleService.saveNew(userRole);
+            userRoleList.add(userRole);
+        }
+        user.setUserRoles(userRoleList);
+        this.userMapper.userDtoMapper(user);
     }
 
     @Override

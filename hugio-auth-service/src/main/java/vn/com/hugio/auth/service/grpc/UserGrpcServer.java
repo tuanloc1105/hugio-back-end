@@ -9,6 +9,7 @@ import vn.com.hugio.auth.dto.UserDto;
 import vn.com.hugio.auth.entity.Role;
 import vn.com.hugio.auth.mapper.UserMapper;
 import vn.com.hugio.auth.message.request.CreateUserRequest;
+import vn.com.hugio.auth.message.request.UpdateUserRequest;
 import vn.com.hugio.auth.service.AuthService;
 import vn.com.hugio.auth.service.RoleService;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
@@ -17,21 +18,11 @@ import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.pagable.Direction;
 import vn.com.hugio.common.pagable.PagableRequest;
 import vn.com.hugio.common.utils.StringUtil;
-import vn.com.hugio.grpc.user.CreateUserInput;
-import vn.com.hugio.grpc.user.PageableInput;
-import vn.com.hugio.grpc.user.RequestTypeCreateUserInput;
-import vn.com.hugio.grpc.user.RequestTypePageableInput;
-import vn.com.hugio.grpc.user.RequestTypeUpdateUserStatus;
-import vn.com.hugio.grpc.user.RequestTypeUserInfoInput;
-import vn.com.hugio.grpc.user.RequestTypeUserTokenInput;
-import vn.com.hugio.grpc.user.ResponseTypeRoleOutput;
-import vn.com.hugio.grpc.user.ResponseTypeUpdateUserStatus;
-import vn.com.hugio.grpc.user.ResponseTypeUserInfo;
-import vn.com.hugio.grpc.user.RoleOutput;
-import vn.com.hugio.grpc.user.UpdateUserStatus;
-import vn.com.hugio.grpc.user.UserInfo;
-import vn.com.hugio.grpc.user.UserServiceGrpc;
+import vn.com.hugio.grpc.user.*;
 import vn.com.hugio.proto.utils.GrpcUtil;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @GrpcService
 @RequiredArgsConstructor
@@ -109,6 +100,40 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
                     .setUsername(userInfo.getUsername());
             userInfo.getRoles().forEach(info::addRole);
             responseBuilder.setResponse(info.build());
+        } catch (InternalServiceException e) {
+            responseBuilder.setCode(e.getCode());
+            responseBuilder.setMessage(e.getMessage());
+        } catch (Exception e) {
+            responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
+            responseBuilder.setMessage(e.getMessage());
+        }
+        responseBuilder.setTrace(GrpcUtil.createTraceTypeGrpc());
+        LOG.info("RETURN GRPC RESULT");
+        responseObserver.onNext(responseBuilder.build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void updateUser(RequestTypeUpdateUserInput request, StreamObserver<ResponseTypeVoid> responseObserver) {
+        ResponseTypeVoid.Builder responseBuilder = ResponseTypeVoid.newBuilder();
+        try {
+            GrpcUtil.getTraceId(request.getTrace());
+            LOG.info("RETRIEVE A GRPC MESSAGE");
+        } catch (RuntimeException e) {
+            responseBuilder.setCode(ErrorCodeEnum.VALIDATE_FAILURE.getCode().toString());
+            responseBuilder.setMessage(e.getMessage());
+            responseObserver.onNext(responseBuilder.build());
+            responseObserver.onCompleted();
+            return;
+        }
+        try {
+            UpdateUserInput input = request.getRequest();
+            UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+            updateUserRequest.setUserUid(input.getUserId());
+            updateUserRequest.setRoles(new ArrayList<>(input.getRolesList()));
+            this.authService.updateUser(updateUserRequest);
+            responseBuilder.setCode(ErrorCodeEnum.SUCCESS.getCode().toString());
+            responseBuilder.setMessage(ErrorCodeEnum.SUCCESS.getMessage());
         } catch (InternalServiceException e) {
             responseBuilder.setCode(e.getCode());
             responseBuilder.setMessage(e.getMessage());

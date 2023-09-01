@@ -28,6 +28,7 @@ import vn.com.hugio.user.message.request.CreateUserInfoRequest;
 import vn.com.hugio.user.message.request.EditUserInfoRequest;
 import vn.com.hugio.user.service.UserService;
 import vn.com.hugio.user.service.grpc.client.AuthServiceGrpcClient;
+import vn.com.hugio.user.service.grpc.input.UpdateUserRequest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -123,6 +124,12 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
 
     @Override
     public void updateUser(EditUserInfoRequest request) {
+        this.authServiceGrpcClient.update(
+                UpdateUserRequest.builder()
+                        .userUid(request.getUserUid())
+                        .roles(request.getRoles())
+                        .build()
+        );
         Integer result = this.repository.updateUserInfo(
                 request.getEmail(),
                 request.getAddress(),

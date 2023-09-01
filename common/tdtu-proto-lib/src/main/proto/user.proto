@@ -6,6 +6,7 @@ import "common.proto";
 service UserService {
   rpc findUserByToken (RequestTypeUserTokenInput) returns (ResponseTypeUserInfo) {}
   rpc createUser (RequestTypeCreateUserInput) returns (ResponseTypeUserInfo) {}
+  rpc updateUser (RequestTypeUpdateUserInput) returns (ResponseTypeVoid) {}
   rpc changeUserStatus (RequestTypeUpdateUserStatus) returns (ResponseTypeUpdateUserStatus) {}
   rpc getRoles (RequestTypePageableInput) returns (ResponseTypeRoleOutput) {}
   rpc getUserRole (RequestTypeUserInfoInput) returns (ResponseTypeUserInfo) {}
@@ -113,6 +114,24 @@ message RequestTypeUserInfoInput {
   oneof input {
     UserInfoInput request = 4;
   }
+}
+
+message UpdateUserInput {
+  string userId = 1;
+  repeated string roles = 2;
+}
+
+message RequestTypeUpdateUserInput {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  oneof input {
+    UpdateUserInput request = 2;
+  }
+}
+
+message ResponseTypeVoid {
+  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  string code = 2;
+  string message = 3;
 }
 // ------------------------------ Example ------------------------------
 
