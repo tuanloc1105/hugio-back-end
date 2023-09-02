@@ -45,3 +45,4 @@ docker build . -t $dockerImage:$dockerTag
 
 helm upgrade -i --set image.name=$dockerImage,image.tag=$dockerTag,replica=$k8sReplica -n $k8sNamespace auth-service ./helm_chart
 ```
+VoTuanLoc - LeMinhDuc
