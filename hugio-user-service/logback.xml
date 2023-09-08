@@ -87,7 +87,7 @@
     <Appender name="splunk" class="com.splunk.logging.HttpEventCollectorLogbackAppender">
         <url>http://192.168.1.22:5000</url>
         <token>f2c4ad0c-f5a3-4b1f-a114-fb326dd62dc1</token>
-        <host>localhost</host>
+        <host>user-service</host>
         <index>hugio</index>
         <type>raw</type>
         <sourcetype>log4j</sourcetype>
