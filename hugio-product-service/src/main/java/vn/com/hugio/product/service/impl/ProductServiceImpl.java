@@ -348,7 +348,8 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
 
             QrCodeReqDto dto = QrCodeReqDto.builder()
                     .frameName("no-frame")
-                    .qrCodeText(this.gson.toJson(request))
+                    //.qrCodeText(this.gson.toJson(request))
+                    .qrCodeText(request.getProductUid())
                     .imageFormat("PNG")
                     .imageWidth(1000)
                     //.qrCodeLogo("scan-me-square")
