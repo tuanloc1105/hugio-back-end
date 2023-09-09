@@ -1,6 +1,7 @@
 package vn.com.hugio.user.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.parameters.P;
@@ -33,6 +34,7 @@ import vn.com.hugio.user.service.grpc.input.UpdateUserRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -102,7 +104,9 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
                         user.setRoles(dto1.getRoles());
                         user.setUsername(dto1.getUsername());
                     } catch (InternalServiceException e) {
-                        LOG.warn(ExceptionStackTraceUtil.getStackTrace(e));
+                        LOG.warn(user.getUserUid() + " return a error " + ExceptionStackTraceUtil.getStackTrace(e));
+                        user.setRoles(new ArrayList<>());
+                        user.setUsername(Strings.EMPTY);
                     }
                 })
                 .filter(user -> {

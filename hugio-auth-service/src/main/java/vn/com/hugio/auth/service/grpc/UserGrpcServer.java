@@ -62,9 +62,11 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
                 userInfo.getRoles().forEach(info::addRole);
                 responseBuilder.setResponse(info.build());
             } catch (InternalServiceException e) {
+                LOG.exception(e);
                 responseBuilder.setCode(e.getCode());
                 responseBuilder.setMessage(e.getMessage());
             } catch (Exception e) {
+                LOG.exception(e);
                 responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
                 responseBuilder.setMessage(e.getMessage());
             }
@@ -101,9 +103,11 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
             userInfo.getRoles().forEach(info::addRole);
             responseBuilder.setResponse(info.build());
         } catch (InternalServiceException e) {
+            LOG.exception(e);
             responseBuilder.setCode(e.getCode());
             responseBuilder.setMessage(e.getMessage());
         } catch (Exception e) {
+            LOG.exception(e);
             responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
             responseBuilder.setMessage(e.getMessage());
         }
@@ -135,9 +139,11 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
             responseBuilder.setCode(ErrorCodeEnum.SUCCESS.getCode().toString());
             responseBuilder.setMessage(ErrorCodeEnum.SUCCESS.getMessage());
         } catch (InternalServiceException e) {
+            LOG.exception(e);
             responseBuilder.setCode(e.getCode());
             responseBuilder.setMessage(e.getMessage());
         } catch (Exception e) {
+            LOG.exception(e);
             responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
             responseBuilder.setMessage(e.getMessage());
         }
@@ -170,9 +176,11 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
             responseBuilder.setCode(ErrorCodeEnum.SUCCESS.getCode().toString());
             responseBuilder.setMessage(ErrorCodeEnum.SUCCESS.getMessage());
         } catch (InternalServiceException e) {
+            LOG.exception(e);
             responseBuilder.setCode(e.getCode());
             responseBuilder.setMessage(e.getMessage());
         } catch (Exception e) {
+            LOG.exception(e);
             responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
             responseBuilder.setMessage(e.getMessage());
         }
@@ -210,9 +218,11 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
             responseBuilder.setMessage(ErrorCodeEnum.SUCCESS.getMessage());
             responseBuilder.setResponse(builder);
         } catch (InternalServiceException e) {
+            LOG.exception(e);
             responseBuilder.setCode(e.getCode());
             responseBuilder.setMessage(e.getMessage());
         } catch (Exception e) {
+            LOG.exception(e);
             responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
             responseBuilder.setMessage(e.getMessage());
         }
@@ -246,9 +256,11 @@ public class UserGrpcServer extends UserServiceGrpc.UserServiceImplBase {
             userInfo.getRoles().forEach(info::addRole);
             responseBuilder.setResponse(info.build());
         } catch (InternalServiceException e) {
+            LOG.exception(e);
             responseBuilder.setCode(e.getCode());
             responseBuilder.setMessage(e.getMessage());
         } catch (Exception e) {
+            LOG.exception(e);
             responseBuilder.setCode(ErrorCodeEnum.FAILURE.getCode().toString());
             responseBuilder.setMessage(e.getMessage());
         }
