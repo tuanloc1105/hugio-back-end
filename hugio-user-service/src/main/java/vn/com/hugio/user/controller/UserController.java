@@ -27,39 +27,39 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    @HasRoles(roles = "ADMIN")
+    //@HasRoles(roles = "ADMIN")
     public ResponseType<String> create(@RequestBody RequestType<CreateUserInfoRequest> request) {
         this.userService.createUser(request.getRequest());
         return ResponseType.ok("OK");
     }
 
     @PostMapping("/edit")
-    @HasRoles(roles = "ADMIN")
+    //@HasRoles(roles = "ADMIN")
     public ResponseType<String> edit(@RequestBody RequestType<EditUserInfoRequest> request) {
         this.userService.updateUser(request.getRequest());
         return ResponseType.ok("OK");
     }
 
     @PostMapping("/detail")
-    @HasRoles(roles = "ADMIN")
+    //@HasRoles(roles = "ADMIN")
     public ResponseType<UserInfoDto> detail(@RequestBody RequestType<UserDetailRequest> request) {
         return ResponseType.ok(this.userService.detail(request.getRequest().getUserUid()));
     }
 
     @PostMapping("/all")
-    @HasRoles(roles = "ADMIN")
+    //@HasRoles(roles = "ADMIN")
     public ResponseType<PageResponse<UserInfoDto>> all(@RequestBody RequestType<PagableRequest> request) {
         return ResponseType.ok(this.userService.getAllUser(request.getRequest()));
     }
 
     @PostMapping("/delete")
-    @HasRoles(roles = "ADMIN")
+    //@HasRoles(roles = "ADMIN")
     public ResponseType<?> delete(@RequestBody RequestType<ChangeUserDetailRequest> request) {
         return this.userService.deleteUser(request.getRequest().getUserUid());
     }
 
     @PostMapping("/active")
-    @HasRoles(roles = "ADMIN")
+    //@HasRoles(roles = "ADMIN")
     public ResponseType<?> active(@RequestBody RequestType<ChangeUserDetailRequest> request) {
         return this.userService.activeUser(request.getRequest().getUserUid());
     }
