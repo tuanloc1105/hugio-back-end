@@ -34,7 +34,6 @@ public class EditUserInfoRequest {
     private String phoneNumber;
 
     @JsonProperty("roles")
-    @FieldNotNull
     private List<String> roles;
 
 }

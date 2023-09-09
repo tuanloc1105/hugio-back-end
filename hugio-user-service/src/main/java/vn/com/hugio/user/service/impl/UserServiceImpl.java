@@ -128,12 +128,16 @@ public class UserServiceImpl extends BaseService<UserInfo, UserInfoRepo> impleme
 
     @Override
     public void updateUser(EditUserInfoRequest request) {
-        this.authServiceGrpcClient.update(
-                UpdateUserRequest.builder()
-                        .userUid(request.getUserUid())
-                        .roles(request.getRoles())
-                        .build()
-        );
+        try {
+            this.authServiceGrpcClient.update(
+                    UpdateUserRequest.builder()
+                            .userUid(request.getUserUid())
+                            .roles(request.getRoles())
+                            .build()
+            );
+        } catch (Exception e) {
+            LOG.warn(ExceptionStackTraceUtil.getStackTrace(e));
+        }
         Integer result = this.repository.updateUserInfo(
                 request.getEmail(),
                 request.getAddress(),
