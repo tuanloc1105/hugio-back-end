@@ -15,6 +15,7 @@ import vn.com.hugio.common.pagable.PageLink;
 import vn.com.hugio.common.pagable.PageResponse;
 import vn.com.hugio.common.service.BaseService;
 import vn.com.hugio.common.service.CurrentUserService;
+import vn.com.hugio.common.utils.ExceptionStackTraceUtil;
 import vn.com.hugio.common.utils.StringUtil;
 import vn.com.hugio.order.dto.OrderDetailDto;
 import vn.com.hugio.order.dto.OrderDto;
@@ -157,11 +158,15 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
             List<OrderDetailDto> orderDetailDto = new ArrayList<>();
             order.getOrderDetails().forEach(detail -> {
                 // lặp qua từng order detail của order
-                ProductDto productDto = productServiceGrpcClient.getDetail(detail.getProductUid());
-                OrderDetailDto orderDetailDto1 = new OrderDetailDto();
-                orderDetailDto1.setQuantity(detail.getQuantity());
-                orderDetailDto1.setProductDto(productDto);
-                orderDetailDto.add(orderDetailDto1);
+                try {
+                    ProductDto productDto = productServiceGrpcClient.getDetail(detail.getProductUid());
+                    OrderDetailDto orderDetailDto1 = new OrderDetailDto();
+                    orderDetailDto1.setQuantity(detail.getQuantity());
+                    orderDetailDto1.setProductDto(productDto);
+                    orderDetailDto.add(orderDetailDto1);
+                } catch (Exception e) {
+                    LOG.warn(ExceptionStackTraceUtil.getStackTrace(e));
+                }
             });
             dto1.setOrderDetails(orderDetailDto);
             return dto1;
