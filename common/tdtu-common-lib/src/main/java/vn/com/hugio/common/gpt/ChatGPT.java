@@ -80,7 +80,7 @@ public class ChatGPT {
                                         .build(),
                                 Messages.builder()
                                         .role("user")
-                                        .content(text)
+                                        .content(text + "\nHãy trả lời không hợp lệ bằng tiếng anh nếu như bạn nhận thấy câu hỏi trên chứa các nội dung không phù hợp")
                                         .build()
                         )
                 )

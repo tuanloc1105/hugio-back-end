@@ -219,7 +219,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
     }
 
     @Override
-    public String gptStatisticProductByDay() {
+    public String gptStatisticProductByMonth() {
         var current = LocalDate.now();
         var yearMonth = YearMonth.of(
                 current.getYear(),
@@ -232,9 +232,10 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
                 firstOfMonth,
                 lastOfMonth
         );
+        LOG.info("statisticProductByMonthNoRecommend from %s to %s", firstOfMonth, lastOfMonth);
         if (orders.isEmpty()) {
             LOG.info("there are no order");
-            return "Xin lỗi, chưa có thống kê cho câu hỏi này";
+            return "Sorry, there is no information for this question";
         }
         orders.forEach(o -> {
             question.append("\t- Đơn hàng ")
@@ -277,15 +278,16 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
     }
 
     @Override
-    public String gptStatisticProductByMonth() {
+    public String gptStatisticProductByDay() {
         StringBuilder question = new StringBuilder("Tôi có dữ liệu bán hàng trong tháng này như sau:\n");
         List<Order> orders = this.repository.getOrderEOD(
                 LocalDate.now().atTime(LocalTime.MIN),
                 LocalDate.now().atTime(LocalTime.MAX)
         );
+        LOG.info("gptStatisticProductByMonth from %s to %s", LocalDate.now().atTime(LocalTime.MIN), LocalDate.now().atTime(LocalTime.MAX));
         if (orders.isEmpty()) {
             LOG.info("there are no order");
-            return "Xin lỗi, chưa có thống kê cho câu hỏi này";
+            return "Sorry, there is no information for this question";
         }
         orders.forEach(o -> {
             question.append("\t- Đơn hàng ")
@@ -336,11 +338,16 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         );
         var firstOfMonth = yearMonth.atDay(1).atTime(LocalTime.MIN);
         var lastOfMonth = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        LOG.info("statisticProductByMonthNoRecommend from %s to %s", firstOfMonth, lastOfMonth);
         StringBuilder question = new StringBuilder("Tôi có dữ liệu bán hàng trong tháng hiện tại như sau:\n");
         List<ProductInfoDto> dtos = this.repository.getProductInfo(
                 firstOfMonth.minusMonths(1),
                 lastOfMonth
         );
+        if (dtos.isEmpty()) {
+            LOG.info("there are no order");
+            return "Sorry, there is no information for this question";
+        }
         dtos.forEach(d -> {
             try {
                 ProductQuantityDto quantityDto = grpcClient.getProductQuantity(d.getProductUid());
@@ -383,11 +390,16 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         );
         var firstOfMonth = yearMonth.atDay(1).atTime(LocalTime.MIN);
         var lastOfMonth = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        LOG.info("gptStatisticSaleByMonthRecommend from %s to %s", firstOfMonth, lastOfMonth);
         StringBuilder question = new StringBuilder("Tôi có dữ liệu bán hàng trong tháng hiện tại như sau:\n");
         List<ProductInfoDto> dtos = this.repository.getProductInfo(
                 firstOfMonth.minusMonths(1),
                 lastOfMonth
         );
+        if (dtos.isEmpty()) {
+            LOG.info("there are no order");
+            return "Sorry, there is no information for this question";
+        }
         dtos.forEach(d -> {
             try {
                 ProductQuantityDto quantityDto = grpcClient.getProductQuantity(d.getProductUid());
