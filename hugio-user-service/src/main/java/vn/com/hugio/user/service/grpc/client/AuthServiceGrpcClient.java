@@ -84,7 +84,7 @@ public class AuthServiceGrpcClient {
                 .newBuilder()
                 .setEncryptUsername(username)
                 .setEncryptPassword(password);
-        if (request.getRoles().isEmpty()) {
+        if (request.getRoles() == null || request.getRoles().isEmpty()) {
             tokenInput.addRoles("CUSTOMER");
         } else {
             for (String role : request.getRoles()) {
