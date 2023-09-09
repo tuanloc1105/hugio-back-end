@@ -110,7 +110,7 @@ public class OrderServiceImpl extends BaseService<Order, OrderRepo> implements O
         List<OrderDetail> details = new ArrayList<>();
         request.getOrderInformation().forEach(detail -> {
             ProductDto dto = productServiceGrpcClient.getDetail(detail.getProductUid());
-            atomicTotalPrice.set((atomicTotalPrice.get() + dto.getPrice()) * detail.getQuantity());
+            atomicTotalPrice.set(atomicTotalPrice.get() + (dto.getPrice() * detail.getQuantity()));
             OrderDetail orderDetail = orderDetailService.add(atomicReferenceOrder.get(), detail.getProductUid(), detail.getQuantity());
             details.add(orderDetail);
         });
