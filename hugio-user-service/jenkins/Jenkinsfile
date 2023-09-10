@@ -67,7 +67,7 @@ pipeline {
                     sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker build . -t $dockerImage:$dockerTag\""
 
                     // sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 echo \">>>>>>>>>>>>> Save image to tar and load image into K8S\""
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker save -o $dockerImage.tar $dockerImage:$dockerTag ; microk8s ctr image import $dockerImage.tar ; rm -f $dockerImage.tar\""
+                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker save -o user.tar $dockerImage:$dockerTag ; microk8s ctr image import user.tar ; rm -f user.tar\""
 
                     // sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 echo \">>>>>>>>>>>>> Ugrade helm\""
                     sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; microk8s.helm upgrade -i --set image.name=$dockerImage,image.tag=$dockerTag,replica=$k8sReplica -n $k8sNamespace user-service ./helm_chart\""
