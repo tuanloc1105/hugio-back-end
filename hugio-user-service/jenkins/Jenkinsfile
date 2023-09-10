@@ -63,16 +63,11 @@ pipeline {
         stage('Deploy source') {
             steps {
                 script {
-                    // sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 echo \">>>>>>>>>>>>> Build image\""
                     sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker build . -t $dockerImage:$dockerTag\""
-
-                    // sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 echo \">>>>>>>>>>>>> Save image to tar and load image into K8S\""
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker save -o user.tar $dockerImage:$dockerTag ; microk8s ctr image import user.tar ; rm -f user.tar\""
-
-                    // sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 echo \">>>>>>>>>>>>> Ugrade helm\""
+                    withCredentials([string(credentialsId: 'ae403-key', variable: 'SSH_PASSWORD')]) { // create a credential as a secret text in jenkins credential page
+                        sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker save -o auth.tar $dockerImage:$dockerTag ; echo \$SSH_PASSWORD | sudo -S microk8s ctr image import user.tar ; rm -f user.tar\""
+                    }
                     sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; microk8s.helm upgrade -i --set image.name=$dockerImage,image.tag=$dockerTag,replica=$k8sReplica -n $k8sNamespace user-service ./helm_chart\""
-
-                    // sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 echo \">>>>>>>>>>>>> Clean image\""
                     sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker rmi $dockerImage:$dockerTag\""
                 }
             }
