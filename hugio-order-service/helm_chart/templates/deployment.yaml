@@ -40,7 +40,7 @@ spec:
                   name: {{ .Release.Name }}-secret
                   key: database_password
             - name: AUTH_ENDPOINT
-              value: "http://172.18.255.200:8000/auth_service/auth/retrieve-info"
+              value: "http://auth-service-svc-1:8000/auth_service/auth/retrieve-info"
             - name: KAFKA_SERVER
               value: "192.168.1.22:9092"
             - name: KAFKA_SECURITY_PROTOCOL
