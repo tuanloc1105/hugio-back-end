@@ -12,7 +12,8 @@ Requirement:
 Build project in one times
 
 Go to root folder (hugio-back-end) and run this command
-```
+
+```bash
 mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml
 ```
 
@@ -26,7 +27,7 @@ After the maven build finished, choose a service to run, there are 5 services:
 
 Go to the folder of service you want to run. For instance,
 
-```
+```bash
 cd hugio-auth-service
 
 mvn spring-boot:run
@@ -38,11 +39,12 @@ This project also can be run on K8S
 
 For example, you want to run [hugio-auth-service](hugio-auth-service) on K8S
 
-```
+```bash
 cd hugio-auth-service
 
 docker build . -t $dockerImage:$dockerTag
 
 helm upgrade -i --set image.name=$dockerImage,image.tag=$dockerTag,replica=$k8sReplica -n $k8sNamespace auth-service ./helm_chart
 ```
+
 VoTuanLoc - LeMinhDuc
