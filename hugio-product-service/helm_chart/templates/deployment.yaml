@@ -28,7 +28,7 @@ spec:
             - name: GRPC_INVENTORY_SERVER
               value: "inventory-service-svc-2:9030"
             - name: MYSQL_DB_URL
-              value: "jdbc:mysql://192.168.1.22:3310/hugio_product_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
+              value: "jdbc:mysql://192.168.1.22:3306/hugio_product_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
             - name: MYSQL_DB_USERNAME
               valueFrom:
                 secretKeyRef:

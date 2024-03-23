@@ -24,7 +24,7 @@ spec:
             - containerPort: {{ .Values.grpc_port }}
           env:
             - name: MYSQL_DB_URL
-              value: "jdbc:mysql://192.168.1.22:3310/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
+              value: "jdbc:mysql://192.168.1.22:3306/hugio_user_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
             - name: MYSQL_DB_USERNAME
               valueFrom:
                 secretKeyRef:

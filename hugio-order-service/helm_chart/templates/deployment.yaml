@@ -28,7 +28,7 @@ spec:
             - name: GRPC_PRODUCT_SERVER
               value: "product-service-svc-2:9020"
             - name: MYSQL_DB_URL
-              value: "jdbc:mysql://192.168.1.22:3310/hugio_order_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
+              value: "jdbc:mysql://192.168.1.22:3306/hugio_order_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
             - name: MYSQL_DB_USERNAME
               valueFrom:
                 secretKeyRef:

@@ -8,7 +8,7 @@ def now = (new Date()).format("yyMMddHHmmss", TimeZone.getTimeZone('Asia/Ho_Chi_
 pipeline {
     agent any
     tools {
-        maven "3.9.3"
+        maven "3.9.6"
         jdk "17"
     }
     environment {
@@ -51,11 +51,11 @@ pipeline {
             steps {
                 script {
                     dir('hugio-user-service') {
-                        sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 mkdir -p $TARGET_DIR"
-                        sh "scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@192.168.1.22:$TARGET_DIR"
-                        sh "scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:$TARGET_DIR"
-                        sh "scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./Dockerfile ae403@192.168.1.22:$TARGET_DIR"
-                        sh "scp -i /var/jenkins_home/jenkins -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./logback.xml ae403@192.168.1.22:$TARGET_DIR"
+                        sh "ssh ae403@192.168.1.22 mkdir -p $TARGET_DIR"
+                        sh "scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./helm_chart ae403@192.168.1.22:$TARGET_DIR"
+                        sh "scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ./target ae403@192.168.1.22:$TARGET_DIR"
+                        sh "scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./Dockerfile ae403@192.168.1.22:$TARGET_DIR"
+                        sh "scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./logback.xml ae403@192.168.1.22:$TARGET_DIR"
                     }
                 }
             }
@@ -63,12 +63,12 @@ pipeline {
         stage('Deploy source') {
             steps {
                 script {
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker build . -t $dockerImage:$dockerTag\""
+                    sh "ssh ae403@192.168.1.22 \"cd $TARGET_DIR ; docker build . -t $dockerImage:$dockerTag\""
                     withCredentials([string(credentialsId: 'ae403-key', variable: 'SSH_PASSWORD')]) { // create a credential as a secret text in jenkins credential page
-                        sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker save -o image.tar $dockerImage:$dockerTag ; echo \$SSH_PASSWORD | sudo -S microk8s ctr image import image.tar ; rm -f *.tar\""
+                        sh "ssh ae403@192.168.1.22 \"cd $TARGET_DIR ; docker save -o image.tar $dockerImage:$dockerTag ; echo \$SSH_PASSWORD | sudo -S microk8s ctr image import image.tar ; rm -f *.tar\""
                     }
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; microk8s.helm upgrade -i --set image.name=$dockerImage,image.tag=$dockerTag,replica=$k8sReplica -n $k8sNamespace user-service ./helm_chart\""
-                    sh "ssh -i /var/jenkins_home/jenkins ae403@192.168.1.22 \"cd $TARGET_DIR ; docker rmi $dockerImage:$dockerTag\""
+                    sh "ssh ae403@192.168.1.22 \"cd $TARGET_DIR ; microk8s.helm upgrade -i --set image.name=$dockerImage,image.tag=$dockerTag,replica=$k8sReplica -n $k8sNamespace user-service ./helm_chart\""
+                    sh "ssh ae403@192.168.1.22 \"cd $TARGET_DIR ; docker rmi $dockerImage:$dockerTag\""
                 }
             }
         }
