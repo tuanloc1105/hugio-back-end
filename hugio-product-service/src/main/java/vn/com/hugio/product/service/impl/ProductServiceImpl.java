@@ -244,8 +244,9 @@ public class ProductServiceImpl extends BaseService<Product, ProductRepository> 
         );
         PageResponse<ProductDto> pageResponse;
         // try get data from redis
-        pageResponse = this.redisCacheService.get(redisKey, new TypeReference<>() {
-        });
+        // pageResponse = this.redisCacheService.get(redisKey, new TypeReference<>() {
+        // });
+        pageResponse = null;
         if (pageResponse == null) {
             PageLink pageLink = PageLink.create(request.getPageSize(), request.getPageNumber(), request.getSort());
             Page<Product> products = this.repository.findByActiveIsTrue(pageLink.toPageable());

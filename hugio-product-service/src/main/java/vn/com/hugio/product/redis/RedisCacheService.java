@@ -71,6 +71,7 @@ public class RedisCacheService implements CacheService {
     public String get(String key) {
         try {
             LOG.info("[REDIS GETTING VALUE] Key ({})", key);
+            // return Objects.requireNonNull(StringEscapeUtils.unescapeJava((String) this.template.opsForValue().get(key))).replaceAll("^\"|\"$", "");
             return Objects.requireNonNull(StringEscapeUtils.unescapeJava((String) this.template.opsForValue().get(key))).replaceAll("^\"|\"$", "");
         } catch (Exception e) {
             LOG.error("[REDIS GET VALUE FAIL] {}", e.getMessage());
