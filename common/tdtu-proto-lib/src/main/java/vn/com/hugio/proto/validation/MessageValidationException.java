@@ -2,7 +2,7 @@ package vn.com.hugio.proto.validation;
 
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.GeneratedMessageV3;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ public class MessageValidationException extends Exception {
     private final String protoName;
     private final Object validationRule;
 
-    public MessageValidationException(GeneratedMessage message, FieldDescriptor fieldDescriptor, Object fieldValue,
+    public MessageValidationException(GeneratedMessageV3 message, FieldDescriptor fieldDescriptor, Object fieldValue,
                                       Map.Entry<Descriptors.FieldDescriptor, Object> validationRule) {
         super(computeMessage(message, fieldDescriptor, fieldValue, validationRule));
         this.protoName = fieldDescriptor.getFile().getName();
@@ -23,7 +23,7 @@ public class MessageValidationException extends Exception {
         this.validationRule = validationRule;
     }
 
-    private static String computeMessage(GeneratedMessage message, FieldDescriptor fieldDescriptor, Object fieldValue,
+    private static String computeMessage(GeneratedMessageV3 message, FieldDescriptor fieldDescriptor, Object fieldValue,
                                          Map.Entry<Descriptors.FieldDescriptor, Object> validationRule) {
         StringBuilder b = new StringBuilder();
         b.append(fieldDescriptor.getJsonName());

@@ -21,7 +21,7 @@ package vn.com.hugio.proto.validation.validators;
  */
 
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.GeneratedMessageV3;
 import vn.com.hugio.proto.validation.MessageValidationException;
 import vn.com.hugio.proto.validation.ValidationConditions;
 import vn.com.hugio.proto.validation.Validator;
@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class MinValidator implements Validator {
     @Override
-    public void validate(GeneratedMessage protoMessage, FieldDescriptor fieldDescriptor, Object fieldValue, Map.Entry<FieldDescriptor, Object> rule)
+    public void validate(GeneratedMessageV3 protoMessage, FieldDescriptor fieldDescriptor, Object fieldValue, Map.Entry<FieldDescriptor, Object> rule)
             throws NumberFormatException, MessageValidationException {
         String extensionValueStr = rule.getValue().toString();
         String fieldValueStr = fieldValue.toString();

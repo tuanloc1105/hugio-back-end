@@ -21,7 +21,7 @@ package vn.com.hugio.proto.validation.validators;
  */
 
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.GeneratedMessageV3;
 import vn.com.hugio.proto.validation.MessageValidationException;
 import vn.com.hugio.proto.validation.ValidationConditions;
 import vn.com.hugio.proto.validation.Validator;
@@ -40,7 +40,7 @@ public class RegexValidator implements Validator {
     private static final Map<String, Pattern> patternCache = new ConcurrentHashMap<>();
 
     @Override
-    public void validate(GeneratedMessage protoMessage, FieldDescriptor fieldDescriptor, Object fieldValue, Map.Entry<FieldDescriptor, Object> rule)
+    public void validate(GeneratedMessageV3 protoMessage, FieldDescriptor fieldDescriptor, Object fieldValue, Map.Entry<FieldDescriptor, Object> rule)
             throws MessageValidationException {
 
         String regex = rule.getValue().toString();
