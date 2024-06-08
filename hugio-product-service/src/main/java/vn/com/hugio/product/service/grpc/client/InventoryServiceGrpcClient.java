@@ -1,22 +1,15 @@
 package vn.com.hugio.product.service.grpc.client;
 
 import io.grpc.ManagedChannel;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
 import vn.com.hugio.common.service.CurrentUserService;
-import vn.com.hugio.grpc.inventory.InventoryServiceGrpc;
-import vn.com.hugio.grpc.inventory.ProductInput;
-import vn.com.hugio.grpc.inventory.ProductQuantityOutput;
-import vn.com.hugio.grpc.inventory.RequestTypeInventoryRequest;
-import vn.com.hugio.grpc.inventory.RequestTypeProductInput;
-import vn.com.hugio.grpc.inventory.ResponseTypeProductQuantityOutput;
-import vn.com.hugio.grpc.inventory.ResponseTypeVoid;
+import vn.com.hugio.grpc.common.TraceTypeGRPC;
+import vn.com.hugio.grpc.inventory.*;
 import vn.com.hugio.product.dto.ProductQuantityDto;
 import vn.com.hugio.product.service.grpc.request.InventoryRequest;
-import vn.com.hugio.proto.common.TraceTypeGRPC;
 import vn.com.hugio.proto.utils.GrpcUtil;
 
 @Service

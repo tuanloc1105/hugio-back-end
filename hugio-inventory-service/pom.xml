@@ -69,6 +69,7 @@
 			<groupId>vn.com.hugio.proto</groupId>
 			<artifactId>proto-lib</artifactId>
 			<version>${proto-lib.version}</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>

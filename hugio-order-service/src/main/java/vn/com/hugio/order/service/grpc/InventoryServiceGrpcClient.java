@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import vn.com.hugio.common.exceptions.ErrorCodeEnum;
 import vn.com.hugio.common.exceptions.InternalServiceException;
 import vn.com.hugio.common.log.LOG;
+import vn.com.hugio.grpc.common.TraceTypeGRPC;
 import vn.com.hugio.grpc.inventory.InventoryServiceGrpc;
 import vn.com.hugio.grpc.inventory.ProductInfo;
 import vn.com.hugio.grpc.inventory.ProductInput;
@@ -17,7 +18,6 @@ import vn.com.hugio.grpc.inventory.ResponseTypeProductQuantityOutput;
 import vn.com.hugio.grpc.inventory.ResponseTypeVoid;
 import vn.com.hugio.order.dto.ProductQuantityDto;
 import vn.com.hugio.order.request.value.OrderInformation;
-import vn.com.hugio.proto.common.TraceTypeGRPC;
 import vn.com.hugio.proto.utils.GrpcUtil;
 
 import java.util.List;

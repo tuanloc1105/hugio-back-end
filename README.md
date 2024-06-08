@@ -3,19 +3,11 @@
 ## Configuration before running project
 
 Requirement:
-1. JDK 17
-2. Maven > 3.8.5
-3. Mysql instance
-4. Docker
-5. Helm
+1. JDK 21
+2. Maven > 3.9.0
+3. Mysql version >= 8
 
-Build project in one times
-
-Go to root folder (hugio-back-end) and run this command
-
-```bash
-mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml
-```
+Read [this](./common/tdtu-proto-lib/NOTE.md) before build the project to make sure there is no error.
 
 After the maven build finished, choose a service to run, there are 5 services:
 
@@ -29,22 +21,7 @@ Go to the folder of service you want to run. For instance,
 
 ```bash
 cd hugio-auth-service
-
 mvn spring-boot:run
-```
-
-### Running with Kubernetes (K8S)
-
-This project also can be run on K8S
-
-For example, you want to run [hugio-auth-service](hugio-auth-service) on K8S
-
-```bash
-cd hugio-auth-service
-
-docker build . -t $dockerImage:$dockerTag
-
-helm upgrade -i --set image.name=$dockerImage,image.tag=$dockerTag,replica=$k8sReplica -n $k8sNamespace auth-service ./helm_chart
 ```
 
 VoTuanLoc - LeMinhDuc

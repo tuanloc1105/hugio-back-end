@@ -3,12 +3,16 @@ package vn.com.hugio.auth.service.impl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import vn.com.hugio.auth.dto.UserDto;
 import vn.com.hugio.auth.service.JwtService;
 import vn.com.hugio.common.log.LOG;
 
+import javax.crypto.SecretKey;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -18,11 +22,20 @@ import java.util.UUID;
 @Component
 public class JwtServiceImpl implements JwtService {
 
+    private static SecretKey key;
+
     @Value("${token.secret:jtgLdUg80hwnaklzvG6P9qoOit5yryHt}")
     private String secretKey;
 
     @Value("${token.time:432000}")
     private Integer time;
+
+    @PostConstruct
+    public void setJwtKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
+        key = Keys.hmacShaKeyFor(keyBytes);
+    }
+
 
     @Override
     public String generateJWTToken(UserDto userDto) {
@@ -31,10 +44,10 @@ public class JwtServiceImpl implements JwtService {
         now.add(Calendar.SECOND, time);
 
         return Jwts.builder()
-                .setSubject((userDto.getUsername()))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(now.getTimeInMillis()))
-                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .subject((userDto.getUsername()))
+                .issuedAt(new Date())
+                .expiration(new Date(now.getTimeInMillis()))
+                .signWith(key)
                 .claim("userUid", userDto.getUserUid())
                 .claim("username", userDto.getUsername())
                 .claim("roles", String.join(",", userDto.getRoles()))
@@ -47,9 +60,9 @@ public class JwtServiceImpl implements JwtService {
         String userInfoJson;
         try {
             if (token.startsWith("Bearer ")) {
-                claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token.substring(7)).getBody();
+                claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token.substring(7)).getPayload();
             } else {
-                claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+                claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
             }
             return UserDto.builder()
                     .userUid(String.valueOf(claims.get("userUid")))
