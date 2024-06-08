@@ -4,7 +4,7 @@
 
 echo -e '\n\n >> Generate Java code \n\n'
 
-protoc -I=./tdtu-proto-lib/src/main/proto --java_out=./tdtu-proto-lib/src/main/java --grpc-java_out=./tdtu-proto-lib/src/main/java ./tdtu-proto-lib/src/main/proto/*.proto
+./protoc/bin/protoc -I=./tdtu-proto-lib/src/main/proto --java_out=./tdtu-proto-lib/src/main/java --grpc-java_out=./tdtu-proto-lib/src/main/java ./tdtu-proto-lib/src/main/proto/*.proto
 
 echo -e '\n\n >> Convert javax package to jakarta \n\n'
 
