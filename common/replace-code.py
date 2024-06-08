@@ -21,6 +21,6 @@ def list_files(directory):
                 with open(file_path, 'w') as f:
                     f.write(content)
 # Specify the directory you want to search
-directory = os.path.join(os.getcwd(), 'tdtu-proto-lib')
+directory = os.path.join(os.getcwd(), 'proto-lib')
 
 list_files(directory)
