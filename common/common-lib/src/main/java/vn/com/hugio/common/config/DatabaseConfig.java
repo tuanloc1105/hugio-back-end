@@ -20,11 +20,11 @@ import java.util.HashMap;
 @Configuration
 @EnableJpaRepositories(
         basePackages = "vn.com.**.repository",
-        entityManagerFactoryRef = "mysqlEntityManager",
-        transactionManagerRef = "mysqlTransactionManager"
+        entityManagerFactoryRef = "postgresqlEntityManager",
+        transactionManagerRef = "postgresqlTransactionManager"
 )
 //@ConditionalOnProperty(
-//value = "mysql",
+//value = "postgresql",
 //havingValue = "true"
 //)
 public class DatabaseConfig {
@@ -36,7 +36,7 @@ public class DatabaseConfig {
         this.databaseProperty = databaseProperty;
     }
 
-    @Bean("mysqlDataSources")
+    @Bean("postgresqlDataSources")
     public DataSource mysqlDataSources() {
         LOG.info("CREATE BEAN mysqlDataSources, Connecting to DB URL %s", this.databaseProperty.getUrl());
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -48,15 +48,15 @@ public class DatabaseConfig {
         return dataSource;
     }
 
-    @Bean("mysqlEntityManager")
-    public LocalContainerEntityManagerFactoryBean mysqlEntityManager(@Qualifier("mysqlDataSources") DataSource mysqlDataSources) {
+    @Bean("postgresqlEntityManager")
+    public LocalContainerEntityManagerFactoryBean mysqlEntityManager(@Qualifier("postgresqlDataSources") DataSource mysqlDataSources) {
         LOG.info("CREATE BEAN mysqlEntityManager");
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(mysqlDataSources);
 
         // Scan Entities in Package:
         em.setPackagesToScan("vn.com.**.entity");
-        em.setPersistenceUnitName("HUGIO_MYSQL"); // Important !!
+        em.setPersistenceUnitName("HUGIO_DB"); // Important !!
 
         //
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -77,8 +77,8 @@ public class DatabaseConfig {
         return em;
     }
 
-    @Bean("mysqlTransactionManager")
-    public PlatformTransactionManager mysqlTransactionManager(@Qualifier("mysqlEntityManager") LocalContainerEntityManagerFactoryBean mysqlEntityManager) {
+    @Bean("postgresqlTransactionManager")
+    public PlatformTransactionManager mysqlTransactionManager(@Qualifier("postgresqlEntityManager") LocalContainerEntityManagerFactoryBean mysqlEntityManager) {
         LOG.info("CREATE BEAN mysqlTransactionManager");
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(mysqlEntityManager.getObject());

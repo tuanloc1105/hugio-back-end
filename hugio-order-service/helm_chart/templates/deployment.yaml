@@ -27,14 +27,14 @@ spec:
               value: "inventory-service-svc-2:9030"
             - name: GRPC_PRODUCT_SERVER
               value: "product-service-svc-2:9020"
-            - name: MYSQL_DB_URL
-              value: "jdbc:mysql://192.168.1.22:3306/hugio_order_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
-            - name: MYSQL_DB_USERNAME
+            - name: DB_URL
+              value: "jdbc:postgresql://192.168.1.22:3306/hugio_order_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
+            - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-secret
                   key: database_username
-            - name: MYSQL_DB_PASSWORD
+            - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-secret
