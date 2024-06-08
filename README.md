@@ -7,7 +7,7 @@ Requirement:
 2. Maven > 3.9.0
 3. Mysql version >= 8
 
-Read [this](./common/tdtu-proto-lib/NOTE.md) before build the project to make sure there is no error.
+Read [this](./common/proto-lib/NOTE.md) before build the project to make sure there is no error.
 
 After the maven build finished, choose a service to run, there are 5 services:
 
