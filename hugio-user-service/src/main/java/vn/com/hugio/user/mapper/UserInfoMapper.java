@@ -19,6 +19,7 @@ public interface UserInfoMapper {
     @Mapping(source = "updatedAt", target = "updatedAt")
     @Mapping(source = "createdBy", target = "createdBy")
     @Mapping(source = "updatedBy", target = "updatedBy")
+    @Mapping(target = "username", ignore = true)
     UserInfoDto userInfoDtoMapper(UserInfo userInfo);
 
 }
