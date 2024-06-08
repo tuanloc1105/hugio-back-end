@@ -6,6 +6,8 @@ target/
 
 *.log
 
+/src/main/java/vn/com/hugio/grpc/
+
 ### STS ###
 .apt_generated
 .classpath
