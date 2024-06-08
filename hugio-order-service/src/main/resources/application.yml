@@ -27,9 +27,9 @@ mysql:
   url: ${MYSQL_DB_URL:jdbc:mysql://host:port/hugio_order_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}
   username: ${MYSQL_DB_USERNAME:root}
   password: ${MYSQL_DB_PASSWORD:123456}
-  driver_class_name: com.mysql.cj.jdbc.Driver
+  driver_class_name: org.postgresql.Driver
   ddl_auto: none
-  dialect: org.hibernate.dialect.MySQLDialect
+  dialect: org.hibernate.dialect.PostgreSQLDialect
   show_sql: false
 management:
   tracing:
