@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version>
-        <relativePath /> <!-- lookup parent from repository -->
+        <version>3.3.0</version>
+        <relativePath />
     </parent>
     <groupId>vn.com.hugio.proto</groupId>
     <artifactId>proto-lib</artifactId>
@@ -15,65 +14,66 @@
     <name>proto-lib</name>
     <description>PROTO LIB</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
+        <grpc-server-spring-boot-starter.version>3.1.0.RELEASE</grpc-server-spring-boot-starter.version>
+        <protobuf-java-util.version>4.27.1</protobuf-java-util.version>
+        <protobuf-java-format.version>1.4</protobuf-java-format.version>
+        <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+        <tomcat-annotations-api.version>11.0.0-M20</tomcat-annotations-api.version>
+        <grpc-netty-shaded.version>1.64.0</grpc-netty-shaded.version>
+        <grpc-protobuf.version>1.64.0</grpc-protobuf.version>
+        <grpc-stub.version>1.64.0</grpc-stub.version>
     </properties>
     <dependencies>
 
         <dependency>
             <groupId>net.devh</groupId>
             <artifactId>grpc-server-spring-boot-starter</artifactId>
-            <version>2.14.0.RELEASE</version>
+            <version>${grpc-server-spring-boot-starter.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
-            <version>3.22.2</version>
+            <version>${protobuf-java-util.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>com.googlecode.protobuf-java-format</groupId>
             <artifactId>protobuf-java-format</artifactId>
-            <version>1.4</version>
+            <version>${protobuf-java-format.version}</version>
         </dependency>
 
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
-            <version>1.3.2</version>
+            <version>${javax.annotation-api.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-annotations-api</artifactId>
-            <version>11.0.0-M4</version>
+            <version>${tomcat-annotations-api.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty-shaded</artifactId>
-            <version>1.56.0</version>
+            <version>${grpc-netty-shaded.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
-            <version>1.56.0</version>
+            <version>${grpc-protobuf.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
-            <version>1.56.0</version>
-        </dependency>
-
-        <dependency> <!-- necessary for Java 9+ -->
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>annotations-api</artifactId>
-            <version>6.0.53</version>
-            <scope>provided</scope>
+            <version>${grpc-stub.version}</version>
         </dependency>
 
     </dependencies>
