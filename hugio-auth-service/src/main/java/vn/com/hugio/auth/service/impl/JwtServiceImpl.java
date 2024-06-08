@@ -24,10 +24,10 @@ public class JwtServiceImpl implements JwtService {
 
     private static SecretKey key;
 
-    @Value("${token.secret:jtgLdUg80hwnaklzvG6P9qoOit5yryHt}")
+    @Value("${token.secret}")
     private String secretKey;
 
-    @Value("${token.time:432000}")
+    @Value("${token.time}")
     private Integer time;
 
     @PostConstruct
