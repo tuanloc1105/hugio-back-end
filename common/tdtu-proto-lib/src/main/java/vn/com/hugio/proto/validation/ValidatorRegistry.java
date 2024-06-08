@@ -2,15 +2,8 @@ package vn.com.hugio.proto.validation;
 
 import com.google.common.collect.Maps;
 import com.google.protobuf.Descriptors;
-import vn.com.hugio.proto.validation.validators.ForbiddenValidator;
-import vn.com.hugio.proto.validation.validators.FutureValidator;
-import vn.com.hugio.proto.validation.validators.MaxValidator;
-import vn.com.hugio.proto.validation.validators.MinValidator;
-import vn.com.hugio.proto.validation.validators.PastValidator;
-import vn.com.hugio.proto.validation.validators.RegexValidator;
-import vn.com.hugio.proto.validation.validators.RepeatMaxValidator;
-import vn.com.hugio.proto.validation.validators.RepeatMinValidator;
-import vn.com.hugio.proto.validation.validators.RequiredValidator;
+import vn.com.hugio.grpc.validation.Validation;
+import vn.com.hugio.proto.validation.validators.*;
 
 import java.util.Map;
 
@@ -20,9 +13,9 @@ import java.util.Map;
  */
 public class ValidatorRegistry {
 
-    private static ValidatorRegistry globalValidatorRegistry = createDefaultRegistry();
+    private static final ValidatorRegistry globalValidatorRegistry = createDefaultRegistry();
 
-    private Map<Descriptors.FieldDescriptor, Validator> validatorMap;
+    private final Map<Descriptors.FieldDescriptor, Validator> validatorMap;
 
     /**
      * Constructor which builds a {@link ValidatorRegistry} with predefined validators from the validatorMap.

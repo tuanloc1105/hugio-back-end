@@ -1,5 +1,7 @@
 #!/bin/bash
 
+clear
+
 CURRENT_DIRECTORY=$(pwd)
 
 mvn dependency:resolve
@@ -10,8 +12,6 @@ mvn clean install -DskipTests=true -Dfile.encoding=UTF8 -f pom.xml
 
 cd tdtu-proto-lib/
 
-git reset .
-
-git restore .
+rm -rf ./tdtu-proto-lib/src/main/java/vn/com/hugio/grpc/
 
 cd ${CURRENT_DIRECTORY}

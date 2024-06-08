@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-package vn.com.hugio.proto.common;
+package vn.com.hugio.grpc.common;
 import "validation.proto";
 
 message TraceTypeGRPC{

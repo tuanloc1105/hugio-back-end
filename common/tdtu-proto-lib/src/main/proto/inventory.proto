@@ -20,14 +20,14 @@ message InventoryRequest {
 }
 
 message RequestTypeInventoryRequest {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     InventoryRequest request = 4;
   }
 }
 
 message ResponseTypeVoid {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   string code = 2;
   string message = 3;
 }
@@ -37,7 +37,7 @@ message ProductInput {
 }
 
 message RequestTypeProductInput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     ProductInput request = 4;
   }
@@ -51,7 +51,7 @@ message ProductQuantityOutput {
 }
 
 message ResponseTypeProductQuantityOutput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   string code = 2;
   string message = 3;
   oneof output{
@@ -69,7 +69,7 @@ message ReduceProductInput {
 }
 
 message RequestTypeReduceProductInput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     ReduceProductInput request = 2;
   }

@@ -12,7 +12,7 @@ message ProductInfoInput {
 }
 
 message RequestTypeProductInfoInput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     ProductInfoInput request = 2;
   }
@@ -29,7 +29,7 @@ message ProductInfoOutput {
 }
 
 message ResponseTypeProductInfoOutput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   string code = 2;
   string message = 3;
   oneof output{

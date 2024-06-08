@@ -3,7 +3,7 @@ package vn.com.hugio.proto.validation;
 import com.google.protobuf.DescriptorProtos;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 
 import java.util.Map;
 
@@ -13,9 +13,9 @@ import java.util.Map;
  */
 public class ProtobufValidator {
 
-    private static ProtobufValidator globalProtobufValidator = new ProtobufValidator();
+    private static final ProtobufValidator globalProtobufValidator = new ProtobufValidator();
 
-    private ValidatorRegistry validatorRegistry;
+    private final ValidatorRegistry validatorRegistry;
 
     /**
      * @param validatorRegistry The {@link ValidatorRegistry} which should be used for validation.
@@ -45,7 +45,7 @@ public class ProtobufValidator {
         return new ProtobufValidator(ValidatorRegistry.createDefaultRegistry());
     }
 
-    private void doValidate(GeneratedMessageV3 message, FieldDescriptor fieldDescriptor, Object fieldValue, DescriptorProtos.FieldOptions options)
+    private void doValidate(GeneratedMessage message, FieldDescriptor fieldDescriptor, Object fieldValue, DescriptorProtos.FieldOptions options)
             throws IllegalArgumentException, MessageValidationException {
         for (Map.Entry<Descriptors.FieldDescriptor, Object> entry : options.getAllFields().entrySet()) {
             try {
@@ -61,7 +61,7 @@ public class ProtobufValidator {
      * @param protoMessage The protobuf message object to validate
      * @throws MessageValidationException Further information about the failed field
      */
-    public void validate(GeneratedMessageV3 protoMessage) throws MessageValidationException {
+    public void validate(GeneratedMessage protoMessage) throws MessageValidationException {
         for (Descriptors.FieldDescriptor fieldDescriptor : protoMessage.getDescriptorForType().getFields()) {
 
             Object fieldValue;
@@ -71,13 +71,13 @@ public class ProtobufValidator {
                 fieldValue = protoMessage.hasField(fieldDescriptor) ? protoMessage.getField(fieldDescriptor) : null;
             }
 
-            if (protoMessage.getField(fieldDescriptor) instanceof GeneratedMessageV3) {
+            if (protoMessage.getField(fieldDescriptor) instanceof GeneratedMessage) {
                 doValidate(protoMessage, fieldDescriptor, fieldValue, fieldDescriptor.getOptions());
                 if (fieldDescriptor.isRepeated() || protoMessage.hasField(fieldDescriptor)) {
-                    GeneratedMessageV3 subMessageV3 = (GeneratedMessageV3) protoMessage.getField(fieldDescriptor);
+                    GeneratedMessage subMessageV3 = (GeneratedMessage) protoMessage.getField(fieldDescriptor);
                     validate(subMessageV3);
                 }
-            } else if (fieldDescriptor.getOptions().getAllFields().size() > 0) {
+            } else if (!fieldDescriptor.getOptions().getAllFields().isEmpty()) {
                 doValidate(protoMessage, fieldDescriptor, fieldValue, fieldDescriptor.getOptions());
             }
         }

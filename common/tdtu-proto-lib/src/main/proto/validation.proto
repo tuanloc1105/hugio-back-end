@@ -3,7 +3,7 @@ option java_multiple_files = true;
 
 import "google/protobuf/descriptor.proto";
 
-package vn.com.hugio.proto.validation;
+package vn.com.hugio.grpc.validation;
 
 extend google.protobuf.FieldOptions {
   int64 max = 50001;

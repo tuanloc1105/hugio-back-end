@@ -2,7 +2,7 @@ package vn.com.hugio.proto.utils;
 
 import org.slf4j.MDC;
 import org.springframework.util.StringUtils;
-import vn.com.hugio.proto.common.TraceTypeGRPC;
+import vn.com.hugio.grpc.common.TraceTypeGRPC;
 
 import java.util.UUID;
 

@@ -16,7 +16,7 @@ message UserTokenInput {
 }
 
 message RequestTypeUserTokenInput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     UserTokenInput request = 2;
   }
@@ -31,7 +31,7 @@ message CreateUserInput {
 }
 
 message RequestTypeCreateUserInput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     CreateUserInput request = 2;
   }
@@ -46,7 +46,7 @@ message UserInfo {
 }
 
 message ResponseTypeUserInfo {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   string code = 2;
   string message = 3;
   oneof output{
@@ -62,7 +62,7 @@ message UpdateUserStatus {
 }
 
 message RequestTypeUpdateUserStatus {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     UpdateUserStatus request = 4;
   }
@@ -71,7 +71,7 @@ message RequestTypeUpdateUserStatus {
 // ------------------------------------------------------------
 
 message ResponseTypeUpdateUserStatus {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   string code = 2;
   string message = 3;
 }
@@ -85,7 +85,7 @@ message PageableInput {
   string direction = 4;
 }
 message RequestTypePageableInput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     PageableInput request = 4;
   }
@@ -96,7 +96,7 @@ message RoleOutput {
 }
 
 message ResponseTypeRoleOutput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   string code = 2;
   string message = 3;
   oneof output{
@@ -110,7 +110,7 @@ message UserInfoInput {
 }
 
 message RequestTypeUserInfoInput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     UserInfoInput request = 4;
   }
@@ -122,14 +122,14 @@ message UpdateUserInput {
 }
 
 message RequestTypeUpdateUserInput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     UpdateUserInput request = 2;
   }
 }
 
 message ResponseTypeVoid {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   string code = 2;
   string message = 3;
 }
@@ -140,7 +140,7 @@ message Input {
 }
 
 message RequestTypeInput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   oneof input {
     Input request = 4;
   }
@@ -151,7 +151,7 @@ message Output {
 }
 
 message ResponseTypeOutput {
-  vn.com.hugio.proto.common.TraceTypeGRPC trace = 1;
+  vn.com.hugio.grpc.common.TraceTypeGRPC trace = 1;
   string code = 2;
   string message = 3;
   oneof output{
