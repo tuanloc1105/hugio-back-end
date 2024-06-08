@@ -8,7 +8,7 @@ protoc -I=./tdtu-proto-lib/src/main/proto --java_out=./tdtu-proto-lib/src/main/j
 
 echo -e '\n\n >> Convert javax package to jakarta \n\n'
 
-python ./convert-javax-to-jakarta.py
+python ./replace-code.py
 
 echo -e '\n\n >> Build maven \n\n'
 
