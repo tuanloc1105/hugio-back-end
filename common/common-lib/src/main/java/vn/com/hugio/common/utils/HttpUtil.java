@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -83,7 +84,7 @@ public class HttpUtil {
     }
 
     public HttpURLConnection generateConnection(String host) throws Exception {
-        URL url = new URL(host);
+        URL url = (new URI(host)).toURL();
         return (HttpURLConnection) url.openConnection();
     }
 
