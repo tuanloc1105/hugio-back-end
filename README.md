@@ -5,7 +5,7 @@
 Requirement:
 1. JDK 21
 2. Maven > 3.9.0
-3. Mysql version >= 8
+3. ~~MySQL~~ => PostgreSQL
 
 Read [this](./common/proto-lib/NOTE.md) before build the project to make sure there is no error.
 
