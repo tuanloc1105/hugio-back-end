@@ -12,4 +12,4 @@ echo -e '\n\n >> Generate Java code \n\n'
 
 echo -e '\n\n >> Convert javax package to jakarta \n\n'
 
-python ./replace-code.py
+python3 ./replace-code.py
