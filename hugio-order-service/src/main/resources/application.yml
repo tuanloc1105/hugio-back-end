@@ -18,6 +18,9 @@ spring:
       password: E2$s3U07L#wu
   main:
     allow-bean-definition-overriding: true
+  threads:
+    virtual:
+      enabled: true
 security:
   enable: false
 springdoc:
