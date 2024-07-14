@@ -3,6 +3,7 @@ package vn.com.hugio.common.gpt;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
@@ -55,8 +56,9 @@ public class ChatGPT {
     }
 
     public String chatGPT2(String text) throws Exception {
-        String url = "https://api.openai.com/v1/chat/completions";
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+        String chatGptHostUrl = "https://api.openai.com/v1/chat/completions";
+        URL url = (new URI(chatGptHostUrl)).toURL();
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");

@@ -3,12 +3,10 @@ package vn.com.hugio.common.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.HttpException;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.StringEntity;
@@ -24,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 import vn.com.hugio.common.log.LOG;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -33,8 +30,10 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 @Component
 public class HttpUtil {
 
@@ -88,7 +87,7 @@ public class HttpUtil {
         return (HttpURLConnection) url.openConnection();
     }
 
-    public <T> T sendRequest(Object data, String url, HttpMethod method, Map<String, String> requestHeader, TypeReference<T> respModel, boolean sslCheck) throws Exception {
+    public <T> T sendRequest(Object data, String url, HttpMethod method, Map<String, String> requestHeader, TypeReference<T> respModel) throws Exception {
         HttpURLConnection http = this.generateConnection(url);
         http.setRequestMethod(method.name());
         http.setDoOutput(true);
@@ -112,17 +111,13 @@ public class HttpUtil {
         while ((output = bufferedReader.readLine()) != null) {
             stringBuilder.append(output);
         }
+        if (respModel.getType().getTypeName().equals(String.class.getName())) {
+            throw new RuntimeException("Input casting type can not be String.class");
+        }
         return this.objectMapper.readValue(stringBuilder.toString(), respModel);
     }
 
-    public <T> T callApiHttpPost(
-            Object request,
-            String url,
-            HttpMethod method,
-            Map<String, String> requestHeader,
-            TypeReference<T> respModel,
-            boolean sslCheck
-    ) {
+    public <T> T callApiHttpPost(Object request, String url, Map<String, String> requestHeader, TypeReference<T> respModel) {
         try {
             HttpPost post = new HttpPost(url);
             if (requestHeader != null && !requestHeader.isEmpty()) {
@@ -135,24 +130,18 @@ public class HttpUtil {
             String req = this.objectMapper.writeValueAsString(request);
             StringEntity postingString = new StringEntity(req, ContentType.parse("UTF-8"));
             post.setEntity(postingString);
+            CloseableHttpClient httpClient = null;
             try {
                 final String[] res = new String[1];
-                HttpClient httpClient = HttpClientBuilder.create().build();
-                HttpResponse response = httpClient.execute(post, new HttpClientResponseHandler<HttpResponse>() {
-                    @Override
-                    public HttpResponse handleResponse(ClassicHttpResponse response) throws HttpException, IOException {
-                        response.getEntity().getContent();
-                        InputStream in = response.getEntity().getContent(); //Get the data in the entity
-                        res[0] = new BufferedReader(
-                                new InputStreamReader(in, StandardCharsets.UTF_8))
-                                .lines()
-                                .collect(Collectors.joining("\n"));
-                        return response;
-                    }
+                httpClient = HttpClientBuilder.create().build();
+                HttpResponse response = httpClient.execute(post, (HttpClientResponseHandler<HttpResponse>) httpClientResponse -> {
+                    InputStream in = httpClientResponse.getEntity().getContent(); //Get the data in the entity
+                    res[0] = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
+                    return httpClientResponse;
                 });
                 if (response != null) {
                     if (respModel.getType().getTypeName().equals(String.class.getName())) {
-                        return (T) res[0];
+                        throw new RuntimeException("Input casting type can not be String.class");
                     }
                     return this.objectMapper.readValue(res[0], respModel);
                 }
@@ -160,6 +149,10 @@ public class HttpUtil {
             } catch (Exception e) {
                 LOG.exception(e);
                 throw e;
+            } finally {
+                if (Optional.ofNullable(httpClient).isPresent()) {
+                    httpClient.close();
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
